@@ -1,0 +1,158 @@
+{
+  "slug": "Meloch-03-03",
+  "title": "Мелочь?",
+  "author": "Алексей Масюта",
+  "views": 56,
+  "month": 3,
+  "day": 3,
+  "original": "https://telegra.ph/Meloch-03-03",
+  "content": [
+    {
+      "tag": "p",
+      "children": [
+        "Недавно по работе делал презентацию для компании. На одном из слайдов нужно было показать динамику развития продукта через графики. Вот часть слайда с динамикой развития:"
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/e078785692590df627f42.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "Отправляем заказчику, менеджер мне присылает обратную связь:"
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/d98a709e9917ee82bee40.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "Моя незамедлительная реакция на данную ",
+        {
+          "tag": "em",
+          "children": [
+            "мелочь"
+          ]
+        },
+        ":"
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/f007cd97bed3fe06b28cc.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "Поворачиваю стрелки, с мыслью, что ничего не изменилось даже:"
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/07b42cc09f2d7f2ffa2cf.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "Но потом я подумал, что замечание только сперва кажется забавным, но если, например, кто-то будет знакомиться с презентацией с плохим зрением или на неоткалиброванном проекторе, еще и под углом, то действительно, может быть так, что визуально покажется, что график идет по нисходящей:"
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/8f441a74d3ef019a6de3a.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/f0c4bd02d5ff8e8af4a1c.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        {
+          "tag": "br"
+        }
+      ]
+    }
+  ]
+}

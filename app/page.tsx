@@ -34,7 +34,6 @@ const widgets: Widget[] = [
       "Публикации из канала про UX в одном месте — от коротких мыслей до больших разборов.",
     icon: NotebookPen,
     href: "/notes",
-    soon: true,
     span: "sm:col-span-2",
     accent: "from-indigo-500/15 text-indigo-500 dark:text-indigo-400",
   },

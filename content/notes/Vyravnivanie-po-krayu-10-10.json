@@ -1,0 +1,121 @@
+{
+  "slug": "Vyravnivanie-po-krayu-10-10",
+  "title": "Магнит. Выравнивание",
+  "author": "Алексей Масюта",
+  "views": 115,
+  "month": 10,
+  "day": 10,
+  "original": "https://telegra.ph/Vyravnivanie-po-krayu-10-10",
+  "content": [
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/bc44daaf19dbdd9eaa151.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "В магазинах Магнит висят карточки с информацией, они помогают быстро найти  нужный товар. Первая карточка, которая встречает покупателя — карточка приветствия: «Добро пожаловать!». "
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/8fc5300c0cb92e1466701.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            "Карточка «Добро пожаловать!»"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "Первое что я вижу в этой картинке — столбчатый неровный левый край, который тяжело читается:"
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/190b1b32699588ea37be8.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            "Выравнивание текста по правому краю"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "Если выравнивание сделать по левому краю, глазу легче будет прочесть текст. Да и такое решение, в данном случае, смотрится аккуратнее:"
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/1a83e0db4c38c61b779b3.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            "Выравнивание текста по левому краю"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        {
+          "tag": "br"
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        {
+          "tag": "br"
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        {
+          "tag": "br"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "slug": "Dizajn-korobki-06-08",
+  "title": "Дизайн коробки",
+  "author": "Алексей Масюта",
+  "views": 36,
+  "month": 6,
+  "day": 8,
+  "original": "https://telegra.ph/Dizajn-korobki-06-08",
+  "content": [
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/de254a7b49dc77894628d.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "В этом проекте я отнёсся к коробке не как к контейнеру для транспортировки товара. А как к предмету, который встречает пользователя. Я хотел сделать так, чтобы покупатель, получив свой товар, воспринимал его как подарок. "
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "Дизайн коробки выполнен в ",
+        {
+          "tag": "a",
+          "attrs": {
+            "href": "https://www.behance.net/gallery/184186493/brendbuk-spiropleta",
+            "target": "_blank"
+          },
+          "children": [
+            "брендовом стиле Спироплёта"
+          ]
+        },
+        ". Отличительной чертой спироплётной системы является стандарт отверстий диаметром 5,5 мм и расстоянием между ними 4 мм. Этот стандарт я взял за орнамент, который можно увидеть на левой стороне всех граней коробки."
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        "А узнать подробнее о ",
+        {
+          "tag": "a",
+          "attrs": {
+            "href": "https://spiroplet.ru/tpost/js0tgunnf1-spiropletnii-dirokol-na-6-otverstii",
+            "target": "_blank"
+          },
+          "children": [
+            "спироплётном дыроколе"
+          ]
+        },
+        ", да и вообще о целой ",
+        {
+          "tag": "a",
+          "attrs": {
+            "href": "https://spiroplet.ru/#eko",
+            "target": "_blank"
+          },
+          "children": [
+            "спироплётной экосистеме"
+          ]
+        },
+        " вы можете на официальном сайте ",
+        {
+          "tag": "a",
+          "attrs": {
+            "href": "https://spiroplet.ru/",
+            "target": "_blank"
+          },
+          "children": [
+            "spiroplet.ru"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "p",
+      "children": [
+        {
+          "tag": "br"
+        }
+      ]
+    }
+  ]
+}
