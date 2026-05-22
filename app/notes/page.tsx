@@ -33,7 +33,7 @@ export default function NotesPage() {
 
         <div className="mt-10 flex flex-col divide-y divide-neutral-200 dark:divide-neutral-800">
           {notes.map((n) => {
-            const date = formatDate(n.month, n.day);
+            const date = formatDate(n.month, n.day, n.year);
             return (
               <Link
                 key={n.slug}

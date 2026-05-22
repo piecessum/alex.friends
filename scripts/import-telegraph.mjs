@@ -75,6 +75,26 @@ const monthFromSlug = (slug) => {
   return m ? { month: Number(m[1]), day: Number(m[2]) } : { month: 0, day: 0 };
 };
 
+// API Telegra.ph не отдаёт год. Список SLUGS идёт от новых к старым, верхняя
+// статья — START_YEAR. Идём вниз и уменьшаем год каждый раз, когда дата (ММ-ДД)
+// оказывается позже предыдущей — значит перешагнули назад через Новый год.
+// (Если добавишь статью свежее верхней — подними START_YEAR.)
+const START_YEAR = 2024;
+const yearOf = (() => {
+  const map = {};
+  let year = START_YEAR;
+  let prev = null;
+  for (const slug of SLUGS) {
+    const { month, day } = monthFromSlug(slug);
+    if (prev && (month > prev.month || (month === prev.month && day > prev.day))) {
+      year -= 1;
+    }
+    map[slug] = year;
+    prev = { month, day };
+  }
+  return map;
+})();
+
 const youtubeId = (raw) => {
   const url = decodeURIComponent(raw.replace(/^\/embed\/youtube\?url=/, ""));
   const m = url.match(/(?:youtu\.be\/|v=)([\w-]{6,})/);
@@ -150,6 +170,7 @@ for (const slug of SLUGS) {
         views: r.views || 0,
         month,
         day,
+        year: yearOf[slug],
         original: `https://telegra.ph/${slug}`,
         content,
       },
@@ -158,7 +179,15 @@ for (const slug of SLUGS) {
     )
   );
 
-  index.push({ slug, title: r.title || slug, month, day, excerpt, cover: firstImage });
+  index.push({
+    slug,
+    title: r.title || slug,
+    month,
+    day,
+    year: yearOf[slug],
+    excerpt,
+    cover: firstImage,
+  });
   console.log(`ok (${content.length} блоков, обложка: ${firstImage ? "да" : "нет"})`);
 }
 

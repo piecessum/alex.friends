@@ -12,6 +12,7 @@ export type NoteIndexItem = {
   title: string;
   month: number;
   day: number;
+  year: number;
   excerpt: string;
   cover: string | null;
 };
@@ -23,6 +24,7 @@ export type Note = {
   views: number;
   month: number;
   day: number;
+  year: number;
   original: string;
   content: NoteNode[];
 };
@@ -51,7 +53,7 @@ const MONTHS = [
   "декабря",
 ];
 
-export function formatDate(month: number, day: number): string {
-  if (!month || !day) return "";
-  return `${day} ${MONTHS[month]}`;
+export function formatDate(month: number, day: number, year?: number): string {
+  if (!month || !day) return year ? String(year) : "";
+  return `${day} ${MONTHS[month]}${year ? ` ${year}` : ""}`;
 }

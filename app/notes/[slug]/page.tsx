@@ -38,7 +38,7 @@ export default async function NotePage({
     notFound();
   }
 
-  const date = formatDate(note.month, note.day);
+  const date = formatDate(note.month, note.day, note.year);
 
   return (
     <div className="flex min-h-screen flex-col">
