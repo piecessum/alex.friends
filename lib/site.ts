@@ -6,7 +6,7 @@
  * не трогая код.
  */
 export const RESUME_URL =
-  process.env.NEXT_PUBLIC_RESUME_URL ?? "https://alex-resume.vercel.app";
+  process.env.NEXT_PUBLIC_RESUME_URL ?? "https://alexmasuta.vercel.app";
 
 export const links = {
   /** Сайт-резюме (для работодателя) */
