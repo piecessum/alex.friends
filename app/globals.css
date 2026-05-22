@@ -35,6 +35,24 @@
   border-color: var(--border);
 }
 
+/* Плавная смена цветов при переключении темы.
+   Только цветовые свойства — трансформы motion не затрагиваем, чтобы не лагало. */
+@media (prefers-reduced-motion: no-preference) {
+  *:not(img):not(video):not(canvas),
+  *::before,
+  *::after {
+    transition: background-color 0.3s ease, border-color 0.3s ease,
+      color 0.3s ease, fill 0.3s ease;
+  }
+}
+
+/* Картинки (включая gif-аватар) — без цветового перехода, иначе мигают */
+img,
+video,
+canvas {
+  transition: none;
+}
+
 html {
   scroll-behavior: smooth;
 }
