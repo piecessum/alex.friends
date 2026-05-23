@@ -16,6 +16,9 @@ export function BackToNotesLink({
   return (
     <Link
       href="/notes"
+      // scroll={false} — не даём Next прокрутить /notes в начало, позицию
+      // восстановит NotesScrollKeeper.
+      scroll={false}
       className={className}
       onClick={() => {
         try {
