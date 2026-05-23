@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { NotesScrollKeeper } from "@/components/notes-scroll-keeper";
 import { getNotesIndex, formatDate } from "@/lib/notes";
 
 export const metadata = {
@@ -13,6 +14,7 @@ export default function NotesPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <NotesScrollKeeper />
       <SiteHeader />
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12 sm:py-16">
         <Link
