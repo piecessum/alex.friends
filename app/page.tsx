@@ -94,7 +94,7 @@ export default function Dashboard() {
                 Привет, я Алексей
               </h1>
               <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                Личное пространство — заметки, музыка и всякое тёплое.
+                Это что блог? — нет это бложик
               </p>
             </div>
           </div>
