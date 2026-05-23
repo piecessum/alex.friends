@@ -8,6 +8,23 @@
   "original": "https://telegra.ph/Poleznaya-animaciya-02-05",
   "content": [
     {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/poleznaya-animaciya-cover.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
       "tag": "p",
       "children": [
         "Если мне нужна какая-то настройка, которая неизвестно где находится, я начинаю тыкать каждый пункт,  смотрю есть ли то, что мне нужно."
