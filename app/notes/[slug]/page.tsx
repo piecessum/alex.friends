@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Eye, ExternalLink } from "lucide-react";
+import { ArrowLeft, Eye } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { TelegraphContent } from "@/components/telegraph-content";
@@ -68,15 +68,6 @@ export default async function NotePage({
               {note.views}
             </span>
           )}
-          <a
-            href={note.original}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 transition hover:text-indigo-600 dark:hover:text-indigo-400"
-          >
-            <ExternalLink className="h-3.5 w-3.5" />
-            Оригинал на Telegra.ph
-          </a>
         </div>
 
         <article className="mt-8 text-[17px]">
