@@ -1,0 +1,103 @@
+{
+  "have": [
+    {
+      "title": "Битлз",
+      "tracks": [
+        "Веди мою машину",
+        "Норвежский лес",
+        "Ты не увидишь меня",
+        "Человек ниоткуда",
+        "Думай сам",
+        "Слово",
+        "Мишел",
+        "Что происходит",
+        "Девушка",
+        "Я смотрю сквозь тебя",
+        "В моей жизни",
+        "Жди",
+        "Если мне кто-то был нужен",
+        "Бег ради жизни"
+      ]
+    },
+    {
+      "title": "Вивальди",
+      "tracks": [
+        "Концерт для виолы д'аморе, струнных и чембало",
+        "Концерт для двух гобоев, струнных и чембало",
+        "Концерт для фагота и струнного оркестра",
+        "Концерт для двух гобоев, струнных и чембало",
+        "Маленькая симфония №2"
+      ]
+    },
+    {
+      "title": "Новогодняя подборка",
+      "tracks": [
+        "White Christmas – Bing Crosby",
+        "Have Yourself A Marry Little Cristmas – Frank Sinatra",
+        "The Christmas Song – Nat King Cole",
+        "Blue Christmas – Elvis Presley",
+        "Silent Night — Dinah Washington",
+        "Santa Claus Is Coming To Town - Frankie Valli & The Four Seasons",
+        "Little Drummer Boy - Johnny Cash",
+        "Mary's Boy Child - Harry Belafonte",
+        "Let It Snow. Let It Snow. Let It Snow - Dean Martin",
+        "I'lI Be Home For Christmas - Johnny Mathis",
+        "Jingle Bells - Frank Sinatra",
+        "Rocking Around The Christmas Tree - Brenda Lee",
+        "Rudolph The Red Nosed Reindeer - Dean Martin",
+        "We Wish You A Merry Christmas - Everly Brothers",
+        "Winter Wonderland - Johnny Mathis",
+        "It's Beginning To Look A Lot Like Christmas - The Fontaine Sisters"
+      ]
+    },
+    {
+      "title": "Lana del Rey",
+      "tracks": [
+        "Альбом Born to die"
+      ]
+    },
+    {
+      "title": "Сектор газа",
+      "tracks": [
+        "Альбом Колхозный Панк"
+      ]
+    },
+    {
+      "title": "Голоса птиц в природе",
+      "tracks": []
+    },
+    {
+      "title": "Песняры (гибкая пластинка)",
+      "tracks": []
+    },
+    {
+      "title": "Nirvana",
+      "tracks": [
+        "Альбом Nevermind"
+      ]
+    }
+  ],
+  "want": [
+    "Gorillaz",
+    "The Black eyed peas",
+    "Максим",
+    "The XX",
+    "Sum 41",
+    "Jefferson Airplane",
+    "The Subways",
+    "INXS",
+    "Bob Dylan",
+    "The Doors",
+    "Fleetwood Mac (The Chain (remastered))",
+    "Arial Pink",
+    "David Rawlings",
+    "21 Pilots",
+    "Меладзе",
+    "The Hetters",
+    "Эминем",
+    "Ханс Цимер",
+    "Советские зимние песни",
+    "Советские сказки",
+    "Песни Смешариков"
+  ]
+}

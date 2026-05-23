@@ -39,10 +39,9 @@ const widgets: Widget[] = [
   },
   {
     title: "Пластинки",
-    description: "Моя коллекция винила — карточки с обложками.",
+    description: "Моя коллекция винила — что есть и что хочу.",
     icon: Disc3,
     href: "/vinyl",
-    soon: true,
     accent: "from-purple-500/15 text-purple-500 dark:text-purple-400",
   },
   {
