@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { VinylAlbum } from "@/lib/vinyl";
 
@@ -81,49 +82,85 @@ export function VinylGallery({
   want: string[];
 }) {
   const [tab, setTab] = React.useState<"have" | "want">("have");
+  const [query, setQuery] = React.useState("");
 
   const tabs = [
     { key: "have" as const, label: "Что у меня есть", count: have.length },
     { key: "want" as const, label: "Что я хочу", count: want.length },
   ];
 
+  const q = query.trim().toLowerCase();
+  const filteredHave = q
+    ? have.filter(
+        (a) =>
+          a.title.toLowerCase().includes(q) ||
+          a.tracks.some((t) => t.toLowerCase().includes(q))
+      )
+    : have;
+  const filteredWant = q
+    ? want.filter((w) => w.toLowerCase().includes(q))
+    : want;
+
+  const isEmpty =
+    tab === "have" ? filteredHave.length === 0 : filteredWant.length === 0;
+
   return (
     <div>
-      {/* Сегментированный переключатель */}
-      <div className="inline-flex rounded-2xl border border-neutral-200 bg-neutral-100 p-1 dark:border-neutral-800 dark:bg-neutral-900">
-        {tabs.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => setTab(t.key)}
-            className={cn(
-              "rounded-xl px-4 py-2 text-sm font-medium transition",
-              tab === t.key
-                ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-800 dark:text-neutral-100"
-                : "text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
-            )}
-          >
-            {t.label} <span className="opacity-50">{t.count}</span>
-          </button>
-        ))}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {/* Сегментированный переключатель */}
+        <div className="inline-flex w-fit rounded-2xl border border-neutral-200 bg-neutral-100 p-1 dark:border-neutral-800 dark:bg-neutral-900">
+          {tabs.map((t) => (
+            <button
+              key={t.key}
+              type="button"
+              onClick={() => setTab(t.key)}
+              className={cn(
+                "rounded-xl px-4 py-2 text-sm font-medium transition",
+                tab === t.key
+                  ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-800 dark:text-neutral-100"
+                  : "text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
+              )}
+            >
+              {t.label} <span className="opacity-50">{t.count}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Поиск */}
+        <div className="relative sm:w-64">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Поиск по названию или треку"
+            className="w-full rounded-xl border border-neutral-200 bg-white/60 py-2 pr-3 pl-9 text-sm text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-indigo-400 dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-200"
+          />
+        </div>
       </div>
 
       {/* Сетка пластинок */}
-      <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
-        {tab === "have"
-          ? have.map((a) => (
-              <VinylCard
-                key={a.title}
-                title={a.title}
-                subtitle={
-                  a.tracks.length
-                    ? `${a.tracks.length} ${trackWord(a.tracks.length)}`
-                    : undefined
-                }
-              />
-            ))
-          : want.map((w) => <VinylCard key={w} title={w} want />)}
-      </div>
+      {isEmpty ? (
+        <p className="mt-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
+          Ничего не нашлось по запросу «{query.trim()}».
+        </p>
+      ) : (
+        <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
+          {tab === "have"
+            ? filteredHave.map((a) => (
+                <VinylCard
+                  key={a.title}
+                  title={a.title}
+                  subtitle={
+                    a.tracks.length
+                      ? `${a.tracks.length} ${trackWord(a.tracks.length)}`
+                      : undefined
+                  }
+                />
+              ))
+            : filteredWant.map((w) => <VinylCard key={w} title={w} want />)}
+        </div>
+      )}
     </div>
   );
 }
