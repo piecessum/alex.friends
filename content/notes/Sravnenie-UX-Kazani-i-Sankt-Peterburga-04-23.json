@@ -8,6 +8,23 @@
   "original": "https://telegra.ph/Sravnenie-UX-Kazani-i-Sankt-Peterburga-04-23",
   "content": [
     {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/piterkazan-cover.webp"
+          }
+        },
+        {
+          "tag": "figcaption",
+          "children": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
       "tag": "p",
       "children": [
         "Я прожил в Казани неделю, в Санкт-Петербурге живу с 2016 года. Ещё до поездки в Казань были вопросы к Санкт-Петербургу, но теперь они стали для меня острые. "
