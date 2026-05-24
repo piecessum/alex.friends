@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { VinylFlip } from "@/components/vinyl-flip";
+import { VinylBox } from "@/components/vinyl-box";
 import { getAllVinylItems, getVinylItem } from "@/lib/vinyl";
 
 export function generateStaticParams() {
@@ -45,7 +45,7 @@ export default async function VinylItemPage({
           {item.title}
         </h1>
 
-        <VinylFlip title={item.title} want={item.want} />
+        <VinylBox title={item.title} want={item.want} tracks={item.tracks} />
 
         <section className="mt-12">
           <h2 className="text-lg font-bold tracking-tight">
