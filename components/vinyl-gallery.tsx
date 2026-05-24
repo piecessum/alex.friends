@@ -1,16 +1,11 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { hueOf, slugifyVinyl } from "@/lib/vinyl-utils";
 import type { VinylAlbum } from "@/lib/vinyl";
-
-/** Стабильный «цвет обложки» из названия. */
-function hueOf(s: string) {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360;
-  return h;
-}
 
 const trackWord = (n: number) => {
   const a = n % 10;
@@ -31,7 +26,10 @@ function VinylCard({
 }) {
   const h = hueOf(title);
   return (
-    <div className="group relative aspect-square transition hover:z-10">
+    <Link
+      href={`/vinyl/${slugifyVinyl(title)}`}
+      className="group relative block aspect-square transition hover:z-10"
+    >
       {/* Пластинка выезжает вверх из конверта */}
       <div
         className="absolute left-1/2 top-0 aspect-square w-[86%] -translate-x-1/2 -translate-y-[12%] rounded-full bg-neutral-950 shadow-2xl transition-transform duration-300 ease-out group-hover:-translate-y-[26%]"
@@ -70,7 +68,7 @@ function VinylCard({
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
