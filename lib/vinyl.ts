@@ -17,7 +17,7 @@ export type VinylItem = {
  *  Живёт отдельно от таблицы, поэтому переживает перезапуск импорта. */
 type VinylExtra = Record<
   string,
-  { front?: string; back?: string; tracks?: string[] }
+  { front?: string; back?: string; tracks?: string[]; own?: boolean }
 >;
 
 export function getVinyl(): VinylData {
@@ -45,7 +45,9 @@ export function getAllVinylItems(): VinylItem[] {
     return {
       title,
       tracks: ex.tracks?.length ? ex.tracks : tracks,
-      want,
+      // own: true в обогащении переносит пластинку из «хочу» в «есть»
+      // (на случай, если в таблице её ещё не передвинули)
+      want: want && ex.own !== true,
       slug,
       front: ex.front,
       back: ex.back,

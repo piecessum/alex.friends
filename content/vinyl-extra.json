@@ -96,10 +96,12 @@
       "Fire Coming Out of the Monkey's Head",
       "Don't Get Lost in Heaven",
       "Demon Days"
-    ]
+    ],
+    "own": true
   },
   "pesni-smesharikov": {
     "front": "/vinyl/pesni-smesharikov-front.webp",
-    "back": "/vinyl/pesni-smesharikov-back.webp"
+    "back": "/vinyl/pesni-smesharikov-back.webp",
+    "own": true
   }
 }
