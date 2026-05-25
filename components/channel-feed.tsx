@@ -176,12 +176,46 @@ export function ChannelFeed({ initial }: { initial: TgPage }) {
   const topRef = React.useRef<HTMLDivElement>(null);
   const prevHeight = React.useRef<number | null>(null);
   const didInit = React.useRef(false);
+  const userMoved = React.useRef(false); // пользователь сам тронул скролл
+  const ready = React.useRef(false); // можно подгружать старые сверху
 
-  // При открытии — сразу вниз, к свежим постам.
+  // Любой жест прокрутки = пользователь взял управление: перестаём прижимать вниз.
+  React.useEffect(() => {
+    const onIntent = () => {
+      userMoved.current = true;
+      ready.current = true;
+    };
+    window.addEventListener("wheel", onIntent, { passive: true });
+    window.addEventListener("touchmove", onIntent, { passive: true });
+    window.addEventListener("keydown", onIntent);
+    return () => {
+      window.removeEventListener("wheel", onIntent);
+      window.removeEventListener("touchmove", onIntent);
+      window.removeEventListener("keydown", onIntent);
+    };
+  }, []);
+
+  // При открытии — прижимаем к низу (к свежему посту). Повторяем после поздних
+  // реформатирований (шрифты/картинки), пока пользователь сам не прокрутил.
   useIso(() => {
     if (didInit.current) return;
     didInit.current = true;
-    window.scrollTo(0, document.documentElement.scrollHeight);
+    const pin = () => {
+      if (userMoved.current) return;
+      window.scrollTo(0, document.documentElement.scrollHeight);
+    };
+    pin();
+    const timers = [60, 200, 500, 1000].map((ms) => window.setTimeout(pin, ms));
+    // низ зафиксирован — разрешаем автозагрузку старых
+    const unlock = window.setTimeout(() => (ready.current = true), 1100);
+    const docFonts = (document as { fonts?: { ready?: Promise<unknown> } }).fonts;
+    docFonts?.ready?.then(pin);
+    window.addEventListener("load", pin);
+    return () => {
+      timers.forEach(clearTimeout);
+      clearTimeout(unlock);
+      window.removeEventListener("load", pin);
+    };
   }, []);
 
   // После подгрузки старых сверху — держим позицию, чтобы не прыгало.
@@ -193,7 +227,7 @@ export function ChannelFeed({ initial }: { initial: TgPage }) {
   }, [posts]);
 
   const loadOlder = React.useCallback(async () => {
-    if (!before || loading) return;
+    if (!before || loading || !ready.current) return;
     setLoading(true);
     try {
       const res = await fetch(`/api/channel?before=${before}`);
