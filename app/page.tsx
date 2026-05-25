@@ -53,11 +53,10 @@ const widgets: Widget[] = [
     accent: "from-rose-500/15 text-rose-500 dark:text-rose-400",
   },
   {
-    title: "Телеграм-канал",
-    description: "Пишу про UX, продукт и интерфейсы.",
+    title: "Пишу всякую хрень",
+    description: "интересное, неинтересное, мемное, душное",
     icon: Send,
-    href: links.channel,
-    external: true,
+    href: "/channel",
     accent: "from-sky-500/15 text-sky-500 dark:text-sky-400",
   },
   {
