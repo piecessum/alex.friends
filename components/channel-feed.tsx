@@ -139,13 +139,37 @@ function Post({ post }: { post: TgPost }) {
   );
 }
 
+// useLayoutEffect — чтобы менять скролл до отрисовки (без миганий). На сервере
+// подменяем на useEffect, иначе React ругается.
+const useIso =
+  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
 export function ChannelFeed({ initial }: { initial: TgPage }) {
-  const [posts, setPosts] = React.useState(initial.posts);
+  // Хронологический порядок: старые сверху, новые снизу (как в Telegram).
+  const [posts, setPosts] = React.useState(() => [...initial.posts].reverse());
   const [before, setBefore] = React.useState(initial.nextBefore);
   const [loading, setLoading] = React.useState(false);
   const seen = React.useRef(new Set(initial.posts.map((p) => p.id)));
+  const topRef = React.useRef<HTMLDivElement>(null);
+  const prevHeight = React.useRef<number | null>(null);
+  const didInit = React.useRef(false);
 
-  const loadMore = async () => {
+  // При открытии — сразу вниз, к свежим постам.
+  useIso(() => {
+    if (didInit.current) return;
+    didInit.current = true;
+    window.scrollTo(0, document.documentElement.scrollHeight);
+  }, []);
+
+  // После подгрузки старых сверху — держим позицию, чтобы не прыгало.
+  useIso(() => {
+    if (prevHeight.current != null) {
+      window.scrollBy(0, document.documentElement.scrollHeight - prevHeight.current);
+      prevHeight.current = null;
+    }
+  }, [posts]);
+
+  const loadOlder = React.useCallback(async () => {
     if (!before || loading) return;
     setLoading(true);
     try {
@@ -153,33 +177,45 @@ export function ChannelFeed({ initial }: { initial: TgPage }) {
       const page: TgPage = await res.json();
       const fresh = page.posts.filter((p) => !seen.current.has(p.id));
       fresh.forEach((p) => seen.current.add(p.id));
-      setPosts((prev) => [...prev, ...fresh]);
+      if (fresh.length) {
+        prevHeight.current = document.documentElement.scrollHeight;
+        const chrono = [...fresh].reverse(); // старые сверху
+        setPosts((prev) => [...chrono, ...prev]);
+      }
       setBefore(fresh.length ? page.nextBefore : null);
     } finally {
       setLoading(false);
     }
-  };
+  }, [before, loading]);
+
+  // Автозагрузка старых при прокрутке к верху.
+  React.useEffect(() => {
+    const el = topRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) loadOlder();
+      },
+      { rootMargin: "400px 0px 0px 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [loadOlder]);
 
   return (
     <div>
+      <div ref={topRef} />
+      {before && (
+        <div className="mb-4 flex justify-center text-xs text-neutral-400 dark:text-neutral-500">
+          {loading ? "Загружаю старые…" : "↑ прокрути вверх — там старые посты"}
+        </div>
+      )}
+
       <div className="flex flex-col gap-4">
         {posts.map((p) => (
           <Post key={p.id} post={p} />
         ))}
       </div>
-
-      {before && (
-        <div className="mt-8 flex justify-center">
-          <button
-            type="button"
-            onClick={loadMore}
-            disabled={loading}
-            className="rounded-full border border-neutral-200 bg-white/60 px-5 py-2.5 text-sm font-medium text-neutral-700 transition hover:border-neutral-300 hover:text-neutral-900 disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-300 dark:hover:text-neutral-100"
-          >
-            {loading ? "Загружаю…" : "Показать ещё"}
-          </button>
-        </div>
-      )}
     </div>
   );
 }
