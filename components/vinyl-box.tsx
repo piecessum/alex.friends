@@ -11,10 +11,14 @@ export function VinylBox({
   title,
   want,
   tracks = [],
+  front: frontImg,
+  back: backImg,
 }: {
   title: string;
   want?: boolean;
   tracks?: string[];
+  front?: string;
+  back?: string;
 }) {
   const h = hueOf(title);
   const wrapRef = React.useRef<HTMLDivElement>(null);
@@ -86,18 +90,30 @@ export function VinylBox({
               ...face,
               width: size,
               height: size,
-              background: front,
+              background: frontImg ? "#111" : front,
               backfaceVisibility: "hidden",
               transform: `translate(-50%, -50%) translateZ(${depth / 2}px)`,
             }}
           >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_-10%_-10%,rgba(255,255,255,0.18),transparent_55%)]" />
-            <span className="relative text-xs font-semibold uppercase tracking-widest text-white/55">
-              {want ? "хочу" : "винил"}
-            </span>
-            <div className="relative text-2xl font-bold leading-tight text-white drop-shadow-sm sm:text-3xl">
-              {title}
-            </div>
+            {frontImg ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={frontImg}
+                alt={title}
+                draggable={false}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <>
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_-10%_-10%,rgba(255,255,255,0.18),transparent_55%)]" />
+                <span className="relative text-xs font-semibold uppercase tracking-widest text-white/55">
+                  {want ? "хочу" : "винил"}
+                </span>
+                <div className="relative text-2xl font-bold leading-tight text-white drop-shadow-sm sm:text-3xl">
+                  {title}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Оборотная сторона */}
@@ -107,30 +123,42 @@ export function VinylBox({
               ...face,
               width: size,
               height: size,
-              background: back,
+              background: backImg ? "#111" : back,
               backfaceVisibility: "hidden",
               transform: `translate(-50%, -50%) rotateY(180deg) translateZ(${depth / 2}px)`,
             }}
           >
-            <div className="flex items-start justify-between text-[10px] uppercase tracking-widest text-white/40">
-              <span>{want ? "wishlist" : "side A / B"}</span>
-              <span>33⅓ rpm</span>
-            </div>
-            <div className="text-sm font-semibold text-white/90">{title}</div>
-            <div className="min-h-0 flex-1 overflow-hidden py-2 text-[10px] leading-relaxed text-white/55">
-              {tracks.slice(0, 12).map((t, i) => (
-                <div key={i} className="truncate">
-                  {i + 1}. {t}
+            {backImg ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={backImg}
+                alt={`${title} — оборот`}
+                draggable={false}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <>
+                <div className="flex items-start justify-between text-[10px] uppercase tracking-widest text-white/40">
+                  <span>{want ? "wishlist" : "side A / B"}</span>
+                  <span>33⅓ rpm</span>
                 </div>
-              ))}
-            </div>
-            <div
-              className="h-7 w-24 self-end"
-              style={{
-                background:
-                  "repeating-linear-gradient(90deg, rgba(255,255,255,0.75) 0 2px, transparent 2px 4px, rgba(255,255,255,0.75) 4px 5px, transparent 5px 8px)",
-              }}
-            />
+                <div className="text-sm font-semibold text-white/90">{title}</div>
+                <div className="min-h-0 flex-1 overflow-hidden py-2 text-[10px] leading-relaxed text-white/55">
+                  {tracks.slice(0, 12).map((t, i) => (
+                    <div key={i} className="truncate">
+                      {i + 1}. {t}
+                    </div>
+                  ))}
+                </div>
+                <div
+                  className="h-7 w-24 self-end"
+                  style={{
+                    background:
+                      "repeating-linear-gradient(90deg, rgba(255,255,255,0.75) 0 2px, transparent 2px 4px, rgba(255,255,255,0.75) 4px 5px, transparent 5px 8px)",
+                  }}
+                />
+              </>
+            )}
           </div>
 
           {/* Правый торец */}

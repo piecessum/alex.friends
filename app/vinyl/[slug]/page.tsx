@@ -45,7 +45,13 @@ export default async function VinylItemPage({
           {item.title}
         </h1>
 
-        <VinylBox title={item.title} want={item.want} tracks={item.tracks} />
+        <VinylBox
+          title={item.title}
+          want={item.want}
+          tracks={item.tracks}
+          front={item.front}
+          back={item.back}
+        />
 
         <section className="mt-12">
           <h2 className="text-lg font-bold tracking-tight">

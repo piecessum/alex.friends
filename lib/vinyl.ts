@@ -9,29 +9,52 @@ export type VinylItem = {
   tracks: string[];
   want: boolean;
   slug: string;
+  front?: string;
+  back?: string;
 };
+
+/** Ручное обогащение по slug: фото (front/back) и уточнённые треки.
+ *  Живёт отдельно от таблицы, поэтому переживает перезапуск импорта. */
+type VinylExtra = Record<
+  string,
+  { front?: string; back?: string; tracks?: string[] }
+>;
 
 export function getVinyl(): VinylData {
   const file = path.join(process.cwd(), "content", "vinyl.json");
   return JSON.parse(fs.readFileSync(file, "utf8"));
 }
 
-/** Плоский список всех пластинок (есть + хочу) со slug'ами. */
+function getExtra(): VinylExtra {
+  const file = path.join(process.cwd(), "content", "vinyl-extra.json");
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
+/** Плоский список всех пластинок (есть + хочу) со slug'ами и фото. */
 export function getAllVinylItems(): VinylItem[] {
   const { have, want } = getVinyl();
+  const extra = getExtra();
+
+  const build = (title: string, tracks: string[], want: boolean): VinylItem => {
+    const slug = slugifyVinyl(title);
+    const ex = extra[slug] || {};
+    return {
+      title,
+      tracks: ex.tracks?.length ? ex.tracks : tracks,
+      want,
+      slug,
+      front: ex.front,
+      back: ex.back,
+    };
+  };
+
   return [
-    ...have.map((a) => ({
-      title: a.title,
-      tracks: a.tracks,
-      want: false,
-      slug: slugifyVinyl(a.title),
-    })),
-    ...want.map((w) => ({
-      title: w,
-      tracks: [] as string[],
-      want: true,
-      slug: slugifyVinyl(w),
-    })),
+    ...have.map((a) => build(a.title, a.tracks, false)),
+    ...want.map((w) => build(w, [], true)),
   ];
 }
 

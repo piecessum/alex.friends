@@ -3,14 +3,16 @@ import { ArrowLeft } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { VinylGallery } from "@/components/vinyl-gallery";
-import { getVinyl } from "@/lib/vinyl";
+import { getAllVinylItems } from "@/lib/vinyl";
 
 export const metadata = {
   title: "Пластинки — Алексей Масюта",
 };
 
 export default function VinylPage() {
-  const { have, want } = getVinyl();
+  const items = getAllVinylItems();
+  const have = items.filter((i) => !i.want);
+  const want = items.filter((i) => i.want);
 
   return (
     <div className="flex min-h-screen flex-col">

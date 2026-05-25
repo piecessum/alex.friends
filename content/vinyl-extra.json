@@ -1,0 +1,42 @@
+{
+  "bitlz": {
+    "front": "/vinyl/bitlz-front.webp",
+    "back": "/vinyl/bitlz-back.webp"
+  },
+  "vivaldi": {
+    "front": "/vinyl/vivaldi-front.webp",
+    "back": "/vinyl/vivaldi-back.webp"
+  },
+  "novogodnyaya-podborka": {
+    "front": "/vinyl/novogodnyaya-podborka-front.webp",
+    "back": "/vinyl/novogodnyaya-podborka-back.webp"
+  },
+  "lana-del-rey": {
+    "front": "/vinyl/lana-del-rey-front.webp",
+    "back": "/vinyl/lana-del-rey-back.webp"
+  },
+  "sektor-gaza": {
+    "front": "/vinyl/sektor-gaza-front.webp",
+    "back": "/vinyl/sektor-gaza-back.webp"
+  },
+  "golosa-ptic-v-prirode": {
+    "front": "/vinyl/golosa-ptic-v-prirode-front.webp",
+    "back": "/vinyl/golosa-ptic-v-prirode-back.webp"
+  },
+  "pesnyary-gibkaya-plastinka": {
+    "front": "/vinyl/pesnyary-gibkaya-plastinka-front.webp",
+    "back": "/vinyl/pesnyary-gibkaya-plastinka-back.webp"
+  },
+  "nirvana": {
+    "front": "/vinyl/nirvana-front.webp",
+    "back": "/vinyl/nirvana-back.webp"
+  },
+  "gorillaz": {
+    "front": "/vinyl/gorillaz-front.webp",
+    "back": "/vinyl/gorillaz-back.webp"
+  },
+  "pesni-smesharikov": {
+    "front": "/vinyl/pesni-smesharikov-front.webp",
+    "back": "/vinyl/pesni-smesharikov-back.webp"
+  }
+}

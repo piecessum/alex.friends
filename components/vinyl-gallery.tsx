@@ -4,8 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { hueOf, slugifyVinyl } from "@/lib/vinyl-utils";
-import type { VinylAlbum } from "@/lib/vinyl";
+import { hueOf } from "@/lib/vinyl-utils";
+import type { VinylItem } from "@/lib/vinyl";
 
 const trackWord = (n: number) => {
   const a = n % 10;
@@ -17,17 +17,21 @@ const trackWord = (n: number) => {
 
 function VinylCard({
   title,
+  slug,
+  cover,
   subtitle,
   want = false,
 }: {
   title: string;
+  slug: string;
+  cover?: string;
   subtitle?: string;
   want?: boolean;
 }) {
   const h = hueOf(title);
   return (
     <Link
-      href={`/vinyl/${slugifyVinyl(title)}`}
+      href={`/vinyl/${slug}`}
       className="group relative block aspect-square transition hover:z-10"
     >
       {/* Пластинка выезжает вверх из конверта */}
@@ -48,26 +52,42 @@ function VinylCard({
       </div>
 
       {/* Конверт поверх пластинки */}
-      <div
-        className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-md p-4 shadow-lg ring-1 ring-black/15"
-        style={{
-          background: `linear-gradient(150deg, hsl(${h} 58% 46%), hsl(${(h + 35) % 360} 52% 26%))`,
-        }}
-      >
-        {/* блик */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_-10%_-10%,rgba(255,255,255,0.18),transparent_55%)]" />
-        <span className="relative text-[11px] font-semibold uppercase tracking-widest text-white/55">
-          {want ? "хочу" : "винил"}
-        </span>
-        <div className="relative">
-          <div className="text-base font-bold leading-tight text-white drop-shadow-sm sm:text-lg">
-            {title}
-          </div>
-          {subtitle && (
-            <div className="mt-1 text-xs text-white/70">{subtitle}</div>
+      {cover ? (
+        <div className="absolute inset-0 overflow-hidden rounded-md shadow-lg ring-1 ring-black/15">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={cover}
+            alt={title}
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+          {want && (
+            <span className="absolute left-2 top-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur">
+              хочу
+            </span>
           )}
         </div>
-      </div>
+      ) : (
+        <div
+          className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-md p-4 shadow-lg ring-1 ring-black/15"
+          style={{
+            background: `linear-gradient(150deg, hsl(${h} 58% 46%), hsl(${(h + 35) % 360} 52% 26%))`,
+          }}
+        >
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_-10%_-10%,rgba(255,255,255,0.18),transparent_55%)]" />
+          <span className="relative text-[11px] font-semibold uppercase tracking-widest text-white/55">
+            {want ? "хочу" : "винил"}
+          </span>
+          <div className="relative">
+            <div className="text-base font-bold leading-tight text-white drop-shadow-sm sm:text-lg">
+              {title}
+            </div>
+            {subtitle && (
+              <div className="mt-1 text-xs text-white/70">{subtitle}</div>
+            )}
+          </div>
+        </div>
+      )}
     </Link>
   );
 }
@@ -76,8 +96,8 @@ export function VinylGallery({
   have,
   want,
 }: {
-  have: VinylAlbum[];
-  want: string[];
+  have: VinylItem[];
+  want: VinylItem[];
 }) {
   const [tab, setTab] = React.useState<"have" | "want">("have");
   const [query, setQuery] = React.useState("");
@@ -88,19 +108,13 @@ export function VinylGallery({
   ];
 
   const q = query.trim().toLowerCase();
-  const filteredHave = q
-    ? have.filter(
-        (a) =>
-          a.title.toLowerCase().includes(q) ||
-          a.tracks.some((t) => t.toLowerCase().includes(q))
-      )
-    : have;
-  const filteredWant = q
-    ? want.filter((w) => w.toLowerCase().includes(q))
-    : want;
+  const match = (it: VinylItem) =>
+    it.title.toLowerCase().includes(q) ||
+    it.tracks.some((t) => t.toLowerCase().includes(q));
 
-  const isEmpty =
-    tab === "have" ? filteredHave.length === 0 : filteredWant.length === 0;
+  const filteredHave = q ? have.filter(match) : have;
+  const filteredWant = q ? want.filter(match) : want;
+  const list = tab === "have" ? filteredHave : filteredWant;
 
   return (
     <div>
@@ -138,25 +152,26 @@ export function VinylGallery({
       </div>
 
       {/* Сетка пластинок */}
-      {isEmpty ? (
+      {list.length === 0 ? (
         <p className="mt-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Ничего не нашлось по запросу «{query.trim()}».
         </p>
       ) : (
         <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
-          {tab === "have"
-            ? filteredHave.map((a) => (
-                <VinylCard
-                  key={a.title}
-                  title={a.title}
-                  subtitle={
-                    a.tracks.length
-                      ? `${a.tracks.length} ${trackWord(a.tracks.length)}`
-                      : undefined
-                  }
-                />
-              ))
-            : filteredWant.map((w) => <VinylCard key={w} title={w} want />)}
+          {list.map((it) => (
+            <VinylCard
+              key={it.slug}
+              title={it.title}
+              slug={it.slug}
+              cover={it.front}
+              want={it.want}
+              subtitle={
+                !it.front && it.tracks.length
+                  ? `${it.tracks.length} ${trackWord(it.tracks.length)}`
+                  : undefined
+              }
+            />
+          ))}
         </div>
       )}
     </div>
