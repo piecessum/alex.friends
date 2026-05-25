@@ -13,11 +13,39 @@
   },
   "lana-del-rey": {
     "front": "/vinyl/lana-del-rey-front.webp",
-    "back": "/vinyl/lana-del-rey-back.webp"
+    "back": "/vinyl/lana-del-rey-back.webp",
+    "tracks": [
+      "Born to Die",
+      "Off to the Races",
+      "Blue Jeans",
+      "Video Games",
+      "Diet Mountain Dew",
+      "National Anthem",
+      "Dark Paradise",
+      "Radio",
+      "Carmen",
+      "Million Dollar Man",
+      "Summertime Sadness",
+      "This Is What Makes Us Girls",
+      "Without You",
+      "Lolita",
+      "Lucky Ones"
+    ]
   },
   "sektor-gaza": {
     "front": "/vinyl/sektor-gaza-front.webp",
-    "back": "/vinyl/sektor-gaza-back.webp"
+    "back": "/vinyl/sektor-gaza-back.webp",
+    "tracks": [
+      "Колхозный панк",
+      "Плуги-вуги",
+      "Патриот",
+      "Наркоман",
+      "Банка",
+      "Попец",
+      "Местные",
+      "Утопленник",
+      "Пасха"
+    ]
   },
   "golosa-ptic-v-prirode": {
     "front": "/vinyl/golosa-ptic-v-prirode-front.webp",
@@ -25,15 +53,50 @@
   },
   "pesnyary-gibkaya-plastinka": {
     "front": "/vinyl/pesnyary-gibkaya-plastinka-front.webp",
-    "back": "/vinyl/pesnyary-gibkaya-plastinka-back.webp"
+    "back": "/vinyl/pesnyary-gibkaya-plastinka-back.webp",
+    "tracks": [
+      "Дрозды",
+      "Серёжки"
+    ]
   },
   "nirvana": {
     "front": "/vinyl/nirvana-front.webp",
-    "back": "/vinyl/nirvana-back.webp"
+    "back": "/vinyl/nirvana-back.webp",
+    "tracks": [
+      "Smells Like Teen Spirit",
+      "In Bloom",
+      "Come as You Are",
+      "Breed",
+      "Lithium",
+      "Polly",
+      "Territorial Pissings",
+      "Drain You",
+      "Lounge Act",
+      "Stay Away",
+      "On a Plain",
+      "Something in the Way"
+    ]
   },
   "gorillaz": {
     "front": "/vinyl/gorillaz-front.webp",
-    "back": "/vinyl/gorillaz-back.webp"
+    "back": "/vinyl/gorillaz-back.webp",
+    "tracks": [
+      "Intro",
+      "Last Living Souls",
+      "Kids with Guns",
+      "O Green World",
+      "Dirty Harry",
+      "Feel Good Inc.",
+      "El Mañana",
+      "Every Planet We Reach Is Dead",
+      "November Has Come",
+      "All Alone",
+      "White Light",
+      "Dare",
+      "Fire Coming Out of the Monkey's Head",
+      "Don't Get Lost in Heaven",
+      "Demon Days"
+    ]
   },
   "pesni-smesharikov": {
     "front": "/vinyl/pesni-smesharikov-front.webp",

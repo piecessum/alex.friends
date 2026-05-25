@@ -54,15 +54,9 @@ export default async function VinylItemPage({
         />
 
         <section className="mt-12">
-          <h2 className="text-lg font-bold tracking-tight">
-            {item.want ? "В списке желаемого" : "Список треков"}
-          </h2>
+          <h2 className="text-lg font-bold tracking-tight">Список треков</h2>
 
-          {item.want ? (
-            <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
-              Этой пластинки пока нет в коллекции — она в вишлисте.
-            </p>
-          ) : item.tracks.length ? (
+          {item.tracks.length ? (
             <ol className="mt-4 divide-y divide-neutral-200 dark:divide-neutral-800">
               {item.tracks.map((track, i) => (
                 <li
@@ -76,6 +70,10 @@ export default async function VinylItemPage({
                 </li>
               ))}
             </ol>
+          ) : item.want ? (
+            <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
+              Этой пластинки пока нет в коллекции — она в вишлисте.
+            </p>
           ) : (
             <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
               Список треков не указан.
