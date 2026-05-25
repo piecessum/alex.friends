@@ -100,8 +100,26 @@
     "own": true
   },
   "pesni-smesharikov": {
-    "front": "/vinyl/pesni-smesharikov-back.webp",
-    "back": "/vinyl/pesni-smesharikov-front.webp",
-    "own": true
+    "front": "/vinyl/pesni-smesharikov-front.webp",
+    "back": "/vinyl/pesni-smesharikov-back.webp",
+    "own": true,
+    "tracks": [
+      "Марафонец",
+      "Обормот",
+      "Право на одиночество",
+      "Плюс 7 минус 7",
+      "Куда уходит старый год",
+      "Славный город Кострома",
+      "От винта!",
+      "Новогодняя колыбельная",
+      "Шубиду",
+      "Белым на белом",
+      "Вести-бу-би-лю-би-бу",
+      "Ветер ветер",
+      "Бедненький больной",
+      "Город Омск",
+      "Ниточка",
+      "Круглая песня"
+    ]
   }
 }
