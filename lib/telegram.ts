@@ -11,6 +11,7 @@ export type TgLinkPreview = {
   image?: string;
   site?: string;
 };
+export type TgForward = { name: string; url?: string };
 export type TgPost = {
   id: string;
   url: string;
@@ -19,6 +20,7 @@ export type TgPost = {
   photos: string[];
   videos: TgVideo[];
   link?: TgLinkPreview;
+  forward?: TgForward;
   views?: string;
 };
 export type TgPage = { posts: TgPost[]; nextBefore: string | null };
@@ -50,6 +52,22 @@ function sanitize(html: string): string {
 function field(block: string, re: RegExp): string | undefined {
   const m = block.match(re);
   return m ? m[1] : undefined;
+}
+
+const stripTags = (s: string) =>
+  s.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim();
+
+/** Пересланный пост: имя источника и (если есть) ссылка. */
+function parseForward(block: string): TgForward | undefined {
+  if (!/tgme_widget_message_forwarded_from_name/.test(block)) return undefined;
+  const withLink = block.match(
+    /tgme_widget_message_forwarded_from_name"\s+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/
+  );
+  if (withLink) return { url: withLink[1], name: stripTags(withLink[2]) };
+  const noLink = block.match(
+    /tgme_widget_message_forwarded_from_name[^>]*>([\s\S]*?)<\/(?:a|span)>/
+  );
+  return noLink ? { name: stripTags(noLink[1]) } : undefined;
 }
 
 function parse(html: string): TgPost[] {
@@ -111,6 +129,7 @@ function parse(html: string): TgPost[] {
       photos,
       videos,
       link,
+      forward: parseForward(block),
       views: field(block, /tgme_widget_message_views">([^<]+)</),
     });
   }

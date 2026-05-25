@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Play, Eye, ArrowUpRight } from "lucide-react";
+import { Play, Eye, ArrowUpRight, CornerUpRight } from "lucide-react";
 import type { TgPost, TgPage } from "@/lib/telegram";
 
 const MONTHS = [
@@ -82,6 +82,29 @@ function Post({ post }: { post: TgPost }) {
           </span>
         )}
       </div>
+
+      {post.forward && (
+        <div className="mt-3 flex items-center gap-1.5 rounded-lg border-l-2 border-indigo-400 bg-indigo-500/5 py-1.5 pr-2 pl-2.5 text-xs text-neutral-500 dark:text-neutral-400">
+          <CornerUpRight className="h-3.5 w-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
+          <span>
+            Переслано из{" "}
+            {post.forward.url ? (
+              <a
+                href={post.forward.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+              >
+                {post.forward.name}
+              </a>
+            ) : (
+              <span className="font-medium text-neutral-700 dark:text-neutral-300">
+                {post.forward.name}
+              </span>
+            )}
+          </span>
+        </div>
+      )}
 
       {post.html && (
         <div
