@@ -15,23 +15,30 @@ const trackWord = (n: number) => {
   return "треков";
 };
 
+// Состояние галереи (таб, поиск, позиция скролла), которое нужно
+// восстановить при возврате со страницы конкретной пластинки.
+const GALLERY_STATE_KEY = "vinyl-gallery-state";
+
 function VinylCard({
   title,
   slug,
   cover,
   subtitle,
   want = false,
+  onNavigate,
 }: {
   title: string;
   slug: string;
   cover?: string;
   subtitle?: string;
   want?: boolean;
+  onNavigate?: () => void;
 }) {
   const h = hueOf(title);
   return (
     <Link
       href={`/vinyl/${slug}`}
+      onClick={onNavigate}
       className="group relative block aspect-square transition hover:z-10"
     >
       {/* Пластинка выезжает вверх из конверта */}
@@ -101,6 +108,44 @@ export function VinylGallery({
 }) {
   const [tab, setTab] = React.useState<"have" | "want">("have");
   const [query, setQuery] = React.useState("");
+  const pendingScroll = React.useRef<number | null>(null);
+
+  // Возврат со страницы пластинки: восстанавливаем таб, поиск и скролл.
+  React.useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(GALLERY_STATE_KEY);
+      sessionStorage.removeItem(GALLERY_STATE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as {
+        tab?: "have" | "want";
+        query?: string;
+        scrollY?: number;
+      };
+      if (saved.tab === "have" || saved.tab === "want") setTab(saved.tab);
+      if (typeof saved.query === "string") setQuery(saved.query);
+      if (typeof saved.scrollY === "number") pendingScroll.current = saved.scrollY;
+    } catch {
+      /* sessionStorage недоступен — просто открываем галерею сверху */
+    }
+  }, []);
+
+  // Скроллим только после того, как отрисовалась нужная вкладка.
+  React.useLayoutEffect(() => {
+    if (pendingScroll.current == null) return;
+    window.scrollTo(0, pendingScroll.current);
+    pendingScroll.current = null;
+  });
+
+  const saveState = () => {
+    try {
+      sessionStorage.setItem(
+        GALLERY_STATE_KEY,
+        JSON.stringify({ tab, query, scrollY: window.scrollY })
+      );
+    } catch {
+      /* игнорируем — переход всё равно произойдёт */
+    }
+  };
 
   const tabs = [
     { key: "have" as const, label: "Что у меня есть", count: have.length },
@@ -165,6 +210,7 @@ export function VinylGallery({
               slug={it.slug}
               cover={it.front}
               want={it.want}
+              onNavigate={saveState}
               subtitle={
                 !it.front && it.tracks.length
                   ? `${it.tracks.length} ${trackWord(it.tracks.length)}`
