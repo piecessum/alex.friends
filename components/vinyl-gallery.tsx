@@ -108,7 +108,6 @@ export function VinylGallery({
 }) {
   const [tab, setTab] = React.useState<"have" | "want">("have");
   const [query, setQuery] = React.useState("");
-  const pendingScroll = React.useRef<number | null>(null);
 
   // Возврат со страницы пластинки: восстанавливаем таб, поиск и скролл.
   React.useEffect(() => {
@@ -123,18 +122,17 @@ export function VinylGallery({
       };
       if (saved.tab === "have" || saved.tab === "want") setTab(saved.tab);
       if (typeof saved.query === "string") setQuery(saved.query);
-      if (typeof saved.scrollY === "number") pendingScroll.current = saved.scrollY;
+      // Скроллим после отрисовки нужной вкладки. requestAnimationFrame
+      // срабатывает даже если таб не изменился (возврат на дефолтный «have»),
+      // когда ре-рендера от setTab не происходит.
+      if (typeof saved.scrollY === "number") {
+        const y = saved.scrollY;
+        requestAnimationFrame(() => window.scrollTo(0, y));
+      }
     } catch {
       /* sessionStorage недоступен — просто открываем галерею сверху */
     }
   }, []);
-
-  // Скроллим только после того, как отрисовалась нужная вкладка.
-  React.useLayoutEffect(() => {
-    if (pendingScroll.current == null) return;
-    window.scrollTo(0, pendingScroll.current);
-    pendingScroll.current = null;
-  });
 
   const saveState = () => {
     try {
