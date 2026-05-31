@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, PieChart } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WritingsGrid } from "@/components/writings-grid";
@@ -28,9 +28,19 @@ export default async function NotesPage() {
           На главную
         </Link>
 
-        <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
-          Пишу
-        </h1>
+        <div className="mt-6 flex items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Пишу
+          </h1>
+          <Link
+            href="/notes/stats"
+            aria-label="Статистика"
+            title="Статистика"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white/60 text-neutral-500 transition hover:border-indigo-400 hover:text-indigo-600 dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-400 dark:hover:border-indigo-500 dark:hover:text-indigo-400"
+          >
+            <PieChart className="h-4 w-4" />
+          </Link>
+        </div>
         <p className="mt-3 max-w-2xl text-neutral-600 dark:text-neutral-400">
           Ох тут столько всякого: шиза, интересное, неинтересное, матерюсь
           еще...
