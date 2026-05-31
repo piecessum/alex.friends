@@ -4,9 +4,16 @@ import { ArrowLeft } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ChannelPost } from "@/components/channel-post";
-import { getPostById } from "@/lib/telegram";
+import { fetchAllPosts, getPostById } from "@/lib/telegram";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+// Пререндерим страницы существующих постов — переход с плитки на /notes
+// открывает их мгновенно. Новые посты добавятся при следующей сборке/ревалидации.
+export async function generateStaticParams() {
+  const posts = await fetchAllPosts();
+  return posts.map((p) => ({ id: p.id }));
+}
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();

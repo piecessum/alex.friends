@@ -6,7 +6,10 @@ import { WritingsGrid } from "@/components/writings-grid";
 import { getNotesIndex } from "@/lib/notes";
 import { fetchAllPosts } from "@/lib/telegram";
 
-export const dynamic = "force-dynamic";
+// ISR: страница рендерится при сборке и обновляется не чаще раза в час.
+// Это даёт мгновенный переход с главной — Next отдаёт HTML из кэша,
+// а посты из Telegram подтянутся в следующем окне ревалидации.
+export const revalidate = 3600;
 
 export const metadata = {
   title: "Пишу — Алексей Масюта",
