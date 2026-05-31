@@ -370,7 +370,7 @@ export function StatsDashboard({ stats }: { stats: WritingsStats }) {
           accent="text-teal-500"
         />
         <StatCard
-          label="Форвардов"
+          label="Репостов"
           value={totals.forwarded}
           hint={
             totals.posts
