@@ -77,7 +77,7 @@ export default function Dashboard() {
           className="flex items-center justify-between gap-4"
         >
           <div className="flex items-center gap-4">
-            <AvatarToggle size={72} />
+            <AvatarToggle size={104} />
             <div>
               <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
                 Привет, я Алексей
