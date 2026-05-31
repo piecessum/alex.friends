@@ -8,7 +8,6 @@ import {
   NotebookPen,
   Disc3,
   Gift,
-  Send,
   Briefcase,
 } from "lucide-react";
 import { AvatarToggle } from "@/components/avatar-toggle";
@@ -29,9 +28,8 @@ type Widget = {
 
 const widgets: Widget[] = [
   {
-    title: "Заметки и лонгриды",
-    description:
-      "Публикации из канала про UX в одном месте — от коротких мыслей до больших разборов.",
+    title: "Пишу",
+    description: "Нафига? ды хочется",
     icon: NotebookPen,
     href: "/notes",
     span: "sm:col-span-2",
@@ -51,13 +49,6 @@ const widgets: Widget[] = [
     href: links.wishlist,
     external: true,
     accent: "from-rose-500/15 text-rose-500 dark:text-rose-400",
-  },
-  {
-    title: "Пишу всякую хрень",
-    description: "интересное, неинтересное, мемное, душное",
-    icon: Send,
-    href: "/channel",
-    accent: "from-sky-500/15 text-sky-500 dark:text-sky-400",
   },
   {
     title: "Я ищу работу",

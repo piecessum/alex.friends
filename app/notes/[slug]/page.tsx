@@ -4,7 +4,6 @@ import { ArrowLeft, Eye } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { TelegraphContent } from "@/components/telegraph-content";
-import { BackToNotesLink } from "@/components/back-to-notes-link";
 import {
   getNote,
   getNotesIndex,
@@ -51,10 +50,14 @@ export default async function NotePage({
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-12 sm:py-16">
-        <BackToNotesLink className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400">
+        <Link
+          href="/notes"
+          scroll={false}
+          className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+        >
           <ArrowLeft className="h-4 w-4" />
-          Все лонгриды
-        </BackToNotesLink>
+          Назад
+        </Link>
 
         <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
           {note.title}
@@ -115,10 +118,14 @@ export default async function NotePage({
         )}
 
         <div className="mt-12 border-t border-neutral-200 pt-6 dark:border-neutral-800">
-          <BackToNotesLink className="inline-flex items-center gap-1.5 text-sm text-neutral-600 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400">
+          <Link
+            href="/notes"
+            scroll={false}
+            className="inline-flex items-center gap-1.5 text-sm text-neutral-600 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+          >
             <ArrowLeft className="h-4 w-4" />
-            Ко всем лонгридам
-          </BackToNotesLink>
+            Назад
+          </Link>
         </div>
       </main>
       <SiteFooter />

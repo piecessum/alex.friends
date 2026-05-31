@@ -22,8 +22,25 @@ export type TgPost = {
   link?: TgLinkPreview;
   forward?: TgForward;
   views?: string;
+  /** Хэштеги из текста поста, без `#`, в нижнем регистре. */
+  tags: string[];
 };
 export type TgPage = { posts: TgPost[]; nextBefore: string | null };
+
+/** Хэштеги поста — из ссылок Telegram (?q=%23tag) и из текста. */
+function extractTags(html: string): string[] {
+  const set = new Set<string>();
+  const fromLinks = [...html.matchAll(/q=%23([^"&'\s<>]+)/gi)].map((m) =>
+    decodeURIComponent(m[1])
+  );
+  const stripped = html.replace(/<[^>]+>/g, " ");
+  const fromText = [...stripped.matchAll(/#([\p{L}\p{N}_]+)/giu)].map((m) => m[1]);
+  for (const t of [...fromLinks, ...fromText]) {
+    const k = t.toLowerCase();
+    if (k && !/^\d+$/.test(k)) set.add(k);
+  }
+  return [...set];
+}
 
 const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
@@ -131,6 +148,7 @@ function parse(html: string): TgPost[] {
       link,
       forward: parseForward(block),
       views: field(block, /tgme_widget_message_views">([^<]+)</),
+      tags: extractTags(textRaw ?? ""),
     });
   }
   return posts;
@@ -151,4 +169,35 @@ export async function fetchChannel(before?: string): Promise<TgPage> {
   const oldest = ascending[0].id; // лента приходит по возрастанию id
   const posts = ascending.reverse(); // показываем новые сверху
   return { posts, nextBefore: oldest };
+}
+
+/**
+ * Вытаскивает все доступные посты канала, проходя по страницам `?before=`.
+ * Каждая страница кэшируется на час через `revalidate`, общий результат
+ * получается из тёплого кэша почти мгновенно.
+ */
+export async function fetchAllPosts(): Promise<TgPost[]> {
+  const seen = new Set<string>();
+  const all: TgPost[] = [];
+  let before: string | undefined;
+  // Жёсткая верхняя граница, чтоб защититься от зацикливания.
+  for (let i = 0; i < 40; i++) {
+    const page = await fetchChannel(before);
+    let added = 0;
+    for (const p of page.posts) {
+      if (seen.has(p.id)) continue;
+      seen.add(p.id);
+      all.push(p);
+      added++;
+    }
+    if (!page.nextBefore || added === 0) break;
+    before = page.nextBefore;
+  }
+  all.sort((a, b) => Number(b.id) - Number(a.id));
+  return all;
+}
+
+export async function getPostById(id: string): Promise<TgPost | null> {
+  const all = await fetchAllPosts();
+  return all.find((p) => p.id === id) ?? null;
 }
