@@ -40,6 +40,7 @@ const widgets: Widget[] = [
     description: "Моя коллекция винила — что есть и что хочу.",
     icon: Disc3,
     href: "/vinyl",
+    span: "lg:row-span-2",
     accent: "from-purple-500/15 text-purple-500 dark:text-purple-400",
   },
   {
@@ -124,6 +125,27 @@ export default function Dashboard() {
             const cardClass =
               "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 p-6 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700";
 
+            // На растянутом по высоте виджете пластинок добавляем
+            // декоративную пластинку в углу, чтобы не было пустоты.
+            const decoration =
+              w.title === "Пластинки" ? (
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-20 -bottom-20 hidden h-72 w-72 rounded-full opacity-70 transition-transform duration-500 ease-out group-hover:rotate-12 lg:block"
+                  style={{
+                    backgroundImage:
+                      "repeating-radial-gradient(circle at 50% 50%, rgba(168,85,247,0.18) 0px, rgba(168,85,247,0.18) 1px, transparent 2px, transparent 4px), radial-gradient(circle at 50% 50%, rgba(168,85,247,0.28), rgba(168,85,247,0.05) 60%, transparent 75%)",
+                  }}
+                />
+              ) : null;
+
+            const innerContent = (
+              <>
+                {decoration}
+                <div className="relative">{inner}</div>
+              </>
+            );
+
             return (
               <motion.div
                 key={w.title}
@@ -139,11 +161,11 @@ export default function Dashboard() {
                     rel="noopener noreferrer"
                     className={cardClass}
                   >
-                    {inner}
+                    {innerContent}
                   </a>
                 ) : (
                   <Link href={w.href} className={cardClass}>
-                    {inner}
+                    {innerContent}
                   </Link>
                 )}
               </motion.div>
