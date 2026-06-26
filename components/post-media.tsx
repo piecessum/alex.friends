@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Play, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { FitImage } from "@/components/fit-image";
 import type { TgVideo } from "@/lib/telegram";
 
 /**
@@ -50,21 +51,12 @@ export function PostMedia({
   return (
     <div className="mt-6 space-y-3">
       {photos.map((src, i) => (
-        <button
+        <FitImage
           key={`p${i}`}
-          type="button"
+          src={src}
           onClick={() => setIndex(i)}
-          className="block w-full cursor-zoom-in"
-          aria-label="Открыть фото"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={src}
-            alt=""
-            loading="lazy"
-            className="mx-auto h-auto w-full rounded-xl"
-          />
-        </button>
+          className="mx-auto h-auto cursor-zoom-in rounded-xl"
+        />
       ))}
 
       {videos.map((v, i) => (

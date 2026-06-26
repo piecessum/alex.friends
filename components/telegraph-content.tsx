@@ -1,4 +1,5 @@
 import * as React from "react";
+import { FitImage } from "@/components/fit-image";
 import type { NoteNode } from "@/lib/notes";
 
 /** Текст узла целиком — нужно, чтобы скрывать пустые подписи к картинкам. */
@@ -84,23 +85,14 @@ function Node({ node }: { node: NoteNode }) {
         </figcaption>
       );
     }
-    case "img": {
-      // variant="phone" — вертикальный скриншот телефона: сужаем, чтобы он
-      // помещался в один экран по высоте (на мобильном остаётся во всю ширину).
-      const isPhone = attrs.variant === "phone";
+    case "img":
       return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={attrs.src}
+        <FitImage
+          src={attrs.src || ""}
           alt={attrs.alt || ""}
-          loading="lazy"
-          className={
-            "mx-auto h-auto w-full rounded-xl border border-neutral-200 dark:border-neutral-800" +
-            (isPhone ? " max-w-[320px]" : "")
-          }
+          className="mx-auto h-auto rounded-xl border border-neutral-200 dark:border-neutral-800"
         />
       );
-    }
     case "video":
       return (
         <video
