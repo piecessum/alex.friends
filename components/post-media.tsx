@@ -48,16 +48,42 @@ export function PostMedia({
 
   if (photos.length === 0 && videos.length === 0) return null;
 
+  // Сетка для альбома (несколько фото) — как в Telegram: 2 в ряд, 4 — 2×2,
+  // иначе по 3 в ряд. Одно фото показываем во всю ширину.
+  const gridCols =
+    photos.length === 2 || photos.length === 4 ? "grid-cols-2" : "grid-cols-3";
+
   return (
     <div className="mt-6 space-y-3">
-      {photos.map((src, i) => (
+      {photos.length === 1 && (
         <FitImage
-          key={`p${i}`}
-          src={src}
-          onClick={() => setIndex(i)}
+          src={photos[0]}
+          onClick={() => setIndex(0)}
           className="mx-auto h-auto cursor-zoom-in rounded-xl"
         />
-      ))}
+      )}
+
+      {photos.length > 1 && (
+        <div className={`grid gap-1 overflow-hidden rounded-xl ${gridCols}`}>
+          {photos.map((src, i) => (
+            <button
+              key={`p${i}`}
+              type="button"
+              onClick={() => setIndex(i)}
+              className="group/ph relative aspect-square cursor-zoom-in overflow-hidden bg-neutral-200 dark:bg-neutral-800"
+              aria-label="Открыть фото"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover transition group-hover/ph:opacity-90"
+              />
+            </button>
+          ))}
+        </div>
+      )}
 
       {videos.map((v, i) =>
         v.src ? (
