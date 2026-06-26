@@ -30,6 +30,6 @@ Push в `main` → автодеплой на Vercel.
 - [x] Каркас + перелинковка с резюме
 - [ ] Блог из Markdown (`content/posts/`)
 - [ ] Obsidian → Git → Vercel
-- [ ] Автопостинг в Telegram-канал
+- [x] Автопостинг в Telegram-канал (`scripts/publish-telegram.mjs`)
 - [ ] Карточки пластинок из Google Sheets
 - [ ] 3D-переворот карточек
