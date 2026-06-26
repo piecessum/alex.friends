@@ -62,9 +62,11 @@ export function computeWritingsStats(
   const forwarded = posts.filter((p) => !!p.forward).length;
   const untaggedPosts = posts.filter((p) => p.tags.length === 0).length;
 
-  // ── byTag ─────────────────────────────────────────────
+  // ── byTag (посты канала + лонгриды с тегами из подписи анонса) ─────────
   const tagCounts = new Map<string, number>();
-  for (const p of posts) for (const t of p.tags) tagCounts.set(t, (tagCounts.get(t) || 0) + 1);
+  const bumpTag = (t: string) => tagCounts.set(t, (tagCounts.get(t) || 0) + 1);
+  for (const p of posts) for (const t of p.tags) bumpTag(t);
+  for (const n of notes) for (const t of n.tags ?? []) bumpTag(t);
   const taggedTotal = [...tagCounts.values()].reduce((a, b) => a + b, 0) || 1;
   const byTag: StatsTagSlice[] = [...tagCounts.entries()]
     .map(([tag, count]) => ({ tag, count, share: count / taggedTotal }))

@@ -66,6 +66,7 @@ type Tile =
       date: string;
       title: string;
       excerpt: string;
+      tags: string[];
     }
   | {
       kind: "post";
@@ -89,6 +90,7 @@ function buildTiles(notes: NoteIndexItem[], posts: TgPost[]): Tile[] {
       date: formatNoteDate(n.month, n.day, n.year),
       title: n.title,
       excerpt: n.excerpt,
+      tags: n.tags ?? [],
     })),
     ...posts.map<Tile>((p) => ({
       kind: "post",
@@ -116,7 +118,9 @@ export function WritingsGrid({
 
   const tagChips = React.useMemo(() => {
     const counts = new Map<string, number>();
-    for (const p of posts) for (const t of p.tags) counts.set(t, (counts.get(t) || 0) + 1);
+    const bump = (t: string) => counts.set(t, (counts.get(t) || 0) + 1);
+    for (const p of posts) for (const t of p.tags) bump(t);
+    for (const n of notes) for (const t of n.tags ?? []) bump(t);
     const ordered: { tag: string; count: number }[] = [];
     const used = new Set<string>();
     for (const t of TAG_ORDER) {
@@ -127,7 +131,7 @@ export function WritingsGrid({
     }
     for (const [t, c] of counts) if (!used.has(t)) ordered.push({ tag: t, count: c });
     return ordered;
-  }, [posts]);
+  }, [posts, notes]);
 
   const [filter, setFilter] = React.useState<string>("all");
 
@@ -180,7 +184,8 @@ export function WritingsGrid({
   const visible = React.useMemo(() => {
     if (filter === "all") return tiles;
     if (filter === "longreads") return tiles.filter((t) => t.kind === "note");
-    return tiles.filter((t) => t.kind === "post" && t.tags.includes(filter));
+    // По тегу — и посты, и лонгриды с этим хэштегом.
+    return tiles.filter((t) => t.tags.includes(filter));
   }, [tiles, filter]);
 
   const renderChip = (key: string, label: string, count: number) => {
@@ -253,6 +258,18 @@ export function WritingsGrid({
                       <p className="mt-2 line-clamp-3 text-sm text-neutral-600 dark:text-neutral-400">
                         {t.excerpt}
                       </p>
+                    )}
+                    {t.tags.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-x-2 gap-y-1">
+                        {t.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs text-indigo-600 dark:text-indigo-400"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
                     )}
                   </>
                 ) : (

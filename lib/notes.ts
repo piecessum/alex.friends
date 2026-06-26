@@ -15,6 +15,8 @@ export type NoteIndexItem = {
   year: number;
   excerpt: string;
   cover: string | null;
+  /** Хэштеги лонгрида — из подписи Telegram-анонса (см. _telegram-log.json). */
+  tags: string[];
 };
 
 export type Note = {
@@ -29,8 +31,38 @@ export type Note = {
   content: NoteNode[];
 };
 
+/**
+ * Лог Telegram-анонсов: slug лонгрида → данные отправленного в канал поста.
+ * Заполняется scripts/publish-telegram.mjs. Связывает лонгрид с его анонсом —
+ * отсюда берём теги лонгрида и id постов-анонсов, чтобы не дублировать их
+ * в ленте (анонс на сайте «представляет» сам лонгрид).
+ */
+export type TelegramLogEntry = {
+  message_id: number;
+  date: string;
+  url: string;
+  tags?: string[];
+};
+
+export function getTelegramLog(): Record<string, TelegramLogEntry> {
+  const file = path.join(DIR, "_telegram-log.json");
+  if (!fs.existsSync(file)) return {};
+  return JSON.parse(fs.readFileSync(file, "utf8"));
+}
+
+/** id постов-анонсов в канале — их прячем из ленты/статистики (как строки). */
+export function getAnnouncedPostIds(): Set<string> {
+  return new Set(
+    Object.values(getTelegramLog()).map((e) => String(e.message_id))
+  );
+}
+
 export function getNotesIndex(): NoteIndexItem[] {
-  return JSON.parse(fs.readFileSync(path.join(DIR, "index.json"), "utf8"));
+  const index: NoteIndexItem[] = JSON.parse(
+    fs.readFileSync(path.join(DIR, "index.json"), "utf8")
+  );
+  const log = getTelegramLog();
+  return index.map((n) => ({ ...n, tags: log[n.slug]?.tags ?? [] }));
 }
 
 export function getNote(slug: string): Note {

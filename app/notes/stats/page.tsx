@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { StatsDashboard } from "@/components/stats-dashboard";
-import { getNotesIndex } from "@/lib/notes";
+import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { fetchAllPosts } from "@/lib/telegram";
 import { computeWritingsStats } from "@/lib/writings-stats";
 
@@ -15,7 +15,9 @@ export const metadata = {
 
 export default async function WritingsStatsPage() {
   const notes = getNotesIndex();
-  const posts = await fetchAllPosts();
+  // Посты-анонсы лонгридов не считаем — иначе один материал учтётся дважды.
+  const announced = getAnnouncedPostIds();
+  const posts = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
   const stats = computeWritingsStats(posts, notes);
 
   return (

@@ -3,7 +3,7 @@ import { ArrowLeft, PieChart } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WritingsGrid } from "@/components/writings-grid";
-import { getNotesIndex } from "@/lib/notes";
+import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { fetchAllPosts } from "@/lib/telegram";
 
 // ISR: страница рендерится при сборке и обновляется не чаще раза в час.
@@ -17,7 +17,9 @@ export const metadata = {
 
 export default async function NotesPage() {
   const notes = getNotesIndex();
-  const posts = await fetchAllPosts();
+  // Посты-анонсы лонгридов прячем — на сайте их «представляет» сам лонгрид.
+  const announced = getAnnouncedPostIds();
+  const posts = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
 
   return (
     <div className="flex min-h-screen flex-col">
