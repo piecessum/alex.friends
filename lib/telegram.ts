@@ -3,7 +3,7 @@
 
 export const CHANNEL = "ux_review";
 
-export type TgVideo = { thumb?: string; duration?: string };
+export type TgVideo = { thumb?: string; duration?: string; src?: string };
 export type TgLinkPreview = {
   url?: string;
   title?: string;
@@ -118,12 +118,27 @@ function parse(html: string): TgPost[] {
     const durations = [
       ...block.matchAll(/video_duration[^>]*>([^<]+)</g),
     ].map((x) => x[1]);
+    // Прямые mp4 из веб-превью. Размытые дубли-постеры (class …blured) и
+    // повторы пропускаем. У «тяжёлых» видео ссылки нет — останется превью.
+    const vSrcs: string[] = [];
+    for (const m of block.matchAll(/<video\s+src="([^"]+)"([^>]*)>/g)) {
+      if (/blured/.test(m[2])) continue;
+      if (!vSrcs.includes(m[1])) vSrcs.push(m[1]);
+    }
     const hasVideo =
       vThumbs.length > 0 || /tgme_widget_message_video/.test(block);
     const videos: TgVideo[] = hasVideo
       ? (vThumbs.length ? vThumbs : [undefined]).map((thumb, idx) => ({
           thumb,
           duration: durations[idx],
+          // Сопоставляем по порядку, только если число ссылок совпало с числом
+          // видео (иначе для одиночного видео берём единственную ссылку).
+          src:
+            vSrcs.length === vThumbs.length
+              ? vSrcs[idx]
+              : vThumbs.length <= 1
+                ? vSrcs[0]
+                : undefined,
         }))
       : [];
 

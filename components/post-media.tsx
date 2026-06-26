@@ -59,39 +59,51 @@ export function PostMedia({
         />
       ))}
 
-      {videos.map((v, i) => (
-        <a
-          key={`v${i}`}
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group/media relative block aspect-video overflow-hidden rounded-xl bg-neutral-200 dark:bg-neutral-800"
-        >
-          {v.thumb ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={v.thumb}
-              alt=""
-              loading="lazy"
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-neutral-400">
-              видео
-            </div>
-          )}
-          <span className="absolute inset-0 flex items-center justify-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition group-hover/media:scale-110">
-              <Play className="h-6 w-6 translate-x-0.5 fill-current" />
-            </span>
-            {v.duration && (
-              <span className="absolute bottom-2 right-2 rounded bg-black/65 px-1.5 py-0.5 text-[11px] font-medium text-white">
-                {v.duration}
-              </span>
+      {videos.map((v, i) =>
+        v.src ? (
+          <video
+            key={`v${i}`}
+            src={v.src}
+            poster={v.thumb}
+            controls
+            playsInline
+            preload="metadata"
+            className="mx-auto h-auto max-h-[85vh] w-full rounded-xl bg-black"
+          />
+        ) : (
+          <a
+            key={`v${i}`}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group/media relative block aspect-video overflow-hidden rounded-xl bg-neutral-200 dark:bg-neutral-800"
+          >
+            {v.thumb ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={v.thumb}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-neutral-400">
+                видео
+              </div>
             )}
-          </span>
-        </a>
-      ))}
+            <span className="absolute inset-0 flex items-center justify-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition group-hover/media:scale-110">
+                <Play className="h-6 w-6 translate-x-0.5 fill-current" />
+              </span>
+              {v.duration && (
+                <span className="absolute bottom-2 right-2 rounded bg-black/65 px-1.5 py-0.5 text-[11px] font-medium text-white">
+                  {v.duration}
+                </span>
+              )}
+            </span>
+          </a>
+        )
+      )}
 
       {open && (
         <div
