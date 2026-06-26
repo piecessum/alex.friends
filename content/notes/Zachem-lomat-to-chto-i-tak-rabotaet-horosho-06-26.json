@@ -270,9 +270,9 @@
       "tag": "figure",
       "children": [
         {
-          "tag": "video",
+          "tag": "img",
           "attrs": {
-            "src": "/notes/aa9c6ae9e04706be9d42d.mp4"
+            "src": "/notes/aa9c6ae9e04706be9d42d.gif"
           }
         },
         {
