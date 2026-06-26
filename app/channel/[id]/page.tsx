@@ -41,20 +41,25 @@ export async function generateMetadata({
   return { title: `${text || "Пост"} — Алексей Масюта` };
 }
 
-/** Плитка перехода к соседнему посту. */
-function NavCard({
+/** Текстовая ссылка перехода к соседнему посту (стрелка снаружи). */
+function NavLink({
   post,
   label,
+  side,
 }: {
   post: TgPost;
   label: string;
+  side: "left" | "right";
 }) {
+  const Arrow = side === "left" ? ArrowLeft : ArrowRight;
   return (
     <Link
       href={`/channel/${post.id}`}
-      className="group flex items-start gap-2.5 rounded-xl border border-neutral-200 bg-white/50 p-4 backdrop-blur transition hover:border-neutral-300 hover:shadow-md hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700"
+      className={`group flex max-w-[47%] items-start gap-2.5 ${
+        side === "right" ? "ml-auto flex-row-reverse text-right" : ""
+      }`}
     >
-      <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-neutral-400 transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+      <Arrow className="mt-0.5 h-4 w-4 shrink-0 text-neutral-400 transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
       <span className="min-w-0">
         <span className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
           {label}
@@ -101,13 +106,17 @@ export default async function ChannelItemPage({
         </div>
 
         {(older || newer) && (
-          <nav className="mt-12 grid gap-3 border-t border-neutral-200 pt-8 sm:grid-cols-2 dark:border-neutral-800">
-            {older && <NavCard post={older} label="Предыдущий пост" />}
-            {newer && <NavCard post={newer} label="Следующий пост" />}
+          <nav className="mt-12 flex gap-6">
+            {newer ? (
+              <NavLink post={newer} label="Следующий пост" side="left" />
+            ) : (
+              <span />
+            )}
+            {older && <NavLink post={older} label="Предыдущий пост" side="right" />}
           </nav>
         )}
 
-        <div className="mt-10 border-t border-neutral-200 pt-6 dark:border-neutral-800">
+        <div className="mt-10">
           <Link
             href="/notes"
             scroll={false}
