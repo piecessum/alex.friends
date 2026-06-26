@@ -83,7 +83,8 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/2507c2f483e755cfd8853.webp"
+            "src": "/notes/2507c2f483e755cfd8853.webp",
+            "variant": "phone"
           }
         },
         {
