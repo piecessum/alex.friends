@@ -249,7 +249,8 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/a57db21389aa69a18c939.webp"
+            "src": "/notes/a57db21389aa69a18c939.webp",
+            "variant": "phone"
           }
         },
         {
@@ -301,7 +302,8 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/b4fa708f4ff4e613510a3.webp"
+            "src": "/notes/b4fa708f4ff4e613510a3.webp",
+            "variant": "phone"
           }
         },
         {

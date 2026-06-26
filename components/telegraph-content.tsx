@@ -84,16 +84,23 @@ function Node({ node }: { node: NoteNode }) {
         </figcaption>
       );
     }
-    case "img":
+    case "img": {
+      // variant="phone" — вертикальный скриншот телефона: сужаем, чтобы он
+      // помещался в один экран по высоте (на мобильном остаётся во всю ширину).
+      const isPhone = attrs.variant === "phone";
       return (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={attrs.src}
           alt={attrs.alt || ""}
           loading="lazy"
-          className="mx-auto h-auto w-full rounded-xl border border-neutral-200 dark:border-neutral-800"
+          className={
+            "mx-auto h-auto w-full rounded-xl border border-neutral-200 dark:border-neutral-800" +
+            (isPhone ? " max-w-[320px]" : "")
+          }
         />
       );
+    }
     case "video":
       return (
         <video
