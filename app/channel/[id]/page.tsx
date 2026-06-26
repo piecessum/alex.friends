@@ -19,10 +19,10 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-/** Короткое описание поста для плитки навигации. */
+/** Короткое описание поста для плитки навигации (с «…», если обрезано). */
 function preview(post: TgPost): string {
   const text = stripHtml(post.html);
-  if (text) return text.slice(0, 80);
+  if (text) return text.length > 80 ? text.slice(0, 80).trimEnd() + "…" : text;
   if (post.photos.length) return "Фото";
   if (post.videos.length) return "Видео";
   return "Пост";
@@ -41,32 +41,37 @@ export async function generateMetadata({
   return { title: `${text || "Пост"} — Алексей Масюта` };
 }
 
-/** Текстовая ссылка перехода к соседнему посту (стрелка снаружи). */
+/**
+ * Карточка перехода к соседнему посту. Заголовок «Предыдущий пост →» прижат
+ * вправо (side="right"), текст превью всегда по левому краю.
+ */
 function NavLink({
   post,
   label,
   side,
+  className = "",
 }: {
   post: TgPost;
   label: string;
   side: "left" | "right";
+  className?: string;
 }) {
   const Arrow = side === "left" ? ArrowLeft : ArrowRight;
   return (
     <Link
       href={`/channel/${post.id}`}
-      className={`group flex max-w-[47%] items-start gap-2.5 ${
-        side === "right" ? "ml-auto flex-row-reverse text-right" : ""
-      }`}
+      className={`group flex flex-col rounded-xl border border-neutral-200 bg-white/50 p-4 backdrop-blur transition hover:border-neutral-300 hover:shadow-md hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700 ${className}`}
     >
-      <Arrow className="mt-0.5 h-4 w-4 shrink-0 text-neutral-400 transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
-      <span className="min-w-0">
-        <span className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-          {label}
-        </span>
-        <span className="mt-1 block line-clamp-2 text-sm leading-snug text-neutral-700 transition group-hover:text-indigo-600 dark:text-neutral-300 dark:group-hover:text-indigo-400">
-          {preview(post)}
-        </span>
+      <span
+        className={`flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 ${
+          side === "right" ? "flex-row-reverse" : ""
+        }`}
+      >
+        <Arrow className="h-4 w-4 shrink-0 transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+        {label}
+      </span>
+      <span className="mt-1.5 line-clamp-2 text-sm leading-snug text-neutral-700 transition group-hover:text-indigo-600 dark:text-neutral-300 dark:group-hover:text-indigo-400">
+        {preview(post)}
       </span>
     </Link>
   );
@@ -106,13 +111,18 @@ export default async function ChannelItemPage({
         </div>
 
         {(older || newer) && (
-          <nav className="mt-12 flex gap-6">
-            {newer ? (
+          <nav className="mt-12 grid gap-3 sm:grid-cols-2">
+            {newer && (
               <NavLink post={newer} label="Следующий пост" side="left" />
-            ) : (
-              <span />
             )}
-            {older && <NavLink post={older} label="Предыдущий пост" side="right" />}
+            {older && (
+              <NavLink
+                post={older}
+                label="Предыдущий пост"
+                side="right"
+                className={newer ? "" : "sm:col-start-2"}
+              />
+            )}
           </nav>
         )}
 
