@@ -11,13 +11,14 @@ export type VinylItem = {
   slug: string;
   front?: string;
   back?: string;
+  genre?: string;
 };
 
 /** Обогащение по slug: фото (front/back), уточнённые треки и флаг own.
  *  vinyl.json держит сами списки (есть/хочу), подробности по альбому — здесь. */
 type VinylExtra = Record<
   string,
-  { front?: string; back?: string; tracks?: string[]; own?: boolean }
+  { front?: string; back?: string; tracks?: string[]; own?: boolean; genre?: string }
 >;
 
 export function getVinyl(): VinylData {
@@ -51,6 +52,7 @@ export function getAllVinylItems(): VinylItem[] {
       slug,
       front: ex.front,
       back: ex.back,
+      genre: ex.genre,
     };
   };
 

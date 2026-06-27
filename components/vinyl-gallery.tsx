@@ -108,6 +108,20 @@ export function VinylGallery({
 }) {
   const [tab, setTab] = React.useState<"have" | "want">("have");
   const [query, setQuery] = React.useState("");
+  // null = «Все». Фильтр по жанру работает только на вкладке «есть».
+  const [genre, setGenre] = React.useState<string | null>(null);
+
+  // Лотки по жанрам, как в музыкальном магазине: каждый жанр и сколько
+  // в нём пластинок. Сортируем по количеству (популярные жанры — первыми).
+  const genres = React.useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const it of have) {
+      if (it.genre) counts.set(it.genre, (counts.get(it.genre) ?? 0) + 1);
+    }
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"))
+      .map(([name, count]) => ({ name, count }));
+  }, [have]);
 
   // Возврат со страницы пластинки: восстанавливаем таб, поиск и скролл.
   React.useEffect(() => {
@@ -118,10 +132,12 @@ export function VinylGallery({
       const saved = JSON.parse(raw) as {
         tab?: "have" | "want";
         query?: string;
+        genre?: string | null;
         scrollY?: number;
       };
       if (saved.tab === "have" || saved.tab === "want") setTab(saved.tab);
       if (typeof saved.query === "string") setQuery(saved.query);
+      if (typeof saved.genre === "string") setGenre(saved.genre);
       // Скроллим после отрисовки нужной вкладки. requestAnimationFrame
       // срабатывает даже если таб не изменился (возврат на дефолтный «have»),
       // когда ре-рендера от setTab не происходит.
@@ -138,7 +154,7 @@ export function VinylGallery({
     try {
       sessionStorage.setItem(
         GALLERY_STATE_KEY,
-        JSON.stringify({ tab, query, scrollY: window.scrollY })
+        JSON.stringify({ tab, query, genre, scrollY: window.scrollY })
       );
     } catch {
       /* игнорируем — переход всё равно произойдёт */
@@ -155,7 +171,9 @@ export function VinylGallery({
     it.title.toLowerCase().includes(q) ||
     it.tracks.some((t) => t.toLowerCase().includes(q));
 
-  const filteredHave = q ? have.filter(match) : have;
+  const filteredHave = have.filter(
+    (it) => (!genre || it.genre === genre) && (!q || match(it))
+  );
   const filteredWant = q ? want.filter(match) : want;
   const list = tab === "have" ? filteredHave : filteredWant;
 
@@ -194,10 +212,41 @@ export function VinylGallery({
         </div>
       </div>
 
+      {/* Лотки по жанрам — как в магазине пластинок. Только на вкладке «есть». */}
+      {tab === "have" && genres.length > 0 && (
+        <div className="mt-6 flex flex-wrap gap-2">
+          {[{ name: null as string | null, count: have.length }, ...genres].map(
+            (g) => {
+              const active = genre === g.name;
+              return (
+                <button
+                  key={g.name ?? "__all"}
+                  type="button"
+                  onClick={() => setGenre(g.name)}
+                  className={cn(
+                    "rounded-full border px-3.5 py-1.5 text-sm font-medium transition",
+                    active
+                      ? "border-indigo-600 bg-indigo-600 text-white"
+                      : "border-neutral-200 bg-white/60 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950/40 dark:text-neutral-400 dark:hover:border-neutral-700 dark:hover:text-neutral-200"
+                  )}
+                >
+                  {g.name ?? "Все"}{" "}
+                  <span className={active ? "opacity-60" : "opacity-50"}>
+                    {g.count}
+                  </span>
+                </button>
+              );
+            }
+          )}
+        </div>
+      )}
+
       {/* Сетка пластинок */}
       {list.length === 0 ? (
         <p className="mt-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
-          Ничего не нашлось по запросу «{query.trim()}».
+          {q
+            ? `Ничего не нашлось по запросу «${query.trim()}».`
+            : "В этом жанре пока пусто."}
         </p>
       ) : (
         <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">

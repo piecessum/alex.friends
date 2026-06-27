@@ -1,15 +1,18 @@
 {
   "bitlz": {
     "front": "/vinyl/bitlz-front.webp",
-    "back": "/vinyl/bitlz-back.webp"
+    "back": "/vinyl/bitlz-back.webp",
+    "genre": "Рок"
   },
   "vivaldi": {
     "front": "/vinyl/vivaldi-front.webp",
-    "back": "/vinyl/vivaldi-back.webp"
+    "back": "/vinyl/vivaldi-back.webp",
+    "genre": "Классика"
   },
   "novogodnyaya-podborka": {
     "front": "/vinyl/novogodnyaya-podborka-front.webp",
-    "back": "/vinyl/novogodnyaya-podborka-back.webp"
+    "back": "/vinyl/novogodnyaya-podborka-back.webp",
+    "genre": "Поп"
   },
   "lana-del-rey": {
     "front": "/vinyl/lana-del-rey-front.webp",
@@ -30,7 +33,8 @@
       "Without You",
       "Lolita",
       "Lucky Ones"
-    ]
+    ],
+    "genre": "Поп"
   },
   "sektor-gaza": {
     "front": "/vinyl/sektor-gaza-front.webp",
@@ -45,11 +49,13 @@
       "Местные",
       "Утопленник",
       "Пасха"
-    ]
+    ],
+    "genre": "Рок"
   },
   "golosa-ptic-v-prirode": {
     "front": "/vinyl/golosa-ptic-v-prirode-front.webp",
-    "back": "/vinyl/golosa-ptic-v-prirode-back.webp"
+    "back": "/vinyl/golosa-ptic-v-prirode-back.webp",
+    "genre": "Звуки природы"
   },
   "pesnyary-gibkaya-plastinka": {
     "front": "/vinyl/pesnyary-gibkaya-plastinka-front.webp",
@@ -57,7 +63,8 @@
     "tracks": [
       "Дрозды",
       "Серёжки"
-    ]
+    ],
+    "genre": "Эстрада"
   },
   "nirvana": {
     "front": "/vinyl/nirvana-front.webp",
@@ -75,7 +82,8 @@
       "Stay Away",
       "On a Plain",
       "Something in the Way"
-    ]
+    ],
+    "genre": "Рок"
   },
   "gorillaz": {
     "front": "/vinyl/gorillaz-front.webp",
@@ -97,7 +105,8 @@
       "Don't Get Lost in Heaven",
       "Demon Days"
     ],
-    "own": true
+    "own": true,
+    "genre": "Рок"
   },
   "pesni-smesharikov": {
     "front": "/vinyl/pesni-smesharikov-front.webp",
@@ -120,7 +129,8 @@
       "Город Омск",
       "Ниточка",
       "Круглая песня"
-    ]
+    ],
+    "genre": "Детские песни"
   },
   "bob-dylan-under-the-red-sky": {
     "front": "/vinyl/bob-dylan-front.webp",
@@ -136,7 +146,8 @@
       "God Knows",
       "Handy Dandy",
       "Cat's in the Well"
-    ]
+    ],
+    "genre": "Рок"
   },
   "na-koncertah-vladimira-vysockogo": {
     "front": "/vinyl/vysotskiy-front.webp",
@@ -155,7 +166,8 @@
       "Поездка в город",
       "Чёрное золото",
       "На судне бунт"
-    ]
+    ],
+    "genre": "Авторская песня"
   },
   "iosif-kobzon-blagoslovlyayu-vse-chto-bylo": {
     "front": "/vinyl/kobson-front.webp",
@@ -171,7 +183,8 @@
       "Я стремлюсь к роскошной воле",
       "Слуга царице",
       "Гармоника, гармоника"
-    ]
+    ],
+    "genre": "Эстрада"
   },
   "pesni-dlya-detey-pro-krasnuyu-shapochku-a-rybnikov": {
     "front": "/vinyl/dlya-detei-front.webp",
@@ -183,7 +196,8 @@
       "Необитаемый остров",
       "Песня о звёздах",
       "Песня Волчицы"
-    ]
+    ],
+    "genre": "Детские песни"
   },
   "puteshestvie-gullivera-v-brobdingneg": {
     "front": "/vinyl/gyliver-front.webp",
@@ -192,7 +206,8 @@
       "Инсценировка В. Левертова по роману Дж. Свифта",
       "В ролях: В. Гафт (Гулливер), В. Ларионов (от автора), А. Каменкова (Глюмдальклич), Э. Урусова (королева)",
       "Режиссёр Н. Киселёва"
-    ]
+    ],
+    "genre": "Детские сказки"
   },
   "skazki-narodov-mira-vanyushka-i-carevna-russkaya-skazka": {
     "front": "/vinyl/vanusha-front.webp",
@@ -202,7 +217,8 @@
       "Инсценировка Е. Лаговского, музыка С. Томина",
       "В ролях: В. Якут (сказочник), О. Великанова (царевна)",
       "Инструментальный ансамбль п/р В. Желвакова"
-    ]
+    ],
+    "genre": "Детские сказки"
   },
   "skazka-vasilisa-prekrasnaya": {
     "front": "/vinyl/vasilisa-front.webp",
@@ -211,7 +227,8 @@
       "Композиция Г. Синельникова по мотивам русской народной сказки",
       "В ролях: Е. Синельникова (Василиса), Э. Зорин (Царевич)",
       "Оркестр народных инструментов"
-    ]
+    ],
+    "genre": "Детские сказки"
   },
   "priglashenie-k-tancu": {
     "front": "/vinyl/tancy-front.webp",
@@ -220,6 +237,7 @@
       "Сборник инструментальной танцевальной музыки (Aicinājums uz deju)",
       "Эстрадный оркестр Латвийского радио и телевидения, дирижёр Алнис Закис",
       "Бальные танцы — вальсы, танго, фокстроты"
-    ]
+    ],
+    "genre": "Инструментальная"
   }
 }
