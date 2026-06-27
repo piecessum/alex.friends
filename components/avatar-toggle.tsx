@@ -8,7 +8,9 @@ const ANIM_MS = 1440;
 const FRAME_COUNT = 36;
 const FIRST_FRAME = 0;
 const LAST_FRAME = FRAME_COUNT - 1;
-const SPRITE = "/avatar/day-night-sprite.png";
+const SPRITE = "/avatar/day-night-sprite.webp";
+const STATIC_DAY = "/avatar/day.PNG";
+const STATIC_NIGHT = "/avatar/night.PNG";
 
 export function AvatarToggle({
   size = 80,
@@ -20,6 +22,7 @@ export function AvatarToggle({
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [broken, setBroken] = React.useState(false);
+  const [spriteReady, setSpriteReady] = React.useState(false);
   const [frame, setFrame] = React.useState(LAST_FRAME);
 
   const prevTheme = React.useRef<string | undefined>(undefined);
@@ -38,6 +41,7 @@ export function AvatarToggle({
 
     const image = new Image();
     image.onerror = () => setBroken(true);
+    image.onload = () => setSpriteReady(true);
     image.src = SPRITE;
 
     return () => {
@@ -105,16 +109,38 @@ export function AvatarToggle({
       style={{ width: size, height: size }}
       className={cn("relative overflow-hidden rounded-full", ring, className)}
     >
-      <div
-        aria-label="Аватар Алексея"
-        role="img"
-        className="absolute inset-0 h-full w-full bg-cover"
-        style={{
-          backgroundImage: `url(${SPRITE})`,
-          backgroundPosition: `${(-frame * size).toFixed(2)}px 0`,
-          backgroundSize: `${size * FRAME_COUNT}px ${size}px`,
-        }}
-      />
+      {/* Мгновенный статичный кадр, пока тяжёлый спрайт догружается.
+          Тема выбирается CSS-классами, поэтому без вспышки при гидратации. */}
+      {!spriteReady && (
+        <>
+          <img
+            src={STATIC_DAY}
+            alt=""
+            aria-hidden
+            draggable={false}
+            className="absolute inset-0 h-full w-full object-cover dark:hidden"
+          />
+          <img
+            src={STATIC_NIGHT}
+            alt=""
+            aria-hidden
+            draggable={false}
+            className="absolute inset-0 hidden h-full w-full object-cover dark:block"
+          />
+        </>
+      )}
+      {spriteReady && (
+        <div
+          aria-label="Аватар Алексея"
+          role="img"
+          className="absolute inset-0 h-full w-full bg-cover"
+          style={{
+            backgroundImage: `url(${SPRITE})`,
+            backgroundPosition: `${(-frame * size).toFixed(2)}px 0`,
+            backgroundSize: `${size * FRAME_COUNT}px ${size}px`,
+          }}
+        />
+      )}
     </div>
   );
 }
