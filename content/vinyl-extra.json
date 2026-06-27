@@ -121,5 +121,105 @@
       "Ниточка",
       "Круглая песня"
     ]
+  },
+  "bob-dylan-under-the-red-sky": {
+    "front": "/vinyl/bob-dylan-front.webp",
+    "back": "/vinyl/bob-dylan-back.webp",
+    "tracks": [
+      "Wiggle Wiggle",
+      "Under the Red Sky",
+      "Unbelievable",
+      "Born in Time",
+      "T.V. Talkin' Song",
+      "10,000 Men",
+      "2 x 2",
+      "God Knows",
+      "Handy Dandy",
+      "Cat's in the Well"
+    ]
+  },
+  "na-koncertah-vladimira-vysockogo": {
+    "front": "/vinyl/vysotskiy-front.webp",
+    "back": "/vinyl/vysotskiy-back.webp",
+    "tracks": [
+      "Песня о друге",
+      "Памяти М. Хергиани",
+      "Песенка о старой Одессе",
+      "О моём старшине",
+      "Снайпер",
+      "Я не люблю",
+      "О переселении душ",
+      "Плагиат",
+      "Жираф",
+      "Слухи",
+      "Поездка в город",
+      "Чёрное золото",
+      "На судне бунт"
+    ]
+  },
+  "iosif-kobzon-blagoslovlyayu-vse-chto-bylo": {
+    "front": "/vinyl/kobson-front.webp",
+    "back": "/vinyl/kobson-back.webp",
+    "tracks": [
+      "Русь моя",
+      "Благословляю всё, что было",
+      "Сольвейг",
+      "Имя Пушкинского дома",
+      "В тихий вечер мы встречались",
+      "Россия",
+      "Весь я — память, весь я — слух",
+      "Я стремлюсь к роскошной воле",
+      "Слуга царице",
+      "Гармоника, гармоника"
+    ]
+  },
+  "pesni-dlya-detey-pro-krasnuyu-shapochku-a-rybnikov": {
+    "front": "/vinyl/dlya-detei-front.webp",
+    "back": "/vinyl/dlya-detei-back.webp",
+    "tracks": [
+      "Песня Красной Шапочки",
+      "Песня Охотника",
+      "Песня о мастерах",
+      "Необитаемый остров",
+      "Песня о звёздах",
+      "Песня Волчицы"
+    ]
+  },
+  "puteshestvie-gullivera-v-brobdingneg": {
+    "front": "/vinyl/gyliver-front.webp",
+    "back": "/vinyl/gyliver-back.webp",
+    "tracks": [
+      "Инсценировка В. Левертова по роману Дж. Свифта",
+      "В ролях: В. Гафт (Гулливер), В. Ларионов (от автора), А. Каменкова (Глюмдальклич), Э. Урусова (королева)",
+      "Режиссёр Н. Киселёва"
+    ]
+  },
+  "skazki-narodov-mira-vanyushka-i-carevna-russkaya-skazka": {
+    "front": "/vinyl/vanusha-front.webp",
+    "back": "/vinyl/vanusha-back.webp",
+    "tracks": [
+      "Русская народная сказка",
+      "Инсценировка Е. Лаговского, музыка С. Томина",
+      "В ролях: В. Якут (сказочник), О. Великанова (царевна)",
+      "Инструментальный ансамбль п/р В. Желвакова"
+    ]
+  },
+  "skazka-vasilisa-prekrasnaya": {
+    "front": "/vinyl/vasilisa-front.webp",
+    "back": "/vinyl/vasilisa-back.webp",
+    "tracks": [
+      "Композиция Г. Синельникова по мотивам русской народной сказки",
+      "В ролях: Е. Синельникова (Василиса), Э. Зорин (Царевич)",
+      "Оркестр народных инструментов"
+    ]
+  },
+  "priglashenie-k-tancu": {
+    "front": "/vinyl/tancy-front.webp",
+    "back": "/vinyl/tancy-back.webp",
+    "tracks": [
+      "Сборник инструментальной танцевальной музыки (Aicinājums uz deju)",
+      "Эстрадный оркестр Латвийского радио и телевидения, дирижёр Алнис Закис",
+      "Бальные танцы — вальсы, танго, фокстроты"
+    ]
   }
 }
