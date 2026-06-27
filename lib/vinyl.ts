@@ -7,6 +7,9 @@ export type VinylData = { have: VinylAlbum[]; want: string[] };
 export type VinylItem = {
   title: string;
   tracks: string[];
+  /** Описание издания абзацами — для пластинок, где «треки» это на самом деле
+   *  не список песен, а сведения о записи (в ролях, оркестр и т.п.). */
+  description?: string[];
   want: boolean;
   slug: string;
   front?: string;
@@ -18,7 +21,14 @@ export type VinylItem = {
  *  vinyl.json держит сами списки (есть/хочу), подробности по альбому — здесь. */
 type VinylExtra = Record<
   string,
-  { front?: string; back?: string; tracks?: string[]; own?: boolean; genre?: string }
+  {
+    front?: string;
+    back?: string;
+    tracks?: string[];
+    description?: string[];
+    own?: boolean;
+    genre?: string;
+  }
 >;
 
 export function getVinyl(): VinylData {
@@ -46,6 +56,7 @@ export function getAllVinylItems(): VinylItem[] {
     return {
       title,
       tracks: ex.tracks?.length ? ex.tracks : tracks,
+      description: ex.description,
       // own: true в обогащении переносит пластинку из «хочу» в «есть»
       // (быстрый способ отметить покупку, не трогая списки в vinyl.json)
       want: want && ex.own !== true,

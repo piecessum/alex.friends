@@ -49,14 +49,23 @@ export default async function VinylItemPage({
           title={item.title}
           want={item.want}
           tracks={item.tracks}
+          description={item.description}
           front={item.front}
           back={item.back}
         />
 
         <section className="mt-12">
-          <h2 className="text-lg font-bold tracking-tight">Список треков</h2>
+          <h2 className="text-lg font-bold tracking-tight">
+            {item.description?.length ? "Об издании" : "Список треков"}
+          </h2>
 
-          {item.tracks.length ? (
+          {item.description?.length ? (
+            <div className="mt-4 space-y-3 text-neutral-700 dark:text-neutral-300">
+              {item.description.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+          ) : item.tracks.length ? (
             <ol className="mt-4 divide-y divide-neutral-200 dark:divide-neutral-800">
               {item.tracks.map((track, i) => (
                 <li

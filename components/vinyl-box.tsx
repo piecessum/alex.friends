@@ -11,12 +11,14 @@ export function VinylBox({
   title,
   want,
   tracks = [],
+  description,
   front: frontImg,
   back: backImg,
 }: {
   title: string;
   want?: boolean;
   tracks?: string[];
+  description?: string[];
   front?: string;
   back?: string;
 }) {
@@ -144,11 +146,13 @@ export function VinylBox({
                 </div>
                 <div className="text-sm font-semibold text-white/90">{title}</div>
                 <div className="min-h-0 flex-1 overflow-hidden py-2 text-[10px] leading-relaxed text-white/55">
-                  {tracks.slice(0, 12).map((t, i) => (
-                    <div key={i} className="truncate">
-                      {i + 1}. {t}
-                    </div>
-                  ))}
+                  {description?.length
+                    ? description.map((p, i) => <div key={i}>{p}</div>)
+                    : tracks.slice(0, 12).map((t, i) => (
+                        <div key={i} className="truncate">
+                          {i + 1}. {t}
+                        </div>
+                      ))}
                 </div>
                 <div
                   className="h-7 w-24 self-end"
