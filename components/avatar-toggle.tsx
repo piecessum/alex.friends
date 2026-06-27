@@ -4,23 +4,11 @@ import * as React from "react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
-/**
- * Гифки ~1.44 с, проигрываются один раз (loop=1) и держат последний кадр.
- * Статичные day.PNG / night.PNG — это первый и последний кадр гифки,
- * поэтому подмена гифки на статику происходит пиксель-в-пиксель, без рывка.
- */
-const ANIM_MS = 1500;
-
-const ASSETS = {
-  /** Светлая тема — в очках (первый кадр гифки) */
-  light: "/avatar/day.PNG",
-  /** Тёмная тема — без очков (последний кадр гифки) */
-  dark: "/avatar/night.PNG",
-  /** Переход свет→тьма — снимает очки */
-  toDark: "/avatar/day-night.gif",
-  /** Переход тьма→свет — надевает очки */
-  toLight: "/avatar/night-day.gif",
-} as const;
+const ANIM_MS = 1440;
+const FRAME_COUNT = 36;
+const FIRST_FRAME = 0;
+const LAST_FRAME = FRAME_COUNT - 1;
+const SPRITE = "/avatar/day-night-sprite.png";
 
 export function AvatarToggle({
   size = 80,
@@ -32,92 +20,65 @@ export function AvatarToggle({
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [broken, setBroken] = React.useState(false);
-  const [src, setSrc] = React.useState<string>(ASSETS.dark);
+  const [frame, setFrame] = React.useState(LAST_FRAME);
 
   const prevTheme = React.useRef<string | undefined>(undefined);
-  const blobs = React.useRef<Record<string, Blob>>({});
-  const liveUrl = React.useRef<string | null>(null);
-  const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const transitionId = React.useRef(0);
+  const frameRef = React.useRef(LAST_FRAME);
+  const raf = React.useRef<number | null>(null);
 
-  // Гифки один раз грузим целиком в память. Дальше каждый переход создаёт
-  // свежий object-URL из блоба: гифка играет с первого кадра и не качается
-  // по сети повторно.
+  const setCurrentFrame = React.useCallback((nextFrame: number) => {
+    frameRef.current = nextFrame;
+    setFrame(nextFrame);
+  }, []);
+
   React.useEffect(() => {
     setMounted(true);
     prevTheme.current = resolvedTheme;
-    setSrc(resolvedTheme === "dark" ? ASSETS.dark : ASSETS.light);
-    let alive = true;
+    setCurrentFrame(resolvedTheme === "dark" ? LAST_FRAME : FIRST_FRAME);
 
-    [ASSETS.toDark, ASSETS.toLight].forEach((url) => {
-      fetch(url)
-        .then((r) => r.blob())
-        .then((b) => {
-          if (alive) blobs.current[url] = b;
-        })
-        .catch(() => {});
-    });
-    // Статичные кадры — в кэш браузера.
-    [ASSETS.light, ASSETS.dark].forEach((s) => {
-      const i = new Image();
-      i.src = s;
-    });
+    const image = new Image();
+    image.onerror = () => setBroken(true);
+    image.src = SPRITE;
 
     return () => {
-      alive = false;
-      if (timer.current) clearTimeout(timer.current);
-      if (liveUrl.current) URL.revokeObjectURL(liveUrl.current);
+      if (raf.current !== null) cancelAnimationFrame(raf.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Смена темы → проигрываем нужную гифку.
   React.useEffect(() => {
     if (!mounted || !resolvedTheme) return;
     if (!prevTheme.current || prevTheme.current === resolvedTheme) {
       prevTheme.current = resolvedTheme;
-      setSrc(resolvedTheme === "dark" ? ASSETS.dark : ASSETS.light);
+      setCurrentFrame(resolvedTheme === "dark" ? LAST_FRAME : FIRST_FRAME);
       return;
     }
 
-    const toDark = resolvedTheme === "dark";
     prevTheme.current = resolvedTheme;
+    const from = frameRef.current;
+    const to = resolvedTheme === "dark" ? LAST_FRAME : FIRST_FRAME;
+    const distance = to - from;
+    const startedAt = performance.now();
 
-    const url = toDark ? ASSETS.toDark : ASSETS.toLight;
-    const final = toDark ? ASSETS.dark : ASSETS.light;
+    if (raf.current !== null) {
+      cancelAnimationFrame(raf.current);
+    }
 
-    if (timer.current) clearTimeout(timer.current);
-    const id = ++transitionId.current;
+    const tick = (now: number) => {
+      const progress = Math.min((now - startedAt) / ANIM_MS, 1);
+      setCurrentFrame(Math.round(from + distance * progress));
 
-    const play = (blob: Blob) => {
-      if (transitionId.current !== id) return;
-      if (liveUrl.current) URL.revokeObjectURL(liveUrl.current);
-      const gif = URL.createObjectURL(blob);
-      liveUrl.current = gif;
-      setSrc(gif);
+      if (progress < 1) {
+        raf.current = requestAnimationFrame(tick);
+        return;
+      }
 
-      timer.current = setTimeout(() => {
-        if (transitionId.current !== id) return;
-        setSrc(final);
-      }, ANIM_MS);
+      raf.current = null;
+      setCurrentFrame(to);
     };
 
-    const cached = blobs.current[url];
-    if (cached) {
-      play(cached);
-      return;
-    }
-
-    fetch(url)
-      .then((r) => r.blob())
-      .then((blob) => {
-        blobs.current[url] = blob;
-        play(blob);
-      })
-      .catch(() => {
-        if (transitionId.current === id) setSrc(final);
-      });
-  }, [resolvedTheme, mounted]);
+    raf.current = requestAnimationFrame(tick);
+  }, [resolvedTheme, mounted, setCurrentFrame]);
 
   const ring =
     "ring-2 ring-neutral-200 dark:ring-neutral-800 shadow-lg shadow-black/5";
@@ -144,14 +105,15 @@ export function AvatarToggle({
       style={{ width: size, height: size }}
       className={cn("relative overflow-hidden rounded-full", ring, className)}
     >
-      {/* Один img исключает мигание между подложкой и GIF. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt="Аватар Алексея"
-        draggable={false}
-        onError={() => setBroken(true)}
-        className="absolute inset-0 h-full w-full object-cover"
+      <div
+        aria-label="Аватар Алексея"
+        role="img"
+        className="absolute inset-0 h-full w-full bg-cover"
+        style={{
+          backgroundImage: `url(${SPRITE})`,
+          backgroundPosition: `${(-frame * size).toFixed(2)}px 0`,
+          backgroundSize: `${size * FRAME_COUNT}px ${size}px`,
+        }}
       />
     </div>
   );
