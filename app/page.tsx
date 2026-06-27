@@ -7,7 +7,7 @@ import {
   ArrowRight,
   NotebookPen,
   Disc3,
-  Gift,
+  Camera,
   Briefcase,
 } from "lucide-react";
 import { AvatarToggle } from "@/components/avatar-toggle";
@@ -44,12 +44,11 @@ const widgets: Widget[] = [
     accent: "from-purple-500/15 text-purple-500 dark:text-purple-400",
   },
   {
-    title: "Вишлист",
-    description: "То, что хочу получить в подарок.",
-    icon: Gift,
-    href: links.wishlist,
-    external: true,
-    accent: "from-rose-500/15 text-rose-500 dark:text-rose-400",
+    title: "Фотографирую",
+    description: "Фиксирую красивые моменты.",
+    icon: Camera,
+    href: "/photos",
+    accent: "from-amber-500/15 text-amber-500 dark:text-amber-400",
   },
   {
     title: "Я ищу работу",
