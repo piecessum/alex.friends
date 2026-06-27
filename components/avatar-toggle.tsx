@@ -5,24 +5,22 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
 /**
- * Длительность гиф-анимации (снимает/надевает очки) в мс.
- * Гифки ~1.44 с, проигрываются один раз (loop=1) и держат последний кадр —
- * свап на статичное фото происходит здесь с небольшим запасом.
+ * Гифки ~1.44 с, проигрываются один раз (loop=1) и держат последний кадр.
+ * Статичные day.PNG / night.PNG — это первый и последний кадр гифки,
+ * поэтому подмена гифки на статику происходит пиксель-в-пиксель, без рывка.
  */
-const ANIM_MS = 1600;
+const ANIM_MS = 1500;
 
 const ASSETS = {
-  /** Светлая тема, статика — в очках (день) */
+  /** Светлая тема — в очках (первый кадр гифки) */
   light: "/avatar/day.PNG",
-  /** Тёмная тема, статика — без очков (ночь) */
+  /** Тёмная тема — без очков (последний кадр гифки) */
   dark: "/avatar/night.PNG",
-  /** Переход свет→тьма — снимает очки (день→ночь) */
+  /** Переход свет→тьма — снимает очки */
   toDark: "/avatar/day-night.gif",
-  /** Переход тьма→свет — надевает очки (ночь→день) */
+  /** Переход тьма→свет — надевает очки */
   toLight: "/avatar/night-day.gif",
 } as const;
-
-type Phase = "idle" | "to-dark" | "to-light";
 
 export function AvatarToggle({
   size = 80,
@@ -33,35 +31,35 @@ export function AvatarToggle({
 }) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
-  const [phase, setPhase] = React.useState<Phase>("idle");
-  const [gifUrl, setGifUrl] = React.useState<string | null>(null);
   const [broken, setBroken] = React.useState(false);
+  // Активный переход: гифка поверх + кадр-«подложка» под ней. null = покой.
+  const [trans, setTrans] = React.useState<{ gif: string; base: string } | null>(
+    null
+  );
 
   const prevTheme = React.useRef<string | undefined>(undefined);
-  const blobs = React.useRef<{ toDark?: Blob; toLight?: Blob }>({});
-  const objectUrl = React.useRef<string | null>(null);
+  const blobs = React.useRef<Record<string, Blob>>({});
+  const liveUrl = React.useRef<string | null>(null);
+  const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const transitionId = React.useRef(0);
 
-  // Один раз грузим гифки целиком в память (Blob). При смене темы создаём
-  // свежий object-URL из этого блоба: гифка играет с первого кадра, рисуется
-  // мгновенно (она уже в памяти) и НИКОГДА не качается по сети повторно —
-  // отсюда уходят и тормоза, и построчная «полоска» недогруженного кадра.
+  // Гифки один раз грузим целиком в память. Дальше каждый переход создаёт
+  // свежий object-URL из блоба: гифка играет с первого кадра и не качается
+  // по сети повторно.
   React.useEffect(() => {
     setMounted(true);
     prevTheme.current = resolvedTheme;
     let alive = true;
 
-    Promise.all([
-      fetch(ASSETS.toDark).then((r) => r.blob()),
-      fetch(ASSETS.toLight).then((r) => r.blob()),
-    ])
-      .then(([d, l]) => {
-        if (!alive) return;
-        blobs.current.toDark = d;
-        blobs.current.toLight = l;
-      })
-      .catch(() => {});
-
-    // Статичные кадры тоже прогреваем в кэш браузера.
+    [ASSETS.toDark, ASSETS.toLight].forEach((url) => {
+      fetch(url)
+        .then((r) => r.blob())
+        .then((b) => {
+          if (alive) blobs.current[url] = b;
+        })
+        .catch(() => {});
+    });
+    // Статичные кадры — в кэш браузера.
     [ASSETS.light, ASSETS.dark].forEach((s) => {
       const i = new Image();
       i.src = s;
@@ -69,12 +67,13 @@ export function AvatarToggle({
 
     return () => {
       alive = false;
-      if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
+      if (timer.current) clearTimeout(timer.current);
+      if (liveUrl.current) URL.revokeObjectURL(liveUrl.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Смена темы (от любой кнопки) → проигрываем нужную гифку из памяти.
+  // Смена темы → проигрываем нужную гифку.
   React.useEffect(() => {
     if (!mounted || !resolvedTheme) return;
     if (!prevTheme.current || prevTheme.current === resolvedTheme) {
@@ -85,29 +84,27 @@ export function AvatarToggle({
     const toDark = resolvedTheme === "dark";
     prevTheme.current = resolvedTheme;
 
-    const blob = toDark ? blobs.current.toDark : blobs.current.toLight;
-    if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
+    const url = toDark ? ASSETS.toDark : ASSETS.toLight;
+    const blob = blobs.current[url];
 
-    if (blob) {
-      objectUrl.current = URL.createObjectURL(blob);
-      setGifUrl(objectUrl.current);
-    } else {
-      // Блоб ещё не догрузился — фолбэк на прямой URL с cache-bust,
-      // чтобы гифка хотя бы проиграла с первого кадра.
-      objectUrl.current = null;
-      const direct = toDark ? ASSETS.toDark : ASSETS.toLight;
-      setGifUrl(`${direct}?k=${Date.now()}`);
-    }
+    if (liveUrl.current) URL.revokeObjectURL(liveUrl.current);
+    const gif = blob
+      ? (liveUrl.current = URL.createObjectURL(blob))
+      : ((liveUrl.current = null), `${url}?k=${Date.now()}`);
 
-    setPhase(toDark ? "to-dark" : "to-light");
-    const t = setTimeout(() => setPhase("idle"), ANIM_MS);
-    return () => clearTimeout(t);
+    // Подложка во время анимации = стартовый кадр: без мигания в финальное фото.
+    const base = toDark ? ASSETS.light : ASSETS.dark;
+    setTrans({ gif, base });
+
+    if (timer.current) clearTimeout(timer.current);
+    const id = ++transitionId.current;
+    timer.current = setTimeout(() => {
+      if (transitionId.current === id) setTrans(null);
+    }, ANIM_MS);
   }, [resolvedTheme, mounted]);
 
   const isDark = mounted ? resolvedTheme === "dark" : true;
-
-  const src =
-    phase !== "idle" && gifUrl ? gifUrl : isDark ? ASSETS.dark : ASSETS.light;
+  const base = trans ? trans.base : isDark ? ASSETS.dark : ASSETS.light;
 
   const ring =
     "ring-2 ring-neutral-200 dark:ring-neutral-800 shadow-lg shadow-black/5";
@@ -130,17 +127,31 @@ export function AvatarToggle({
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      key={src}
-      src={src}
-      alt="Аватар Алексея"
-      width={size}
-      height={size}
-      draggable={false}
-      onError={() => setBroken(true)}
+    <div
       style={{ width: size, height: size }}
-      className={cn("rounded-full object-cover", ring, className)}
-    />
+      className={cn("relative overflow-hidden rounded-full", ring, className)}
+    >
+      {/* Статичный кадр — всегда снизу, никогда не мигает. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={base}
+        alt="Аватар Алексея"
+        draggable={false}
+        onError={() => setBroken(true)}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      {/* Гифка — только во время перехода, поверх статики. */}
+      {trans && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={trans.gif}
+          src={trans.gif}
+          alt=""
+          aria-hidden
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+    </div>
   );
 }
