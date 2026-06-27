@@ -74,20 +74,25 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center justify-between gap-4"
+          className="flex items-center gap-4"
         >
-          <div className="flex items-center gap-4">
+          {/* Аватар с переключателем темы поверх него: кнопка сидит на
+              нижне-правом углу по диагонали (45°) и слегка перекрывает
+              фото. Так аватар остаётся круглым даже на узком экране. */}
+          <div className="relative shrink-0">
             <AvatarToggle size={104} />
-            <div>
-              <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-                Привет, я Алексей
-              </h1>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                Это что блог? — нет это бложик
-              </p>
+            <div className="absolute bottom-0 right-0 translate-x-[18%] translate-y-[18%] rounded-full ring-2 ring-white dark:ring-neutral-950">
+              <ThemeToggle />
             </div>
           </div>
-          <ThemeToggle />
+          <div>
+            <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
+              Привет, я Алексей
+            </h1>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+              Это что блог? — нет это бложик
+            </p>
+          </div>
         </motion.div>
 
         {/* Bento-сетка виджетов */}
