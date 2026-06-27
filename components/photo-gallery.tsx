@@ -38,16 +38,40 @@ export function PhotoGallery({ photos }: { photos: string[] }) {
     };
   }, [open, close, show]);
 
-  // Свайп пальцем в лайтбоксе.
+  // Свайп пальцем в лайтбоксе. Пинч-зум (два пальца) свайпом не считаем.
   const touchX = React.useRef<number | null>(null);
+  const touchY = React.useRef<number | null>(null);
+  const pinching = React.useRef(false);
   const onTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length > 1) {
+      pinching.current = true;
+      touchX.current = null;
+      return;
+    }
+    pinching.current = false;
     touchX.current = e.touches[0].clientX;
+    touchY.current = e.touches[0].clientY;
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    // Появился второй палец — это зум, а не свайп.
+    if (e.touches.length > 1) {
+      pinching.current = true;
+      touchX.current = null;
+    }
   };
   const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchX.current === null) return;
+    if (pinching.current) {
+      // Дождёмся, пока оторвут все пальцы, и только тогда сбросим флаг.
+      if (e.touches.length === 0) pinching.current = false;
+      return;
+    }
+    if (touchX.current === null || touchY.current === null) return;
     const dx = e.changedTouches[0].clientX - touchX.current;
-    if (Math.abs(dx) > 50) show(dx < 0 ? 1 : -1);
+    const dy = e.changedTouches[0].clientY - touchY.current;
+    // Листаем только при явно горизонтальном жесте одним пальцем.
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) show(dx < 0 ? 1 : -1);
     touchX.current = null;
+    touchY.current = null;
   };
 
   return (
@@ -79,6 +103,7 @@ export function PhotoGallery({ photos }: { photos: string[] }) {
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm"
           onClick={close}
           onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
           role="dialog"
           aria-modal="true"
