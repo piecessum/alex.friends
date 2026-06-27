@@ -32,10 +32,7 @@ export function AvatarToggle({
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [broken, setBroken] = React.useState(false);
-  // Активный переход: гифка поверх + кадр-«подложка» под ней. null = покой.
-  const [trans, setTrans] = React.useState<{ gif: string; base: string } | null>(
-    null
-  );
+  const [src, setSrc] = React.useState<string>(ASSETS.dark);
 
   const prevTheme = React.useRef<string | undefined>(undefined);
   const blobs = React.useRef<Record<string, Blob>>({});
@@ -49,6 +46,7 @@ export function AvatarToggle({
   React.useEffect(() => {
     setMounted(true);
     prevTheme.current = resolvedTheme;
+    setSrc(resolvedTheme === "dark" ? ASSETS.dark : ASSETS.light);
     let alive = true;
 
     [ASSETS.toDark, ASSETS.toLight].forEach((url) => {
@@ -78,6 +76,7 @@ export function AvatarToggle({
     if (!mounted || !resolvedTheme) return;
     if (!prevTheme.current || prevTheme.current === resolvedTheme) {
       prevTheme.current = resolvedTheme;
+      setSrc(resolvedTheme === "dark" ? ASSETS.dark : ASSETS.light);
       return;
     }
 
@@ -85,26 +84,40 @@ export function AvatarToggle({
     prevTheme.current = resolvedTheme;
 
     const url = toDark ? ASSETS.toDark : ASSETS.toLight;
-    const blob = blobs.current[url];
-
-    if (liveUrl.current) URL.revokeObjectURL(liveUrl.current);
-    const gif = blob
-      ? (liveUrl.current = URL.createObjectURL(blob))
-      : ((liveUrl.current = null), `${url}?k=${Date.now()}`);
-
-    // Подложка во время анимации = стартовый кадр: без мигания в финальное фото.
-    const base = toDark ? ASSETS.light : ASSETS.dark;
-    setTrans({ gif, base });
+    const final = toDark ? ASSETS.dark : ASSETS.light;
 
     if (timer.current) clearTimeout(timer.current);
     const id = ++transitionId.current;
-    timer.current = setTimeout(() => {
-      if (transitionId.current === id) setTrans(null);
-    }, ANIM_MS);
-  }, [resolvedTheme, mounted]);
 
-  const isDark = mounted ? resolvedTheme === "dark" : true;
-  const base = trans ? trans.base : isDark ? ASSETS.dark : ASSETS.light;
+    const play = (blob: Blob) => {
+      if (transitionId.current !== id) return;
+      if (liveUrl.current) URL.revokeObjectURL(liveUrl.current);
+      const gif = URL.createObjectURL(blob);
+      liveUrl.current = gif;
+      setSrc(gif);
+
+      timer.current = setTimeout(() => {
+        if (transitionId.current !== id) return;
+        setSrc(final);
+      }, ANIM_MS);
+    };
+
+    const cached = blobs.current[url];
+    if (cached) {
+      play(cached);
+      return;
+    }
+
+    fetch(url)
+      .then((r) => r.blob())
+      .then((blob) => {
+        blobs.current[url] = blob;
+        play(blob);
+      })
+      .catch(() => {
+        if (transitionId.current === id) setSrc(final);
+      });
+  }, [resolvedTheme, mounted]);
 
   const ring =
     "ring-2 ring-neutral-200 dark:ring-neutral-800 shadow-lg shadow-black/5";
@@ -131,27 +144,15 @@ export function AvatarToggle({
       style={{ width: size, height: size }}
       className={cn("relative overflow-hidden rounded-full", ring, className)}
     >
-      {/* Статичный кадр — всегда снизу, никогда не мигает. */}
+      {/* Один img исключает мигание между подложкой и GIF. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={base}
+        src={src}
         alt="Аватар Алексея"
         draggable={false}
         onError={() => setBroken(true)}
         className="absolute inset-0 h-full w-full object-cover"
       />
-      {/* Гифка — только во время перехода, поверх статики. */}
-      {trans && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={trans.gif}
-          src={trans.gif}
-          alt=""
-          aria-hidden
-          draggable={false}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      )}
     </div>
   );
 }
