@@ -13,8 +13,8 @@ export type VinylItem = {
   back?: string;
 };
 
-/** Ручное обогащение по slug: фото (front/back) и уточнённые треки.
- *  Живёт отдельно от таблицы, поэтому переживает перезапуск импорта. */
+/** Обогащение по slug: фото (front/back), уточнённые треки и флаг own.
+ *  vinyl.json держит сами списки (есть/хочу), подробности по альбому — здесь. */
 type VinylExtra = Record<
   string,
   { front?: string; back?: string; tracks?: string[]; own?: boolean }
@@ -46,7 +46,7 @@ export function getAllVinylItems(): VinylItem[] {
       title,
       tracks: ex.tracks?.length ? ex.tracks : tracks,
       // own: true в обогащении переносит пластинку из «хочу» в «есть»
-      // (на случай, если в таблице её ещё не передвинули)
+      // (быстрый способ отметить покупку, не трогая списки в vinyl.json)
       want: want && ex.own !== true,
       slug,
       front: ex.front,
