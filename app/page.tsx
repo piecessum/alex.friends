@@ -81,7 +81,7 @@ export default function Dashboard() {
               фото. Так аватар остаётся круглым даже на узком экране. */}
           <div className="relative shrink-0">
             <AvatarToggle size={104} />
-            <div className="absolute bottom-0 right-0 translate-x-[18%] translate-y-[18%] rounded-full ring-2 ring-white dark:ring-neutral-950">
+            <div className="absolute bottom-0 right-0 inline-flex translate-x-[18%] translate-y-[18%] rounded-full ring-2 ring-white dark:ring-neutral-950">
               <ThemeToggle />
             </div>
           </div>
