@@ -32,4 +32,4 @@ Push в `main` → автодеплой на Vercel.
 - [ ] Obsidian → Git → Vercel
 - [x] Автопостинг в Telegram-канал (`scripts/publish-telegram.mjs`)
 - [x] Карточки пластинок
-- [ ] 3D-переворот карточек
+- [x] 3D-переворот карточек
