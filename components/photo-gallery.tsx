@@ -131,7 +131,7 @@ export function PhotoGallery({ photos }: { photos: string[] }) {
             src={photos[open]}
             alt=""
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[88vh] max-w-[92vw] rounded-md object-contain shadow-2xl"
+            className="max-h-[100dvh] w-full object-contain sm:h-auto sm:max-h-[88vh] sm:w-auto sm:max-w-[92vw] sm:rounded-md sm:shadow-2xl"
           />
         </div>
       )}
