@@ -16,15 +16,38 @@ const DURATION = 260;
 const EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
 const TRANSITION = `transform ${DURATION}ms ${EASE}`;
 
-export function PhotoGallery({ photos }: { photos: string[] }) {
+type Photo = { src: string; category: string };
+type Category = { id: string; label: string };
+
+export function PhotoGallery({
+  photos,
+  categories,
+}: {
+  photos: Photo[];
+  categories: readonly Category[];
+}) {
   // null = лайтбокс закрыт, иначе индекс открытой фотографии.
   const [open, setOpen] = React.useState<number | null>(null);
+  // Выбранная категория-чипс (null = «Все»).
+  const [cat, setCat] = React.useState<string | null>(null);
   // Живое смещение кадра во время жеста (в пикселях).
   const [offset, setOffset] = React.useState({ x: 0, y: 0 });
   // Включаем CSS-переход только когда «доводим» жест анимацией.
   const [animate, setAnimate] = React.useState(false);
 
-  const n = photos.length;
+  // Видимые снимки и их адреса с учётом выбранной категории.
+  const visible = React.useMemo(
+    () => (cat ? photos.filter((p) => p.category === cat) : photos),
+    [photos, cat]
+  );
+  const items = React.useMemo(() => visible.map((p) => p.src), [visible]);
+  const n = items.length;
+
+  // Смена категории закрывает открытый лайтбокс, чтобы индекс не «уехал».
+  const selectCategory = React.useCallback((id: string | null) => {
+    setOpen(null);
+    setCat(id);
+  }, []);
 
   const close = React.useCallback(() => setOpen(null), []);
 
@@ -166,13 +189,42 @@ export function PhotoGallery({ photos }: { photos: string[] }) {
   const prevIdx = n ? (open! - 1 + n) % n : 0;
   const nextIdx = n ? (open! + 1) % n : 0;
 
+  const chip =
+    "shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500";
+  const chipOn = "bg-amber-500 text-white";
+  const chipOff =
+    "bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700";
+
   return (
     <>
+      {/* Чипсы-категории */}
+      {categories.length > 0 && (
+        <div className="mb-5 flex gap-2 overflow-x-auto px-5 pb-1 sm:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <button
+            type="button"
+            onClick={() => selectCategory(null)}
+            className={`${chip} ${cat === null ? chipOn : chipOff}`}
+          >
+            Все
+          </button>
+          {categories.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => selectCategory(c.id)}
+              className={`${chip} ${cat === c.id ? chipOn : chipOff}`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Плотная сетка квадратных превью */}
       <div className="grid grid-cols-3 gap-1 sm:grid-cols-4 sm:gap-1.5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8">
-        {photos.map((src, i) => (
+        {visible.map((p, i) => (
           <button
-            key={src}
+            key={p.src}
             type="button"
             onClick={() => setOpen(i)}
             className="group relative aspect-square overflow-hidden rounded-sm bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 dark:bg-neutral-800"
@@ -180,7 +232,7 @@ export function PhotoGallery({ photos }: { photos: string[] }) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={src}
+              src={p.src}
               alt=""
               loading="lazy"
               className="h-full w-full object-cover transition duration-300 group-hover:scale-105 group-active:scale-95"
@@ -220,7 +272,7 @@ export function PhotoGallery({ photos }: { photos: string[] }) {
 
           {/* Счётчик */}
           <span className="absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white/90 sm:top-5">
-            {open + 1} / {photos.length}
+            {open + 1} / {n}
           </span>
 
           {/* Назад */}
@@ -272,7 +324,7 @@ export function PhotoGallery({ photos }: { photos: string[] }) {
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={photos[idx]}
+                    src={items[idx]}
                     alt=""
                     draggable={false}
                     loading={k === 1 ? "eager" : "lazy"}

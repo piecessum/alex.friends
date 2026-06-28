@@ -10,24 +10,42 @@ export const metadata = {
   title: "Фотографирую — Алексей Масюта",
 };
 
-// Читаем список снимков из public/photos на этапе сборки: чтобы добавить
-// новые фото, достаточно закинуть файлы в папку — код менять не нужно.
-function getPhotos(): string[] {
-  const dir = path.join(process.cwd(), "public", "photos");
-  let files: string[] = [];
-  try {
-    files = fs.readdirSync(dir);
-  } catch {
-    return [];
+// Категории-чипсы соответствуют подпапкам в public/photos. Чтобы добавить
+// новое фото, достаточно положить файл в нужную папку — код менять не нужно.
+// Новую категорию заводим, добавив папку сюда.
+const CATEGORIES = [
+  { id: "priroda", label: "Природа" },
+  { id: "arhitektura", label: "Архитектура" },
+  { id: "street-art", label: "Стрит-арт" },
+] as const;
+
+const IMG_RE = /\.(jpe?g|png|webp|avif|gif)$/i;
+
+export type Photo = { src: string; category: string };
+
+function getPhotos(): Photo[] {
+  const root = path.join(process.cwd(), "public", "photos");
+  const photos: Photo[] = [];
+  for (const { id } of CATEGORIES) {
+    let files: string[] = [];
+    try {
+      files = fs.readdirSync(path.join(root, id));
+    } catch {
+      continue;
+    }
+    for (const f of files.filter((f) => IMG_RE.test(f)).sort()) {
+      photos.push({ src: `/photos/${id}/${f}`, category: id });
+    }
   }
-  return files
-    .filter((f) => /\.(jpe?g|png|webp|avif|gif)$/i.test(f))
-    .sort()
-    .map((f) => `/photos/${f}`);
+  return photos;
 }
 
 export default function PhotosPage() {
   const photos = getPhotos();
+  // Показываем только те категории, в которых реально есть снимки.
+  const categories = CATEGORIES.filter((c) =>
+    photos.some((p) => p.category === c.id)
+  );
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -69,7 +87,7 @@ export default function PhotosPage() {
         ) : (
           // Галерея во всю ширину экрана
           <div className="mt-10 px-1 sm:px-2 lg:px-4">
-            <PhotoGallery photos={photos} />
+            <PhotoGallery photos={photos} categories={categories} />
           </div>
         )}
       </main>
