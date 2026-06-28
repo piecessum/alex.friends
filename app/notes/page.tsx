@@ -24,7 +24,7 @@ export default async function NotesPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12 sm:py-16">
+      <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"

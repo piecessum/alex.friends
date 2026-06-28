@@ -199,7 +199,7 @@ export function PhotoGallery({
     <>
       {/* Чипсы-категории */}
       {categories.length > 0 && (
-        <div className="mb-5 flex gap-2 overflow-x-auto px-5 pb-1 sm:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mb-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <button
             type="button"
             onClick={() => selectCategory(null)}

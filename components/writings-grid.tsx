@@ -208,7 +208,7 @@ export function WritingsGrid({
 
   return (
     <div>
-      <div className="-mx-6 overflow-x-auto px-6 pb-1">
+      <div className="-mx-4 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
           {renderChip("all", "Всё", tiles.length)}
           {renderChip("longreads", "Лонгриды", notes.length)}
@@ -221,7 +221,7 @@ export function WritingsGrid({
           Здесь пока пусто.
         </p>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {visible.map((t) => (
             <Link
               key={t.key}

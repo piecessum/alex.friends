@@ -23,7 +23,7 @@ export default async function WritingsStatsPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12 sm:py-16">
+      <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <Link
           href="/notes"
           className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
@@ -39,7 +39,7 @@ export default async function WritingsStatsPage() {
           Что и сколько я тут написал.
         </p>
 
-        <div className="mt-10">
+        <div className="mt-8">
           <StatsDashboard stats={stats} />
         </div>
       </main>
