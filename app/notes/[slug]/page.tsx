@@ -4,12 +4,19 @@ import { ArrowLeft, Eye } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { TelegraphContent } from "@/components/telegraph-content";
+import { GraphWidget } from "@/components/graph-widget";
 import {
   getNote,
   getNotesIndex,
+  getAnnouncedPostIds,
   getRelatedNotes,
   formatDate,
 } from "@/lib/notes";
+import { fetchAllPosts } from "@/lib/telegram";
+import { buildLocalGraph } from "@/lib/graph";
+
+// Локальный граф тянет ленту канала — обновляем не чаще раза в час.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return getNotesIndex().map((n) => ({ slug: n.slug }));
@@ -46,9 +53,16 @@ export default async function NotePage({
   const date = formatDate(note.month, note.day, note.year);
   const related = getRelatedNotes(slug, 3);
 
+  // Локальный граф: этот лонгрид, его теги и соседи по тегам.
+  const announced = getAnnouncedPostIds();
+  const feed = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
+  const localGraph = buildLocalGraph(feed, getNotesIndex(), `note:${slug}`);
+
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
+      <GraphWidget data={localGraph} caption="Этот лонгрид в графе" tagLabels />
+
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
         <Link
           href="/notes"

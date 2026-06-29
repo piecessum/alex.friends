@@ -3,9 +3,11 @@ import { ArrowLeft } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { StatsDashboard } from "@/components/stats-dashboard";
+import { TagGraph } from "@/components/tag-graph";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { fetchAllPosts } from "@/lib/telegram";
 import { computeWritingsStats } from "@/lib/writings-stats";
+import { buildTagGraph } from "@/lib/graph";
 
 export const revalidate = 3600;
 
@@ -19,6 +21,9 @@ export default async function WritingsStatsPage() {
   const announced = getAnnouncedPostIds();
   const posts = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
   const stats = computeWritingsStats(posts, notes);
+  const graph = buildTagGraph(posts, notes);
+  const tagCount = graph.nodes.filter((n) => n.kind === "tag").length;
+  const softCount = graph.nodes.filter((n) => n.soft).length;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -39,7 +44,21 @@ export default async function WritingsStatsPage() {
           Что и сколько я тут написал.
         </p>
 
-        <div className="mt-8">
+        <section className="mt-8">
+          <h2 className="text-xl font-bold tracking-tight">Граф связей</h2>
+          <p className="mt-2 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400">
+            {tagCount} тегов-созвездий, посты висят на своих тегах. Полые точки —
+            теги подобраны по смыслу{softCount ? ` (${softCount} шт.)` : ""}, а не
+            указаны хэштегом. Наведи на узел, чтобы подсветить связи; клик по тегу
+            открывает ленту, клик по посту — сам пост. Колесо — зум,
+            перетаскивание — двигать.
+          </p>
+          <div className="mt-4 h-[60vh] min-h-[380px] overflow-hidden rounded-2xl border border-neutral-200 bg-white/40 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/40">
+            <TagGraph data={graph} className="h-full w-full" />
+          </div>
+        </section>
+
+        <div className="mt-12">
           <StatsDashboard stats={stats} />
         </div>
       </main>

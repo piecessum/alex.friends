@@ -4,7 +4,10 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ChannelPost } from "@/components/channel-post";
+import { GraphWidget } from "@/components/graph-widget";
 import { fetchAllPosts, type TgPost } from "@/lib/telegram";
+import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
+import { buildLocalGraph } from "@/lib/graph";
 
 export const revalidate = 3600;
 
@@ -93,9 +96,16 @@ export default async function ChannelItemPage({
   const newer = pos > 0 ? posts[pos - 1] : null;
   const older = pos < posts.length - 1 ? posts[pos + 1] : null;
 
+  // Локальный граф: этот пост, его теги и соседи по тегам.
+  const announced = getAnnouncedPostIds();
+  const feed = posts.filter((p) => !announced.has(p.id));
+  const localGraph = buildLocalGraph(feed, getNotesIndex(), `post:${id}`);
+
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
+      <GraphWidget data={localGraph} caption="Этот пост в графе" tagLabels />
+
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
         <Link
           href="/notes"
