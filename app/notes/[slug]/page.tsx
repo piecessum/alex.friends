@@ -13,7 +13,7 @@ import {
   formatDate,
 } from "@/lib/notes";
 import { fetchAllPosts } from "@/lib/telegram";
-import { buildLocalGraph } from "@/lib/graph";
+import { buildLocalGraph, buildTagGraph } from "@/lib/graph";
 
 // Локальный граф тянет ленту канала — обновляем не чаще раза в час.
 export const revalidate = 3600;
@@ -53,15 +53,23 @@ export default async function NotePage({
   const date = formatDate(note.month, note.day, note.year);
   const related = getRelatedNotes(slug, 3);
 
-  // Локальный граф: этот лонгрид, его теги и соседи по тегам.
+  // Локальный граф: этот лонгрид, его теги и соседи по тегам. Общий — для
+  // переключателя локальный/общий в полноэкранном виде.
   const announced = getAnnouncedPostIds();
   const feed = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
-  const localGraph = buildLocalGraph(feed, getNotesIndex(), `note:${slug}`);
+  const notesIndex = getNotesIndex();
+  const localGraph = buildLocalGraph(feed, notesIndex, `note:${slug}`);
+  const fullGraph = buildTagGraph(feed, notesIndex);
 
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <GraphWidget data={localGraph} caption="Этот лонгрид в графе" tagLabels />
+      <GraphWidget
+        data={localGraph}
+        fullData={fullGraph}
+        caption="Этот лонгрид в графе"
+        tagLabels
+      />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
         <Link

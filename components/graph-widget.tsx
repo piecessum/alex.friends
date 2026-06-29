@@ -7,10 +7,13 @@ import type { TagGraph as TagGraphData } from "@/lib/graph";
 // только в развёрнутом виде.
 export function GraphWidget({
   data,
+  fullData,
   caption = "Граф связей",
   tagLabels = false,
 }: {
   data: TagGraphData;
+  /** Общий граф — для переключателя локальный/общий в полноэкранном виде. */
+  fullData?: TagGraphData;
   caption?: string;
   tagLabels?: boolean;
 }) {
@@ -18,6 +21,7 @@ export function GraphWidget({
     <div className="fixed top-24 right-6 z-40 hidden h-44 w-60 overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/60 shadow-lg shadow-black/5 backdrop-blur-md dark:border-neutral-800/70 dark:bg-neutral-950/50 lg:block">
       <GraphFrame
         data={data}
+        fullData={fullData}
         caption={caption}
         inlineTagLabels={tagLabels}
         inlinePan={false}

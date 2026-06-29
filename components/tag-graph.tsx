@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import type { GraphNode, GraphLink, TagGraph } from "@/lib/graph";
@@ -77,6 +78,8 @@ export function TagGraph({
   tagLabels = true,
   pan = true,
   highlight = true,
+  focusId,
+  emphasizeIds,
 }: {
   data: TagGraph;
   className?: string;
@@ -89,6 +92,11 @@ export function TagGraph({
   /** Подсветка соседей при наведении (гасит остальное). В уголке выключаем —
    *  на мелких узлах мигает и мешает; остаётся только подсказка у курсора. */
   highlight?: boolean;
+  /** Узел, обведённый кольцом (текущий пост в общем графе). */
+  focusId?: string;
+  /** Подсветить это подмножество узлов, остальное приглушить (показ локального
+   *  графа внутри общего: видно, где он находится). */
+  emphasizeIds?: string[];
 }) {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
@@ -112,6 +120,8 @@ export function TagGraph({
     // ── Подготовка узлов/связей и индексов ──────────────────────────────────
     const nodes = data.nodes;
     const links = data.links;
+    const emphasize =
+      emphasizeIds && emphasizeIds.length ? new Set(emphasizeIds) : null;
     const index = new Map<string, number>();
     nodes.forEach((n, i) => index.set(n.id, i));
 
@@ -259,9 +269,13 @@ export function TagGraph({
       ctx.clearRect(0, 0, cssW, cssH);
       const edgeBase = dark ? "rgba(148,163,184,0.18)" : "rgba(100,116,139,0.22)";
       const labelColor = dark ? "#e5e5e5" : "#1f2937";
-      const dim = highlight && hover >= 0;
+      // Эмфазис (локальное подмножество внутри общего графа) гасит остальное
+      // постоянно; ховер дополнительно подсвечивает узел с соседями.
+      const hovering = highlight && hover >= 0;
+      const dim = hovering || !!emphasize;
       const lit = new Set<string>();
-      if (dim) {
+      if (emphasize) for (const id of emphasize) lit.add(id);
+      if (hovering) {
         lit.add(nodes[hover].id);
         for (const nb of neighbors.get(nodes[hover].id)!) lit.add(nb);
       }
@@ -293,14 +307,15 @@ export function TagGraph({
       const accent = dark ? "#818cf8" : "#6366f1";
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
+        const isFocus = n.focus || n.id === focusId;
         const s = toScreen(pts[i]);
-        const r = radii[i] * (n.focus ? 2 : 1);
+        const r = radii[i] * (isFocus ? 2 : 1);
         const on = !dim || lit.has(n.id);
         const c = colorOf(n);
         ctx.globalAlpha = on ? 1 : 0.12;
         ctx.beginPath();
         ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-        if (n.kind !== "tag" && n.soft && !n.focus) {
+        if (n.kind !== "tag" && n.soft && !isFocus) {
           // мягкий тег — полый кружок (догадка, а не явный хэштег)
           ctx.fillStyle = dark ? "#0a0a0a" : "#ffffff";
           ctx.fill();
@@ -311,8 +326,8 @@ export function TagGraph({
           ctx.fillStyle = c;
           ctx.fill();
         }
-        // фокус-узел (текущий пост в локальном графе) — кольцо-акцент
-        if (n.focus) {
+        // фокус-узел (текущий пост) — кольцо-акцент
+        if (isFocus) {
           ctx.beginPath();
           ctx.arc(s.x, s.y, r + 3.5, 0, Math.PI * 2);
           ctx.lineWidth = 2;
@@ -428,9 +443,11 @@ export function TagGraph({
       }
       if (hit >= 0) {
         const n = nodes[hit];
+        // Координаты вьюпорта — тултип рисуем порталом в body, чтобы он не
+        // обрезался рамкой уголка (overflow-hidden) для крайних точек.
         setHoverLabel({
-          x: sx,
-          y: sy,
+          x: e.clientX,
+          y: e.clientY,
           text: n.kind === "tag" ? `#${n.label} · ${n.count}` : n.label,
           soft: n.soft,
         });
@@ -502,26 +519,36 @@ export function TagGraph({
         canvas.removeEventListener("wheel", onWheel);
       }
     };
-  }, [data, dark, interactive, tagLabels, pan, highlight, router]);
+  }, [data, dark, interactive, tagLabels, pan, highlight, focusId, emphasizeIds, router]);
+
+  // Тултип рисуем порталом в body (fixed по координатам вьюпорта) — чтобы он
+  // не обрезался рамкой уголка и был виден для крайних точек. У правого края
+  // переворачиваем влево, чтобы не уезжал за экран.
+  const flipX =
+    typeof window !== "undefined" && hoverLabel
+      ? hoverLabel.x > window.innerWidth - 200
+      : false;
 
   return (
     <div className={className} style={{ position: "relative" }}>
       <canvas ref={canvasRef} className="h-full w-full touch-none" />
-      {hoverLabel && (
-        <div
-          className="pointer-events-none absolute z-10 max-w-xs rounded-lg border border-neutral-200 bg-white/95 px-2.5 py-1.5 text-xs text-neutral-800 shadow-lg backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/95 dark:text-neutral-200"
-          style={{
-            left: Math.min(hoverLabel.x + 12, 9999),
-            top: hoverLabel.y + 12,
-            transform: "translateZ(0)",
-          }}
-        >
-          {hoverLabel.text}
-          {hoverLabel.soft && (
-            <span className="ml-1 text-neutral-400">· по смыслу</span>
-          )}
-        </div>
-      )}
+      {hoverLabel &&
+        createPortal(
+          <div
+            className="pointer-events-none fixed z-[120] max-w-[40vw] rounded-md border border-neutral-200 bg-white/95 px-2 py-1 text-[11px] leading-tight text-neutral-800 shadow-lg backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/95 dark:text-neutral-200"
+            style={{
+              left: flipX ? hoverLabel.x - 12 : hoverLabel.x + 12,
+              top: hoverLabel.y + 14,
+              transform: flipX ? "translateX(-100%)" : undefined,
+            }}
+          >
+            {hoverLabel.text}
+            {hoverLabel.soft && (
+              <span className="ml-1 text-neutral-400">· по смыслу</span>
+            )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
