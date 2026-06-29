@@ -1,6 +1,9 @@
 // Чтение публичной ленты Telegram-канала через веб-превью t.me/s/<channel>.
 // Без API-ключей. Кэшируется на час (новые посты подтягиваются сами).
 
+import fs from "node:fs";
+import path from "node:path";
+
 export const CHANNEL = "ux_review";
 
 export type TgVideo = { thumb?: string; duration?: string; src?: string };
@@ -211,7 +214,71 @@ export async function fetchAllPosts(): Promise<TgPost[]> {
     before = page.nextBefore;
   }
   all.sort((a, b) => Number(b.id) - Number(a.id));
-  return mergeForwardCaptions(all);
+  return applyManualMerges(mergeForwardCaptions(all), loadManualMerges());
+}
+
+// Ручной список постов, которые надо показать одним: Telegram иногда бьёт один
+// смысловой пост на несколько сообщений (фото + подпись, мысль в двух частях),
+// и по времени их не отличить от двух разных быстрых постов. Поэтому такие
+// группы задаём явно в content/post-merges.json — массив групп id, напр.
+// [["758","759"],["809","810"]]. Первый id группы — каноничный, остальные — alias.
+function loadManualMerges(): string[][] {
+  try {
+    const file = path.join(process.cwd(), "content", "post-merges.json");
+    const data = JSON.parse(fs.readFileSync(file, "utf8"));
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Склеивает несколько постов в один: текст — встык, медиа/теги — объединяем. */
+function mergePosts(members: TgPost[]): TgPost {
+  const base = members[0];
+  return {
+    ...base,
+    html: members.map((m) => m.html).filter(Boolean).join("\n\n"),
+    photos: members.flatMap((m) => m.photos),
+    videos: members.flatMap((m) => m.videos),
+    tags: [...new Set(members.flatMap((m) => m.tags))],
+    forward: members.find((m) => m.forward)?.forward ?? base.forward,
+    link: members.find((m) => m.link)?.link ?? base.link,
+    views: members.find((m) => m.views)?.views ?? base.views,
+    aliasIds: members
+      .flatMap((m) => [m.id, ...(m.aliasIds ?? [])])
+      .filter((id) => id !== base.id),
+  };
+}
+
+function applyManualMerges(posts: TgPost[], groups: string[][]): TgPost[] {
+  if (!groups.length) return posts;
+  const byAnyId = (id: string) =>
+    posts.find((p) => p.id === id || p.aliasIds?.includes(id));
+  const consumed = new Set<string>(); // id неканоничных постов группы
+  const mergedAt = new Map<string, TgPost>(); // каноничный id → склеенный пост
+
+  for (const group of groups) {
+    const seen = new Set<string>();
+    const members: TgPost[] = [];
+    for (const id of group) {
+      const p = byAnyId(id);
+      if (p && !seen.has(p.id)) {
+        seen.add(p.id);
+        members.push(p);
+      }
+    }
+    if (members.length < 2) continue;
+    members.sort((a, b) => Number(a.id) - Number(b.id));
+    mergedAt.set(members[0].id, mergePosts(members));
+    for (let i = 1; i < members.length; i++) consumed.add(members[i].id);
+  }
+
+  const out: TgPost[] = [];
+  for (const p of posts) {
+    if (consumed.has(p.id)) continue;
+    out.push(mergedAt.get(p.id) ?? p);
+  }
+  return out.sort((a, b) => Number(b.id) - Number(a.id));
 }
 
 // Пересылку с подписью Telegram отправляет ДВУМЯ сообщениями в один момент:
