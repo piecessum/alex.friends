@@ -76,6 +76,7 @@ export function TagGraph({
   interactive = true,
   tagLabels = true,
   pan = true,
+  highlight = true,
 }: {
   data: TagGraph;
   className?: string;
@@ -85,6 +86,9 @@ export function TagGraph({
   tagLabels?: boolean;
   /** Зум колесом, пан фона и перетаскивание узлов. В уголке выключаем. */
   pan?: boolean;
+  /** Подсветка соседей при наведении (гасит остальное). В уголке выключаем —
+   *  на мелких узлах мигает и мешает; остаётся только подсказка у курсора. */
+  highlight?: boolean;
 }) {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
@@ -255,7 +259,7 @@ export function TagGraph({
       ctx.clearRect(0, 0, cssW, cssH);
       const edgeBase = dark ? "rgba(148,163,184,0.18)" : "rgba(100,116,139,0.22)";
       const labelColor = dark ? "#e5e5e5" : "#1f2937";
-      const dim = hover >= 0;
+      const dim = highlight && hover >= 0;
       const lit = new Set<string>();
       if (dim) {
         lit.add(nodes[hover].id);
@@ -498,7 +502,7 @@ export function TagGraph({
         canvas.removeEventListener("wheel", onWheel);
       }
     };
-  }, [data, dark, interactive, tagLabels, pan, router]);
+  }, [data, dark, interactive, tagLabels, pan, highlight, router]);
 
   return (
     <div className={className} style={{ position: "relative" }}>

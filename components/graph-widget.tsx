@@ -21,6 +21,7 @@ export function GraphWidget({
         caption={caption}
         inlineTagLabels={tagLabels}
         inlinePan={false}
+        inlineHighlight={false}
       />
     </div>
   );

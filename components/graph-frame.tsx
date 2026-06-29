@@ -14,12 +14,14 @@ export function GraphFrame({
   caption = "Граф связей",
   inlineTagLabels = true,
   inlinePan = true,
+  inlineHighlight = true,
 }: {
   data: TagGraphData;
   /** Заголовок, видимый только в развёрнутом (полноэкранном) виде. */
   caption?: string;
   inlineTagLabels?: boolean;
   inlinePan?: boolean;
+  inlineHighlight?: boolean;
 }) {
   const [full, setFull] = React.useState(false);
 
@@ -45,6 +47,7 @@ export function GraphFrame({
         interactive
         pan={inlinePan}
         tagLabels={inlineTagLabels}
+        highlight={inlineHighlight}
         className="h-full w-full"
       />
       <button
