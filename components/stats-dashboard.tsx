@@ -33,7 +33,7 @@ function StatCard({
   accent: string;
 }) {
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white/50 p-5 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/50">
+    <div className="flex h-full flex-col justify-center rounded-2xl border border-neutral-200 bg-white/50 p-5 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/50">
       <div className={`text-[11px] font-semibold uppercase tracking-widest ${accent}`}>
         {label}
       </div>
@@ -44,6 +44,31 @@ function StatCard({
         </div>
       )}
     </div>
+  );
+}
+
+/** Четыре ключевые цифры — отдельно, чтобы разместить столбиком рядом с графом. */
+export function StatsTotals({ stats }: { stats: WritingsStats }) {
+  const { totals } = stats;
+  const pct = (n: number) =>
+    totals.posts ? `${Math.round((n / totals.posts) * 100)}% постов` : undefined;
+  return (
+    <>
+      <StatCard label="Всего постов" value={totals.posts} accent="text-indigo-500" />
+      <StatCard label="Лонгридов" value={totals.notes} accent="text-fuchsia-500" />
+      <StatCard
+        label="С медиа"
+        value={totals.withMedia}
+        hint={pct(totals.withMedia)}
+        accent="text-teal-500"
+      />
+      <StatCard
+        label="Репостов"
+        value={totals.forwarded}
+        hint={pct(totals.forwarded)}
+        accent="text-amber-500"
+      />
+    </>
   );
 }
 
@@ -348,39 +373,6 @@ export function StatsDashboard({ stats }: { stats: WritingsStats }) {
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard
-          label="Всего постов"
-          value={totals.posts}
-          accent="text-indigo-500"
-        />
-        <StatCard
-          label="Лонгридов"
-          value={totals.notes}
-          accent="text-fuchsia-500"
-        />
-        <StatCard
-          label="С медиа"
-          value={totals.withMedia}
-          hint={
-            totals.posts
-              ? `${Math.round((totals.withMedia / totals.posts) * 100)}% постов`
-              : undefined
-          }
-          accent="text-teal-500"
-        />
-        <StatCard
-          label="Репостов"
-          value={totals.forwarded}
-          hint={
-            totals.posts
-              ? `${Math.round((totals.forwarded / totals.posts) * 100)}% постов`
-              : undefined
-          }
-          accent="text-amber-500"
-        />
-      </div>
-
       <Section title="Темы постов" hint={`${byTag.length} категорий`}>
         <TagsPie
           segments={pieSegments}

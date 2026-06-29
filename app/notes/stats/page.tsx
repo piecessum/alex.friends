@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { StatsDashboard } from "@/components/stats-dashboard";
+import { StatsDashboard, StatsTotals } from "@/components/stats-dashboard";
 import { GraphFrame } from "@/components/graph-frame";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { fetchAllPosts } from "@/lib/telegram";
@@ -22,8 +22,6 @@ export default async function WritingsStatsPage() {
   const posts = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
   const stats = computeWritingsStats(posts, notes);
   const graph = buildTagGraph(posts, notes);
-  const tagCount = graph.nodes.filter((n) => n.kind === "tag").length;
-  const softCount = graph.nodes.filter((n) => n.soft).length;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -44,19 +42,15 @@ export default async function WritingsStatsPage() {
           Что и сколько я тут написал.
         </p>
 
-        <section className="mt-8">
-          <h2 className="text-xl font-bold tracking-tight">Граф связей</h2>
-          <p className="mt-2 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400">
-            {tagCount} тегов-созвездий, посты висят на своих тегах. Полые точки —
-            теги подобраны по смыслу{softCount ? ` (${softCount} шт.)` : ""}, а не
-            указаны хэштегом. Наведи на узел, чтобы подсветить связи; клик по тегу
-            открывает ленту, клик по посту — сам пост. Колесо — зум,
-            перетаскивание — двигать.
-          </p>
-          <div className="mt-4 h-[60vh] min-h-[380px] overflow-hidden rounded-2xl border border-neutral-200 bg-white/40 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/40">
+        {/* Граф слева, ключевые цифры столбиком справа */}
+        <div className="mt-8 grid gap-4 lg:grid-cols-3">
+          <div className="h-[60vh] min-h-[420px] overflow-hidden rounded-2xl border border-neutral-200 bg-white/40 backdrop-blur lg:col-span-2 dark:border-neutral-800 dark:bg-neutral-950/40">
             <GraphFrame data={graph} caption="Граф связей" />
           </div>
-        </section>
+          <div className="grid grid-cols-2 gap-4 lg:h-[60vh] lg:min-h-[420px] lg:grid-cols-1 lg:grid-rows-4">
+            <StatsTotals stats={stats} />
+          </div>
+        </div>
 
         <div className="mt-12">
           <StatsDashboard stats={stats} />
