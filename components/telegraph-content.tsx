@@ -3,14 +3,16 @@
 import * as React from "react";
 import { FitImage } from "@/components/fit-image";
 import { Lightbox } from "@/components/lightbox";
+import { internalizeTelegraphUrl } from "@/lib/telegraph-links";
 import type { NoteNode } from "@/lib/notes";
 
 // Картинки лонгрида открываются в том же лайтбоксе, что и везде на сайте.
 // Контекст даёт каждой <img> её индекс в общем списке снимков и обработчик
-// открытия — клик по картинке открывает просмотр с нужного кадра.
+// открытия, а также slug'и лонгридов — чтобы ссылки на telegra.ph вели внутрь.
 type LightboxCtx = {
   indexOf: Map<NoteNode, number>;
   openAt: (i: number) => void;
+  slugs: Set<string>;
 };
 const LightboxContext = React.createContext<LightboxCtx | null>(null);
 
@@ -81,17 +83,22 @@ function Node({ node }: { node: NoteNode }) {
       return <br />;
     case "hr":
       return <hr className="my-8 border-neutral-200 dark:border-neutral-800" />;
-    case "a":
+    case "a": {
+      const href =
+        internalizeTelegraphUrl(attrs.href, ctx?.slugs ?? new Set()) ||
+        attrs.href;
+      const internal = !!href && href.startsWith("/");
       return (
         <a
-          href={attrs.href}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={href}
+          target={internal ? undefined : "_blank"}
+          rel={internal ? undefined : "noopener noreferrer"}
           className="text-indigo-600 underline underline-offset-2 hover:text-indigo-500 dark:text-indigo-400"
         >
           {kids}
         </a>
       );
+    }
     case "blockquote":
       return (
         <blockquote className="my-6 border-l-2 border-indigo-400 pl-4 italic text-neutral-600 dark:text-neutral-400">
@@ -161,7 +168,14 @@ function Node({ node }: { node: NoteNode }) {
   }
 }
 
-export function TelegraphContent({ content }: { content: NoteNode[] }) {
+export function TelegraphContent({
+  content,
+  noteSlugs = [],
+}: {
+  content: NoteNode[];
+  /** slug'и лонгридов — для подмены telegra.ph-ссылок на внутренние. */
+  noteSlugs?: string[];
+}) {
   const [open, setOpen] = React.useState<number | null>(null);
 
   const { srcs, indexOf } = React.useMemo(() => {
@@ -170,9 +184,11 @@ export function TelegraphContent({ content }: { content: NoteNode[] }) {
     return { srcs: acc.srcs, indexOf: acc.map };
   }, [content]);
 
+  const slugs = React.useMemo(() => new Set(noteSlugs), [noteSlugs]);
+
   const ctx = React.useMemo<LightboxCtx>(
-    () => ({ indexOf, openAt: (i) => setOpen(i) }),
-    [indexOf]
+    () => ({ indexOf, openAt: (i) => setOpen(i), slugs }),
+    [indexOf, slugs]
   );
 
   return (

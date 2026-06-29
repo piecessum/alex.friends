@@ -1,6 +1,11 @@
 import { Eye, ArrowUpRight, CornerUpRight } from "lucide-react";
 import { PostMedia } from "@/components/post-media";
 import type { TgPost } from "@/lib/telegram";
+import { getNotesIndex } from "@/lib/notes";
+import {
+  internalizeTelegraphLinks,
+  internalizeTelegraphUrl,
+} from "@/lib/telegraph-links";
 
 const MONTHS = [
   "января", "февраля", "марта", "апреля", "мая", "июня",
@@ -14,6 +19,12 @@ function formatDate(iso: string): string {
 }
 
 export function ChannelPost({ post }: { post: TgPost }) {
+  // Ссылки на telegra.ph, у которых есть лонгрид на сайте, ведём внутрь.
+  const slugs = new Set(getNotesIndex().map((n) => n.slug));
+  const html = internalizeTelegraphLinks(post.html, slugs);
+  const linkHref = internalizeTelegraphUrl(post.link?.url, slugs) || post.url;
+  const linkInternal = linkHref.startsWith("/");
+
   return (
     <article>
       <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-500">
@@ -52,7 +63,7 @@ export function ChannelPost({ post }: { post: TgPost }) {
       {post.html && (
         <div
           className="mt-5 whitespace-pre-line text-[17px] leading-relaxed break-words text-neutral-800 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:text-neutral-200 dark:[&_a]:text-indigo-400"
-          dangerouslySetInnerHTML={{ __html: post.html }}
+          dangerouslySetInnerHTML={{ __html: html }}
         />
       )}
 
@@ -60,9 +71,9 @@ export function ChannelPost({ post }: { post: TgPost }) {
 
       {post.link && (post.link.title || post.link.image) && (
         <a
-          href={post.link.url || post.url}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={linkHref}
+          target={linkInternal ? undefined : "_blank"}
+          rel={linkInternal ? undefined : "noopener noreferrer"}
           className="mt-4 flex gap-3 rounded-xl border border-neutral-200 p-3 transition hover:border-neutral-300 dark:border-neutral-800 dark:hover:border-neutral-700"
         >
           {post.link.image && (
