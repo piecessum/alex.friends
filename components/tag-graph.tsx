@@ -75,12 +75,16 @@ export function TagGraph({
   className,
   interactive = true,
   tagLabels = true,
+  pan = true,
 }: {
   data: TagGraph;
   className?: string;
+  /** Ховер с подсказкой и клик-навигация по узлам. */
   interactive?: boolean;
   /** Рисовать подписи тегов. В превью-уголке обзорного графа выключаем. */
   tagLabels?: boolean;
+  /** Зум колесом, пан фона и перетаскивание узлов. В уголке выключаем. */
+  pan?: boolean;
 }) {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
@@ -379,12 +383,15 @@ export function TagGraph({
       const sy = e.clientY - rect.top;
       moved = false;
       last = { x: sx, y: sy };
-      const hit = pickNode(sx, sy);
-      if (hit >= 0) {
-        dragNode = hit;
-        pts[hit].fixed = true;
-      } else {
-        panning = true;
+      // Без pan не двигаем — только запоминаем нажатие для клик-навигации.
+      if (pan) {
+        const hit = pickNode(sx, sy);
+        if (hit >= 0) {
+          dragNode = hit;
+          pts[hit].fixed = true;
+        } else {
+          panning = true;
+        }
       }
       canvas.setPointerCapture(e.pointerId);
     }
@@ -412,7 +419,7 @@ export function TagGraph({
       const hit = interactive ? pickNode(sx, sy) : -1;
       if (hit !== hover) {
         hover = hit;
-        canvas.style.cursor = hit >= 0 ? "pointer" : "grab";
+        canvas.style.cursor = hit >= 0 ? "pointer" : pan ? "grab" : "default";
         draw();
       }
       if (hit >= 0) {
@@ -431,17 +438,13 @@ export function TagGraph({
       const rect = canvas.getBoundingClientRect();
       const sx = e.clientX - rect.left;
       const sy = e.clientY - rect.top;
-      if (dragNode >= 0) {
-        pts[dragNode].fixed = false;
-        const hit = dragNode;
-        dragNode = -1;
-        if (!moved) navigate(hit);
-      } else if (panning) {
-        panning = false;
-        if (!moved) {
-          const hit = pickNode(sx, sy);
-          if (hit >= 0) navigate(hit);
-        }
+      if (dragNode >= 0) pts[dragNode].fixed = false;
+      dragNode = -1;
+      panning = false;
+      // Клик без перетаскивания — переход по узлу под курсором.
+      if (!moved) {
+        const hit = pickNode(sx, sy);
+        if (hit >= 0) navigate(hit);
       }
       try {
         canvas.releasePointerCapture(e.pointerId);
@@ -462,7 +465,7 @@ export function TagGraph({
       }
     }
     function onWheel(e: WheelEvent) {
-      if (!interactive) return;
+      if (!interactive || !pan) return;
       e.preventDefault();
       const rect = canvas.getBoundingClientRect();
       const sx = e.clientX - rect.left;
@@ -480,8 +483,8 @@ export function TagGraph({
       canvas.addEventListener("pointerdown", onPointerDown);
       canvas.addEventListener("pointermove", onPointerMove);
       canvas.addEventListener("pointerup", onPointerUp);
-      canvas.addEventListener("wheel", onWheel, { passive: false });
-      canvas.style.cursor = "grab";
+      if (pan) canvas.addEventListener("wheel", onWheel, { passive: false });
+      canvas.style.cursor = pan ? "grab" : "default";
     }
 
     return () => {
@@ -495,7 +498,7 @@ export function TagGraph({
         canvas.removeEventListener("wheel", onWheel);
       }
     };
-  }, [data, dark, interactive, tagLabels, router]);
+  }, [data, dark, interactive, tagLabels, pan, router]);
 
   return (
     <div className={className} style={{ position: "relative" }}>
