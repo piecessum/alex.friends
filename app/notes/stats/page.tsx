@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { StatsDashboard } from "@/components/stats-dashboard";
-import { TagGraph } from "@/components/tag-graph";
+import { GraphFrame } from "@/components/graph-frame";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { fetchAllPosts } from "@/lib/telegram";
 import { computeWritingsStats } from "@/lib/writings-stats";
@@ -54,7 +54,7 @@ export default async function WritingsStatsPage() {
             перетаскивание — двигать.
           </p>
           <div className="mt-4 h-[60vh] min-h-[380px] overflow-hidden rounded-2xl border border-neutral-200 bg-white/40 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/40">
-            <TagGraph data={graph} className="h-full w-full" />
+            <GraphFrame data={graph} caption="Граф связей" />
           </div>
         </section>
 
