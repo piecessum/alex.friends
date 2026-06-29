@@ -44,7 +44,7 @@ export default function PhotosPage() {
   const photos = getPhotos();
   // Показываем только те категории, в которых реально есть снимки.
   const categories = CATEGORIES.filter((c) =>
-    photos.some((p) => p.category === c.id)
+    photos.some((p) => p.category === c.id),
   );
 
   return (
@@ -64,7 +64,8 @@ export default function PhotosPage() {
           Фотографирую
         </h1>
         <p className="mt-3 max-w-2xl text-neutral-600 dark:text-neutral-400">
-          Фиксирую красивые моменты.
+          Фотографирую на свой айфончик иногда, где-нибудь в дороге от скуки
+          обрабатываю фоточки в Snapseed и в родном редакторе айфона.
         </p>
 
         {photos.length === 0 ? (
