@@ -24,6 +24,8 @@ export type TgPost = {
   views?: string;
   /** Хэштеги из текста поста, без `#`, в нижнем регистре. */
   tags: string[];
+  /** id сообщений, склеенных в этот пост (подпись к пересылке). См. mergeForwardCaptions. */
+  aliasIds?: string[];
 };
 export type TgPage = { posts: TgPost[]; nextBefore: string | null };
 
@@ -209,10 +211,61 @@ export async function fetchAllPosts(): Promise<TgPost[]> {
     before = page.nextBefore;
   }
   all.sort((a, b) => Number(b.id) - Number(a.id));
-  return all;
+  return mergeForwardCaptions(all);
+}
+
+// Пересылку с подписью Telegram отправляет ДВУМЯ сообщениями в один момент:
+// сам форвард (медиа) и текст-подпись (обычно с хэштегом). На сайте показываем
+// это одним постом — склеиваем соседей с почти одинаковым временем: медиа и
+// пересылку берём у форварда, текст и теги — у подписи. Старые форварды, у
+// которых рядом нет одновременной подписи, остаются как есть.
+const CAPTION_WINDOW_SEC = 90;
+
+function mergeForwardCaptions(posts: TgPost[]): TgPost[] {
+  const asc = [...posts].sort((a, b) => Number(a.id) - Number(b.id));
+  const time = (p: TgPost) => (p.date ? new Date(p.date).getTime() : NaN);
+  const consumed = new Set<string>(); // id подписи, поглощённой форвардом
+  const mergedAt = new Map<string, TgPost>(); // id форварда → склеенный пост
+
+  for (let i = 0; i < asc.length; i++) {
+    const fwd = asc[i];
+    if (!(fwd.forward && fwd.tags.length === 0)) continue;
+    let caption: TgPost | undefined;
+    for (const j of [i - 1, i + 1]) {
+      const q = asc[j];
+      if (!q || q.forward || consumed.has(q.id)) continue;
+      const dt = Math.abs(time(fwd) - time(q)) / 1000;
+      if (Number.isFinite(dt) && dt <= CAPTION_WINDOW_SEC && (q.tags.length || q.html)) {
+        // при двух кандидатах предпочитаем тот, у которого есть тег
+        if (!caption || (q.tags.length && !caption.tags.length)) caption = q;
+      }
+    }
+    if (caption) {
+      consumed.add(caption.id);
+      mergedAt.set(fwd.id, {
+        ...fwd,
+        html: caption.html || fwd.html,
+        tags: caption.tags.length
+          ? [...new Set([...fwd.tags, ...caption.tags])]
+          : fwd.tags,
+        photos: fwd.photos.length ? fwd.photos : caption.photos,
+        videos: fwd.videos.length ? fwd.videos : caption.videos,
+        link: fwd.link ?? caption.link,
+        views: fwd.views ?? caption.views,
+        aliasIds: [caption.id],
+      });
+    }
+  }
+
+  const out: TgPost[] = [];
+  for (const p of asc) {
+    if (consumed.has(p.id)) continue; // подпись — уже внутри форварда
+    out.push(mergedAt.get(p.id) ?? p); // форвард заменяем склеенным
+  }
+  return out.sort((a, b) => Number(b.id) - Number(a.id));
 }
 
 export async function getPostById(id: string): Promise<TgPost | null> {
   const all = await fetchAllPosts();
-  return all.find((p) => p.id === id) ?? null;
+  return all.find((p) => p.id === id || p.aliasIds?.includes(id)) ?? null;
 }

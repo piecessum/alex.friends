@@ -15,7 +15,8 @@ export const revalidate = 3600;
 // открывает их мгновенно. Новые посты добавятся при следующей сборке/ревалидации.
 export async function generateStaticParams() {
   const posts = await fetchAllPosts();
-  return posts.map((p) => ({ id: p.id }));
+  // Склеенный форвард доступен и по своему id, и по id поглощённой подписи.
+  return posts.flatMap((p) => [p.id, ...(p.aliasIds ?? [])].map((id) => ({ id })));
 }
 
 function stripHtml(html: string): string {
@@ -38,7 +39,7 @@ export async function generateMetadata({
 }) {
   const { id } = await params;
   const posts = await fetchAllPosts();
-  const post = posts.find((p) => p.id === id);
+  const post = posts.find((p) => p.id === id || p.aliasIds?.includes(id));
   if (!post) return { title: "Пост не найден" };
   const text = stripHtml(post.html).slice(0, 60).trim();
   return { title: `${text || "Пост"} — Алексей Масюта` };
@@ -87,7 +88,7 @@ export default async function ChannelItemPage({
 }) {
   const { id } = await params;
   const posts = await fetchAllPosts();
-  const pos = posts.findIndex((p) => p.id === id);
+  const pos = posts.findIndex((p) => p.id === id || p.aliasIds?.includes(id));
   if (pos === -1) notFound();
 
   const post = posts[pos];
@@ -99,7 +100,7 @@ export default async function ChannelItemPage({
   // Локальный граф: этот пост, его теги и соседи по тегам.
   const announced = getAnnouncedPostIds();
   const feed = posts.filter((p) => !announced.has(p.id));
-  const localGraph = buildLocalGraph(feed, getNotesIndex(), `post:${id}`);
+  const localGraph = buildLocalGraph(feed, getNotesIndex(), `post:${post.id}`);
 
   return (
     <div className="flex min-h-screen flex-col">
