@@ -44,7 +44,10 @@ export function GraphFullscreen({
     };
   }, [onClose]);
 
-  const seg = "px-3 py-1 text-sm font-medium transition";
+  // Подпись локального таба — из caption («Этот пост в графе» → «Этот пост»).
+  const localLabel = caption.replace(/\s*в графе$/i, "");
+
+  const seg = "px-3.5 py-1 text-sm font-medium transition";
   const segOn = "bg-indigo-500 text-white";
   const segOff =
     "text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200";
@@ -52,27 +55,28 @@ export function GraphFullscreen({
   return createPortal(
     <div className="fixed inset-0 z-[100] flex flex-col bg-background">
       <div className="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800 sm:px-6">
-        <span className="truncate text-sm font-medium text-neutral-700 dark:text-neutral-300">
-          {canToggle && view === "full" ? "Граф связей" : caption}
-        </span>
-
-        {canToggle && (
+        {/* Переключатель сам по себе говорит, что показано — отдельный заголовок не нужен. */}
+        {canToggle ? (
           <div className="flex shrink-0 overflow-hidden rounded-full border border-neutral-200 dark:border-neutral-800">
             <button
               type="button"
               onClick={() => setView("local")}
               className={`${seg} ${view === "local" ? segOn : segOff}`}
             >
-              Локальный
+              {localLabel}
             </button>
             <button
               type="button"
               onClick={() => setView("full")}
               className={`${seg} ${view === "full" ? segOn : segOff}`}
             >
-              Общий
+              Весь граф
             </button>
           </div>
+        ) : (
+          <span className="truncate text-sm font-medium text-neutral-700 dark:text-neutral-300">
+            {caption}
+          </span>
         )}
 
         <button

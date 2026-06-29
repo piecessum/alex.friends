@@ -394,12 +394,31 @@ export function TagGraph({
     let panning = false;
     let last = { x: 0, y: 0 };
     let moved = false;
+    // Активные указатели (для мультитача): id → экранные координаты.
+    const pointers = new Map<number, { x: number; y: number }>();
+    let pinchDist = 0; // расстояние между двумя пальцами на прошлом кадре
+    let pinchMid = { x: 0, y: 0 }; // их середина (экранные координаты)
 
     function onPointerDown(e: PointerEvent) {
       if (!interactive) return;
       const rect = canvas.getBoundingClientRect();
       const sx = e.clientX - rect.left;
       const sy = e.clientY - rect.top;
+      pointers.set(e.pointerId, { x: sx, y: sy });
+      canvas.setPointerCapture(e.pointerId);
+
+      if (pointers.size === 2 && pan) {
+        // Второй палец — переходим в пинч-зум, отменяем одиночные жесты.
+        if (dragNode >= 0) pts[dragNode].fixed = false;
+        dragNode = -1;
+        panning = false;
+        moved = true; // после пинча клик-навигация не нужна
+        const [a, b] = [...pointers.values()];
+        pinchDist = Math.hypot(a.x - b.x, a.y - b.y);
+        pinchMid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+        return;
+      }
+
       moved = false;
       last = { x: sx, y: sy };
       // Без pan не двигаем — только запоминаем нажатие для клик-навигации.
@@ -412,12 +431,31 @@ export function TagGraph({
           panning = true;
         }
       }
-      canvas.setPointerCapture(e.pointerId);
     }
     function onPointerMove(e: PointerEvent) {
       const rect = canvas.getBoundingClientRect();
       const sx = e.clientX - rect.left;
       const sy = e.clientY - rect.top;
+      if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: sx, y: sy });
+
+      // Пинч двумя пальцами: зум вокруг середины + пан по её смещению.
+      if (pointers.size >= 2 && pan) {
+        const [a, b] = [...pointers.values()];
+        const dist = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+        const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+        const before = toWorld(mid.x, mid.y);
+        if (pinchDist > 0)
+          cam.k = Math.min(4, Math.max(0.2, cam.k * (dist / pinchDist)));
+        const after = toWorld(mid.x, mid.y);
+        cam.x += (after.x - before.x) * cam.k + (mid.x - pinchMid.x);
+        cam.y += (after.y - before.y) * cam.k + (mid.y - pinchMid.y);
+        pinchDist = dist;
+        pinchMid = mid;
+        moved = true;
+        draw();
+        return;
+      }
+
       if (dragNode >= 0) {
         moved = true;
         const w = toWorld(sx, sy);
@@ -455,21 +493,40 @@ export function TagGraph({
         setHoverLabel(null);
       }
     }
-    function onPointerUp(e: PointerEvent) {
+    function endPointer(e: PointerEvent, navigateOnTap: boolean) {
       const rect = canvas.getBoundingClientRect();
       const sx = e.clientX - rect.left;
       const sy = e.clientY - rect.top;
-      if (dragNode >= 0) pts[dragNode].fixed = false;
-      dragNode = -1;
-      panning = false;
-      // Клик без перетаскивания — переход по узлу под курсором.
-      if (!moved) {
-        const hit = pickNode(sx, sy);
-        if (hit >= 0) navigate(hit);
-      }
+      pointers.delete(e.pointerId);
       try {
         canvas.releasePointerCapture(e.pointerId);
       } catch {}
+
+      if (pointers.size === 1) {
+        // Из пинча остался один палец — продолжаем панорамирование им.
+        const [p] = [...pointers.values()];
+        last = { x: p.x, y: p.y };
+        pinchDist = 0;
+        panning = pan;
+        return;
+      }
+      if (pointers.size >= 2) return;
+
+      // Пальцев не осталось.
+      if (dragNode >= 0) pts[dragNode].fixed = false;
+      dragNode = -1;
+      panning = false;
+      pinchDist = 0;
+      if (navigateOnTap && !moved) {
+        const hit = pickNode(sx, sy);
+        if (hit >= 0) navigate(hit);
+      }
+    }
+    function onPointerUp(e: PointerEvent) {
+      endPointer(e, true);
+    }
+    function onPointerCancel(e: PointerEvent) {
+      endPointer(e, false);
     }
     function navigate(i: number) {
       const n = nodes[i];
@@ -504,6 +561,7 @@ export function TagGraph({
       canvas.addEventListener("pointerdown", onPointerDown);
       canvas.addEventListener("pointermove", onPointerMove);
       canvas.addEventListener("pointerup", onPointerUp);
+      canvas.addEventListener("pointercancel", onPointerCancel);
       if (pan) canvas.addEventListener("wheel", onWheel, { passive: false });
       canvas.style.cursor = pan ? "grab" : "default";
     }
@@ -516,6 +574,7 @@ export function TagGraph({
         canvas.removeEventListener("pointerdown", onPointerDown);
         canvas.removeEventListener("pointermove", onPointerMove);
         canvas.removeEventListener("pointerup", onPointerUp);
+        canvas.removeEventListener("pointercancel", onPointerCancel);
         canvas.removeEventListener("wheel", onWheel);
       }
     };
