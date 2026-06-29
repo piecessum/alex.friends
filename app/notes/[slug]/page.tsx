@@ -4,7 +4,7 @@ import { ArrowLeft, Eye } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { TelegraphContent } from "@/components/telegraph-content";
-import { GraphWidget } from "@/components/graph-widget";
+import { PostGraph } from "@/components/post-graph";
 import {
   getNote,
   getNotesIndex,
@@ -64,22 +64,23 @@ export default async function NotePage({
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <GraphWidget
-        data={localGraph}
-        fullData={fullGraph}
-        caption="Этот лонгрид в графе"
-        tagLabels
-      />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
-        <Link
-          href="/notes"
-          scroll={false}
-          className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Назад
-        </Link>
+        <div className="flex items-center justify-between gap-3">
+          <Link
+            href="/notes"
+            scroll={false}
+            className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Назад
+          </Link>
+          <PostGraph
+            data={localGraph}
+            fullData={fullGraph}
+            caption="Этот лонгрид в графе"
+          />
+        </div>
 
         <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
           {note.title}

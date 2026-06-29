@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ChannelPost } from "@/components/channel-post";
-import { GraphWidget } from "@/components/graph-widget";
+import { PostGraph } from "@/components/post-graph";
 import { fetchAllPosts, type TgPost } from "@/lib/telegram";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { buildLocalGraph, buildTagGraph } from "@/lib/graph";
@@ -108,22 +108,23 @@ export default async function ChannelItemPage({
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <GraphWidget
-        data={localGraph}
-        fullData={fullGraph}
-        caption="Этот пост в графе"
-        tagLabels
-      />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
-        <Link
-          href="/notes"
-          scroll={false}
-          className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Назад
-        </Link>
+        <div className="flex items-center justify-between gap-3">
+          <Link
+            href="/notes"
+            scroll={false}
+            className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Назад
+          </Link>
+          <PostGraph
+            data={localGraph}
+            fullData={fullGraph}
+            caption="Этот пост в графе"
+          />
+        </div>
 
         <div className="mt-6">
           <ChannelPost post={post} />
