@@ -1,13 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { Play, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { Play } from "lucide-react";
 import { FitImage } from "@/components/fit-image";
+import { Lightbox } from "@/components/lightbox";
 import type { TgVideo } from "@/lib/telegram";
 
 /**
  * Медиа поста в стиле лонгрида: фото во всю ширину, без рамок, с просмотром
- * по клику (лайтбокс — стрелки/Esc/клик по фону закрывает). Видео остаются
+ * по клику в едином лайтбоксе (см. components/lightbox.tsx). Видео остаются
  * превью со ссылкой в Telegram (сам файл из веб-превью канала недоступен).
  */
 export function PostMedia({
@@ -19,32 +20,8 @@ export function PostMedia({
   videos: TgVideo[];
   url: string;
 }) {
+  // null = лайтбокс закрыт, иначе индекс открытой фотографии.
   const [index, setIndex] = useState<number | null>(null);
-  const open = index !== null;
-
-  const close = useCallback(() => setIndex(null), []);
-  const show = useCallback(
-    (delta: number) =>
-      setIndex((i) =>
-        i === null ? i : (i + delta + photos.length) % photos.length
-      ),
-    [photos.length]
-  );
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-      else if (e.key === "ArrowLeft") show(-1);
-      else if (e.key === "ArrowRight") show(1);
-    };
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [open, close, show]);
 
   if (photos.length === 0 && videos.length === 0) return null;
 
@@ -131,60 +108,12 @@ export function PostMedia({
         )
       )}
 
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
-          onClick={close}
-          role="dialog"
-          aria-modal="true"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={photos[index]}
-            alt=""
-            onClick={(e) => e.stopPropagation()}
-            className="max-h-[92vh] max-w-[92vw] rounded-lg object-contain"
-          />
-
-          <button
-            type="button"
-            onClick={close}
-            aria-label="Закрыть"
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-          >
-            <X className="h-5 w-5" />
-          </button>
-
-          {photos.length > 1 && (
-            <>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  show(-1);
-                }}
-                aria-label="Предыдущее фото"
-                className="absolute left-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  show(1);
-                }}
-                aria-label="Следующее фото"
-                className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </button>
-              <span className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-sm text-white">
-                {index + 1} / {photos.length}
-              </span>
-            </>
-          )}
-        </div>
+      {index !== null && (
+        <Lightbox
+          items={photos}
+          startIndex={index}
+          onClose={() => setIndex(null)}
+        />
       )}
     </div>
   );

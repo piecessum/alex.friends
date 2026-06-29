@@ -1,6 +1,37 @@
+"use client";
+
 import * as React from "react";
 import { FitImage } from "@/components/fit-image";
+import { Lightbox } from "@/components/lightbox";
 import type { NoteNode } from "@/lib/notes";
+
+// Картинки лонгрида открываются в том же лайтбоксе, что и везде на сайте.
+// Контекст даёт каждой <img> её индекс в общем списке снимков и обработчик
+// открытия — клик по картинке открывает просмотр с нужного кадра.
+type LightboxCtx = {
+  indexOf: Map<NoteNode, number>;
+  openAt: (i: number) => void;
+};
+const LightboxContext = React.createContext<LightboxCtx | null>(null);
+
+/** Собирает src всех картинок по порядку и сопоставляет каждый <img>-узел с индексом. */
+function collectImages(
+  nodes: NoteNode[] | undefined,
+  acc: { srcs: string[]; map: Map<NoteNode, number> }
+): void {
+  if (!nodes) return;
+  for (const n of nodes) {
+    if (typeof n === "string") continue;
+    if (n.tag === "img") {
+      const src = n.attrs?.src || "";
+      if (src) {
+        acc.map.set(n, acc.srcs.length);
+        acc.srcs.push(src);
+      }
+    }
+    collectImages(n.children, acc);
+  }
+}
 
 /** Текст узла целиком — нужно, чтобы скрывать пустые подписи к картинкам. */
 function textOf(nodes: NoteNode[] | undefined): string {
@@ -17,6 +48,7 @@ function renderNodes(nodes: NoteNode[] | undefined): React.ReactNode {
 }
 
 function Node({ node }: { node: NoteNode }) {
+  const ctx = React.useContext(LightboxContext);
   if (typeof node === "string") return <>{node}</>;
 
   const { tag, attrs = {}, children } = node;
@@ -85,14 +117,20 @@ function Node({ node }: { node: NoteNode }) {
         </figcaption>
       );
     }
-    case "img":
+    case "img": {
+      const idx = ctx?.indexOf.get(node);
+      const clickable = ctx != null && idx != null;
       return (
         <FitImage
           src={attrs.src || ""}
           alt={attrs.alt || ""}
-          className="mx-auto h-auto rounded-xl border border-neutral-200 dark:border-neutral-800"
+          onClick={clickable ? () => ctx!.openAt(idx!) : undefined}
+          className={`mx-auto h-auto rounded-xl border border-neutral-200 dark:border-neutral-800 ${
+            clickable ? "cursor-zoom-in" : ""
+          }`}
         />
       );
+    }
     case "video":
       return (
         <video
@@ -124,5 +162,25 @@ function Node({ node }: { node: NoteNode }) {
 }
 
 export function TelegraphContent({ content }: { content: NoteNode[] }) {
-  return <div>{renderNodes(content)}</div>;
+  const [open, setOpen] = React.useState<number | null>(null);
+
+  const { srcs, indexOf } = React.useMemo(() => {
+    const acc = { srcs: [] as string[], map: new Map<NoteNode, number>() };
+    collectImages(content, acc);
+    return { srcs: acc.srcs, indexOf: acc.map };
+  }, [content]);
+
+  const ctx = React.useMemo<LightboxCtx>(
+    () => ({ indexOf, openAt: (i) => setOpen(i) }),
+    [indexOf]
+  );
+
+  return (
+    <LightboxContext.Provider value={ctx}>
+      <div>{renderNodes(content)}</div>
+      {open !== null && (
+        <Lightbox items={srcs} startIndex={open} onClose={() => setOpen(null)} />
+      )}
+    </LightboxContext.Provider>
+  );
 }
