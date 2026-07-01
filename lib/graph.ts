@@ -1,5 +1,6 @@
 import type { NoteIndexItem } from "./notes";
 import type { TgPost } from "./telegram";
+import { postBody } from "./post-text";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Граф «посты ⟷ теги» в духе Obsidian: узлы-теги — хабы, узлы-посты висят на
@@ -70,7 +71,7 @@ function cosine(a: Vec, b: Vec): number {
 
 /** Текст поста без html и без хэштегов — основа для классификации. */
 function postText(p: TgPost): string {
-  return p.html
+  return postBody(p)
     .replace(/<[^>]+>/g, " ")
     .replace(/#[\p{L}\p{N}_]+/giu, " ")
     .replace(/&nbsp;/g, " ");

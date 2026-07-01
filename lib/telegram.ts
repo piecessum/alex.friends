@@ -24,6 +24,9 @@ export type TgPost = {
   videos: TgVideo[];
   link?: TgLinkPreview;
   forward?: TgForward;
+  /** Твой комментарий к пересланному посту (отдельное сообщение-подпись).
+   *  html при этом хранит текст самого форварда. */
+  comment?: string;
   views?: string;
   /** Хэштеги из текста поста, без `#`, в нижнем регистре. */
   tags: string[];
@@ -309,9 +312,15 @@ function mergeForwardCaptions(posts: TgPost[]): TgPost[] {
     }
     if (caption) {
       consumed.add(caption.id);
+      // У пересланного сообщения может быть и свой текст, и отдельная подпись-
+      // комментарий. Текст форварда оставляем в html (на сайте — в цитате под
+      // шапкой «Переслано из…»), а подпись кладём в comment (твой голос рядом).
+      // Если подпись дублирует текст форварда, второй раз её не показываем.
+      const comment = caption.html && caption.html !== fwd.html ? caption.html : undefined;
       mergedAt.set(fwd.id, {
         ...fwd,
-        html: caption.html || fwd.html,
+        html: fwd.html,
+        comment,
         tags: caption.tags.length
           ? [...new Set([...fwd.tags, ...caption.tags])]
           : fwd.tags,

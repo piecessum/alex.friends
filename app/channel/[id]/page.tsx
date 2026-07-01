@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { ChannelPost } from "@/components/channel-post";
 import { PostGraph } from "@/components/post-graph";
 import { fetchAllPosts, type TgPost } from "@/lib/telegram";
+import { postBody } from "@/lib/post-text";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { buildLocalGraph, buildTagGraph } from "@/lib/graph";
 
@@ -25,7 +26,7 @@ function stripHtml(html: string): string {
 
 /** Короткое описание поста для плитки навигации (с «…», если обрезано). */
 function preview(post: TgPost): string {
-  const text = stripHtml(post.html);
+  const text = stripHtml(postBody(post));
   if (text) return text.length > 80 ? text.slice(0, 80).trimEnd() + "…" : text;
   if (post.photos.length) return "Фото";
   if (post.videos.length) return "Видео";
@@ -41,7 +42,7 @@ export async function generateMetadata({
   const posts = await fetchAllPosts();
   const post = posts.find((p) => p.id === id || p.aliasIds?.includes(id));
   if (!post) return { title: "Пост не найден" };
-  const text = stripHtml(post.html).slice(0, 60).trim();
+  const text = stripHtml(postBody(post)).slice(0, 60).trim();
   return { title: `${text || "Пост"} — Алексей Масюта` };
 }
 

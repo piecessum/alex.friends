@@ -18,10 +18,17 @@ function formatDate(iso: string): string {
   return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+// Общий стиль текста поста — используем и для комментария, и для текста форварда.
+const bodyClass =
+  "whitespace-pre-line leading-relaxed break-words text-neutral-800 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:text-neutral-200 dark:[&_a]:text-indigo-400";
+
 export function ChannelPost({ post }: { post: TgPost }) {
   // Ссылки на telegra.ph, у которых есть лонгрид на сайте, ведём внутрь.
   const slugs = new Set(getNotesIndex().map((n) => n.slug));
   const html = internalizeTelegraphLinks(post.html, slugs);
+  const comment = post.comment
+    ? internalizeTelegraphLinks(post.comment, slugs)
+    : "";
   const linkHref = internalizeTelegraphUrl(post.link?.url, slugs) || post.url;
   const linkInternal = linkHref.startsWith("/");
 
@@ -37,34 +44,52 @@ export function ChannelPost({ post }: { post: TgPost }) {
         )}
       </div>
 
-      {post.forward && (
-        <div className="mt-4 flex items-center gap-1.5 rounded-lg border-l-2 border-indigo-400 bg-indigo-500/5 py-1.5 pr-2 pl-2.5 text-xs text-neutral-500 dark:text-neutral-400">
-          <CornerUpRight className="h-3.5 w-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
-          <span>
-            Переслано из{" "}
-            {post.forward.url ? (
-              <a
-                href={post.forward.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
-              >
-                {post.forward.name}
-              </a>
-            ) : (
-              <span className="font-medium text-neutral-700 dark:text-neutral-300">
-                {post.forward.name}
-              </span>
-            )}
-          </span>
-        </div>
+      {/* Твой комментарий к пересылке — твоим голосом, над самой цитатой. */}
+      {post.forward && comment && (
+        <div
+          className={`mt-5 text-[17px] ${bodyClass}`}
+          dangerouslySetInnerHTML={{ __html: comment }}
+        />
       )}
 
-      {post.html && (
-        <div
-          className="mt-5 whitespace-pre-line text-[17px] leading-relaxed break-words text-neutral-800 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:text-neutral-200 dark:[&_a]:text-indigo-400"
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+      {post.forward ? (
+        // Пересланный пост оформляем как цитату: шапка «Переслано из…» и,
+        // если у форварда был свой текст, — сам текст под ней.
+        <div className="mt-4 rounded-lg border-l-2 border-indigo-400 bg-indigo-500/5 px-3 py-2.5">
+          <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <CornerUpRight className="h-3.5 w-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
+            <span>
+              Переслано из{" "}
+              {post.forward.url ? (
+                <a
+                  href={post.forward.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+                >
+                  {post.forward.name}
+                </a>
+              ) : (
+                <span className="font-medium text-neutral-700 dark:text-neutral-300">
+                  {post.forward.name}
+                </span>
+              )}
+            </span>
+          </div>
+          {post.html && (
+            <div
+              className={`mt-2 text-[16px] ${bodyClass}`}
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          )}
+        </div>
+      ) : (
+        post.html && (
+          <div
+            className={`mt-5 text-[17px] ${bodyClass}`}
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        )
       )}
 
       <PostMedia photos={post.photos} videos={post.videos} url={post.url} />

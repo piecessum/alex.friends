@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { NoteIndexItem } from "@/lib/notes";
 import type { TgPost } from "@/lib/telegram";
+import { postBody } from "@/lib/post-text";
 
 const KEY_FILTER = "writingsFilter";
 const KEY_SCROLL = "writingsScroll";
@@ -99,7 +100,7 @@ function buildTiles(notes: NoteIndexItem[], posts: TgPost[]): Tile[] {
       sortDate: new Date(p.date).getTime() || 0,
       cover: p.photos[0] || p.videos[0]?.thumb || null,
       date: formatPostDate(p.date),
-      text: postExcerpt(p.html),
+      text: postExcerpt(postBody(p)),
       tags: p.tags,
     })),
   ];

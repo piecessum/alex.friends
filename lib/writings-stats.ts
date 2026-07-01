@@ -1,5 +1,6 @@
 import type { NoteIndexItem } from "./notes";
 import type { TgPost } from "./telegram";
+import { postBody } from "./post-text";
 
 const MONTHS_GEN = [
   "января", "февраля", "марта", "апреля", "мая", "июня",
@@ -143,7 +144,7 @@ export function computeWritingsStats(
   let nonEmpty = 0;
   let longest: { id: string; length: number; preview: string } | null = null;
   for (const p of posts) {
-    const len = postLength(p.html);
+    const len = postLength(postBody(p));
     if (len > 0) {
       total += len;
       nonEmpty++;
@@ -152,7 +153,7 @@ export function computeWritingsStats(
       longest = {
         id: p.id,
         length: len,
-        preview: p.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 80),
+        preview: postBody(p).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 80),
       };
     }
   }
