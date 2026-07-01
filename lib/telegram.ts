@@ -15,6 +15,13 @@ export type TgLinkPreview = {
   site?: string;
 };
 export type TgForward = { name: string; url?: string };
+export type TgPollOption = { text: string; percent: number };
+export type TgPoll = {
+  question: string;
+  /** «Опрос» или «Викторина». */
+  type?: string;
+  options: TgPollOption[];
+};
 export type TgPost = {
   id: string;
   url: string;
@@ -24,6 +31,7 @@ export type TgPost = {
   videos: TgVideo[];
   link?: TgLinkPreview;
   forward?: TgForward;
+  poll?: TgPoll;
   /** Твой комментарий к пересланному посту (отдельное сообщение-подпись).
    *  html при этом хранит текст самого форварда. */
   comment?: string;
@@ -93,6 +101,35 @@ function parseForward(block: string): TgForward | undefined {
     /tgme_widget_message_forwarded_from_name[^>]*>([\s\S]*?)<\/(?:a|span)>/
   );
   return noLink ? { name: stripTags(noLink[1]) } : undefined;
+}
+
+/** Опрос/викторина из веб-превью: вопрос, тип и варианты с процентами. */
+function parsePoll(block: string): TgPoll | undefined {
+  const question = field(
+    block,
+    /tgme_widget_message_poll_question[^>]*>([\s\S]*?)<\/div>/
+  );
+  if (!question) return undefined;
+  const rawType = field(
+    block,
+    /tgme_widget_message_poll_type[^>]*>([\s\S]*?)<\/div>/
+  );
+  const type = rawType
+    ? /quiz/i.test(rawType)
+      ? "Викторина"
+      : /poll/i.test(rawType)
+        ? "Опрос"
+        : stripTags(rawType)
+    : undefined;
+  const options: TgPollOption[] = [];
+  const re =
+    /poll_option_percent[^>]*>(\d+)%<\/div>[\s\S]*?poll_option_text[^>]*>([\s\S]*?)<\/div>/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(block))) {
+    options.push({ percent: Number(m[1]), text: stripTags(m[2]) });
+  }
+  if (options.length === 0) return undefined;
+  return { question: stripTags(question), type, options };
 }
 
 function parse(html: string): TgPost[] {
@@ -170,6 +207,7 @@ function parse(html: string): TgPost[] {
       videos,
       link,
       forward: parseForward(block),
+      poll: parsePoll(block),
       views: field(block, /tgme_widget_message_views">([^<]+)</),
       tags: extractTags(textRaw ?? ""),
     });
@@ -245,6 +283,7 @@ function mergePosts(members: TgPost[]): TgPost {
     videos: members.flatMap((m) => m.videos),
     tags: [...new Set(members.flatMap((m) => m.tags))],
     forward: members.find((m) => m.forward)?.forward ?? base.forward,
+    poll: members.find((m) => m.poll)?.poll ?? base.poll,
     link: members.find((m) => m.link)?.link ?? base.link,
     views: members.find((m) => m.views)?.views ?? base.views,
     aliasIds: members

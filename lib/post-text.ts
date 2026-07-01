@@ -4,5 +4,5 @@ import type { TgPost } from "./telegram";
  *  форварда (или просто текст обычного поста). Отдельный модуль без node:fs,
  *  чтобы его можно было импортировать и в клиентские компоненты. */
 export function postBody(p: TgPost): string {
-  return [p.comment, p.html].filter(Boolean).join("\n\n");
+  return [p.comment, p.html, p.poll?.question].filter(Boolean).join("\n\n");
 }

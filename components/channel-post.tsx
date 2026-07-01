@@ -1,6 +1,6 @@
 import { Eye, ArrowUpRight, CornerUpRight } from "lucide-react";
 import { PostMedia } from "@/components/post-media";
-import type { TgPost } from "@/lib/telegram";
+import type { TgPoll, TgPost } from "@/lib/telegram";
 import { getNotesIndex } from "@/lib/notes";
 import {
   internalizeTelegraphLinks,
@@ -21,6 +21,52 @@ function formatDate(iso: string): string {
 // Общий стиль текста поста — используем и для комментария, и для текста форварда.
 const bodyClass =
   "whitespace-pre-line leading-relaxed break-words text-neutral-800 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:text-neutral-200 dark:[&_a]:text-indigo-400";
+
+/** Опрос из Telegram — показываем результаты (голосовать можно в самом канале). */
+function Poll({ poll }: { poll: TgPoll }) {
+  const leader = Math.max(...poll.options.map((o) => o.percent), 0);
+  return (
+    <div className="mt-5 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
+      <div className="text-[17px] font-semibold text-neutral-800 dark:text-neutral-100">
+        {poll.question}
+      </div>
+      {poll.type && (
+        <div className="mt-0.5 text-xs uppercase tracking-wide text-neutral-400">
+          {poll.type}
+        </div>
+      )}
+      <ul className="mt-3 space-y-3">
+        {poll.options.map((o, i) => {
+          const winning = o.percent === leader && leader > 0;
+          return (
+            <li key={i}>
+              <div className="flex items-baseline justify-between gap-3 text-sm">
+                <span className="text-neutral-700 dark:text-neutral-300">{o.text}</span>
+                <span
+                  className={`shrink-0 tabular-nums ${
+                    winning
+                      ? "font-semibold text-indigo-600 dark:text-indigo-400"
+                      : "text-neutral-500 dark:text-neutral-400"
+                  }`}
+                >
+                  {o.percent}%
+                </span>
+              </div>
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-neutral-200/70 dark:bg-neutral-800">
+                <div
+                  className={`h-full rounded-full ${
+                    winning ? "bg-indigo-500" : "bg-indigo-400/60 dark:bg-indigo-500/50"
+                  }`}
+                  style={{ width: `${o.percent}%` }}
+                />
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 
 export function ChannelPost({ post }: { post: TgPost }) {
   // Ссылки на telegra.ph, у которых есть лонгрид на сайте, ведём внутрь.
@@ -91,6 +137,8 @@ export function ChannelPost({ post }: { post: TgPost }) {
           />
         )
       )}
+
+      {post.poll && <Poll poll={post.poll} />}
 
       <PostMedia photos={post.photos} videos={post.videos} url={post.url} />
 
