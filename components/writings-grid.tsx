@@ -209,12 +209,10 @@ export function WritingsGrid({
 
   return (
     <div>
-      <div className="-mx-4 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
-          {renderChip("all", "Всё", tiles.length)}
-          {renderChip("longreads", "Лонгриды", notes.length)}
-          {tagChips.map(({ tag, count }) => renderChip(tag, `#${tag}`, count))}
-        </div>
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 [&::-webkit-scrollbar]:hidden">
+        {renderChip("all", "Всё", tiles.length)}
+        {renderChip("longreads", "Лонгриды", notes.length)}
+        {tagChips.map(({ tag, count }) => renderChip(tag, `#${tag}`, count))}
       </div>
 
       {visible.length === 0 ? (

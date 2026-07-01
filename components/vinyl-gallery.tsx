@@ -214,7 +214,7 @@ export function VinylGallery({
 
       {/* Лотки по жанрам — как в магазине пластинок. Только на вкладке «есть». */}
       {tab === "have" && genres.length > 0 && (
-        <div className="mt-6 flex flex-wrap gap-2">
+        <div className="-mx-4 mt-6 flex gap-2 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 [&::-webkit-scrollbar]:hidden">
           {[{ name: null as string | null, count: have.length }, ...genres].map(
             (g) => {
               const active = genre === g.name;
@@ -224,7 +224,7 @@ export function VinylGallery({
                   type="button"
                   onClick={() => setGenre(g.name)}
                   className={cn(
-                    "rounded-full border px-3.5 py-1.5 text-sm font-medium transition",
+                    "shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition",
                     active
                       ? "border-indigo-600 bg-indigo-600 text-white"
                       : "border-neutral-200 bg-white/60 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950/40 dark:text-neutral-400 dark:hover:border-neutral-700 dark:hover:text-neutral-200"
