@@ -178,8 +178,13 @@ function YearBars({
   const barW = Math.min(48, bw * 0.65);
 
   return (
-    <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${W} ${H + 36}`} className="h-auto w-full min-w-[420px]">
+    <>
+      <div className="h-56 sm:h-64">
+      <svg
+        viewBox={`0 0 ${W} ${H + 36}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="h-full w-full"
+      >
         {/* сетка */}
         {[0.25, 0.5, 0.75, 1].map((g) => {
           const y = H - padY - (H - padY * 2) * g;
@@ -253,7 +258,8 @@ function YearBars({
           );
         })}
       </svg>
-      <div className="mt-2 flex flex-wrap gap-4 text-xs text-neutral-500 dark:text-neutral-400">
+      </div>
+      <div className="mt-3 flex flex-wrap gap-4 text-xs text-neutral-500 dark:text-neutral-400">
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-3 w-3 rounded-sm" style={{ background: "hsl(238 70% 60%)" }} />
           посты канала
@@ -263,7 +269,7 @@ function YearBars({
           лонгриды
         </span>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -276,8 +282,12 @@ function WeekdayBars({ data }: { data: { day: string; count: number }[] }) {
   const max = Math.max(...data.map((d) => d.count), 1);
   const barW = Math.min(40, bw * 0.7);
   return (
-    <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${W} ${H + 30}`} className="h-auto w-full min-w-[320px]">
+    <div className="h-56 sm:h-64">
+      <svg
+        viewBox={`0 0 ${W} ${H + 30}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="h-full w-full"
+      >
         {[0.25, 0.5, 0.75, 1].map((g) => {
           const y = H - padY - (H - padY * 2) * g;
           return (
@@ -335,6 +345,103 @@ function WeekdayBars({ data }: { data: { day: string; count: number }[] }) {
   );
 }
 
+/** Словесная оценка силы связи по модулю коэффициента корреляции. */
+function describeR(r: number): string {
+  const a = Math.abs(r);
+  if (a < 0.1) return "связи практически нет";
+  const strength =
+    a < 0.3 ? "очень слабая" :
+    a < 0.5 ? "слабая" :
+    a < 0.7 ? "заметная" :
+    a < 0.9 ? "сильная" : "очень сильная";
+  return `${strength} ${r > 0 ? "положительная" : "отрицательная"} связь`;
+}
+
+function fmtViews(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}K`;
+  return String(n);
+}
+
+/** Диаграмма рассеяния «длина поста ↔ просмотры» с линией тренда и r. */
+function ScatterViews({ data }: { data: WritingsStats["lengthViews"] }) {
+  const { points, r, slope, intercept } = data;
+  if (points.length < 4) {
+    return (
+      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+        Пока мало постов с просмотрами для оценки.
+      </p>
+    );
+  }
+  const W = 640, H = 300;
+  const padL = 52, padR = 16, padT = 12, padB = 42;
+  const maxX = Math.max(...points.map((p) => p.x));
+  const maxY = Math.max(...points.map((p) => p.y));
+  const sx = (x: number) => padL + (W - padL - padR) * (x / maxX);
+  const sy = (y: number) => H - padB - (H - padT - padB) * (y / maxY);
+
+  // Концы линии тренда, обрезанные по видимой области [0..maxY].
+  const clampY = (y: number) => Math.max(0, Math.min(maxY, y));
+  const y0 = clampY(intercept);
+  const y1 = clampY(intercept + slope * maxX);
+
+  return (
+    <>
+      <div className="h-64 sm:h-72">
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="xMidYMid meet"
+          className="h-full w-full"
+        >
+          {[0, 0.25, 0.5, 0.75, 1].map((g) => {
+            const y = H - padB - (H - padT - padB) * g;
+            return (
+              <g key={g}>
+                <line x1={padL} x2={W - padR} y1={y} y2={y} stroke="currentColor" strokeOpacity="0.08" />
+                <text x={padL - 8} y={y + 3} textAnchor="end" fontSize="10" fill="currentColor" fillOpacity="0.5">
+                  {fmtViews(Math.round(maxY * g))}
+                </text>
+              </g>
+            );
+          })}
+          {[0, 0.5, 1].map((g) => (
+            <text key={g} x={sx(maxX * g)} y={H - padB + 16} textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.5">
+              {Math.round(maxX * g)}
+            </text>
+          ))}
+
+          <line
+            x1={sx(0)} y1={sy(y0)} x2={sx(maxX)} y2={sy(y1)}
+            stroke="hsl(238 70% 60%)" strokeWidth="2" strokeDasharray="5 4" strokeOpacity="0.85"
+          />
+          {points.map((p) => (
+            <circle key={p.id} cx={sx(p.x)} cy={sy(p.y)} r="4" fill="hsl(290 70% 60%)" fillOpacity="0.5">
+              <title>{`${p.x} символов · ${p.y} просмотров`}</title>
+            </circle>
+          ))}
+
+          <text x={(padL + W - padR) / 2} y={H - 6} textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.6">
+            длина поста, символов
+          </text>
+          <text
+            x={-(padT + H - padB) / 2} y={13} transform="rotate(-90)"
+            textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.6"
+          >
+            просмотры
+          </text>
+        </svg>
+      </div>
+      <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
+        Коэффициент корреляции{" "}
+        <span className="font-semibold tabular-nums text-neutral-800 dark:text-neutral-200">
+          r&nbsp;=&nbsp;{r.toFixed(2)}
+        </span>{" "}
+        — {describeR(r)}{" "}
+        <span className="text-neutral-400">(по {points.length} постам с просмотрами)</span>
+      </p>
+    </>
+  );
+}
+
 function Section({
   title,
   hint,
@@ -358,7 +465,7 @@ function Section({
 }
 
 export function StatsDashboard({ stats }: { stats: WritingsStats }) {
-  const { totals, byTag, byYear, byWeekday, facts } = stats;
+  const { totals, byTag, byYear, byWeekday, lengthViews, facts } = stats;
 
   const pieSegments = [
     ...byTag.map((t, i) => ({
@@ -381,12 +488,18 @@ export function StatsDashboard({ stats }: { stats: WritingsStats }) {
         />
       </Section>
 
-      <Section title="Публикации по годам">
-        <YearBars data={byYear} />
-      </Section>
+      <div className="grid gap-8 lg:grid-cols-2">
+        <Section title="Публикации по годам">
+          <YearBars data={byYear} />
+        </Section>
 
-      <Section title="Когда я пишу" hint="по дням недели">
-        <WeekdayBars data={byWeekday} />
+        <Section title="Когда я пишу" hint="по дням недели">
+          <WeekdayBars data={byWeekday} />
+        </Section>
+      </div>
+
+      <Section title="Длина поста и просмотры" hint="есть ли связь?">
+        <ScatterViews data={lengthViews} />
       </Section>
 
       <Section title="Интересные факты">

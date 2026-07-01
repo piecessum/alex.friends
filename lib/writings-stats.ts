@@ -16,6 +16,38 @@ function postLength(html: string): number {
   return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim().length;
 }
 
+/** «1.2K» → 1200, «3M» → 3000000, «532» → 532. null, если распарсить нельзя. */
+function parseViews(s?: string): number | null {
+  if (!s) return null;
+  const m = s.trim().replace(",", ".").match(/^([\d.]+)\s*([KkMm])?/);
+  if (!m) return null;
+  const n = parseFloat(m[1]);
+  if (!Number.isFinite(n)) return null;
+  const suf = m[2]?.toUpperCase();
+  return Math.round(suf === "K" ? n * 1e3 : suf === "M" ? n * 1e6 : n);
+}
+
+/** Пирсон + линейная регрессия (y = slope·x + intercept) по набору точек. */
+function linreg(pts: { x: number; y: number }[]): {
+  r: number;
+  slope: number;
+  intercept: number;
+} {
+  const n = pts.length;
+  if (n < 2) return { r: 0, slope: 0, intercept: 0 };
+  let sx = 0, sy = 0, sxy = 0, sxx = 0, syy = 0;
+  for (const { x, y } of pts) {
+    sx += x; sy += y; sxy += x * y; sxx += x * x; syy += y * y;
+  }
+  const covN = n * sxy - sx * sy;
+  const varX = n * sxx - sx * sx;
+  const varY = n * syy - sy * sy;
+  const r = varX > 0 && varY > 0 ? covN / Math.sqrt(varX * varY) : 0;
+  const slope = varX > 0 ? covN / varX : 0;
+  const intercept = (sy - slope * sx) / n;
+  return { r, slope, intercept };
+}
+
 function formatDay(iso: string): string {
   const d = new Date(iso);
   return `${d.getDate()} ${MONTHS_GEN[d.getMonth()]} ${d.getFullYear()}`;
@@ -33,6 +65,8 @@ export type StatsByYear = {
   notes: number;
 };
 
+export type CorrelationPoint = { id: string; x: number; y: number };
+
 export type WritingsStats = {
   totals: {
     posts: number;
@@ -44,6 +78,13 @@ export type WritingsStats = {
   byTag: StatsTagSlice[];
   byYear: StatsByYear[];
   byWeekday: { day: string; count: number }[];
+  /** Связь длины поста и числа просмотров: точки + коэффициент корреляции. */
+  lengthViews: {
+    points: CorrelationPoint[]; // x — длина в символах, y — просмотры
+    r: number; // коэффициент Пирсона, −1..1
+    slope: number;
+    intercept: number;
+  };
   facts: {
     firstDate: string;
     lastDate: string;
@@ -159,6 +200,17 @@ export function computeWritingsStats(
   }
   const avgPostLength = nonEmpty ? Math.round(total / nonEmpty) : 0;
 
+  // ── связь длины поста и просмотров ────────────────────
+  const lvPoints: CorrelationPoint[] = [];
+  for (const p of posts) {
+    const views = parseViews(p.views);
+    const len = postLength(postBody(p));
+    if (views != null && views > 0 && len > 0) {
+      lvPoints.push({ id: p.id, x: len, y: views });
+    }
+  }
+  const lvFit = linreg(lvPoints);
+
   return {
     totals: {
       posts: posts.length,
@@ -170,6 +222,7 @@ export function computeWritingsStats(
     byTag,
     byYear,
     byWeekday,
+    lengthViews: { points: lvPoints, ...lvFit },
     facts: {
       firstDate,
       lastDate,
