@@ -97,28 +97,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     // Корень залочен на высоту вьюпорта и сам не скроллится — скролл живёт
     // только внутри контентной карточки (как в GitLab).
     <div className="flex h-[100dvh] flex-col overflow-hidden sm:flex-row">
-      {/* Десктоп: вертикальный рельс слева на серой подложке */}
-      <aside className="hidden w-16 shrink-0 flex-col items-center justify-between py-4 sm:flex">
-        <nav className="flex flex-col items-center gap-2">
-          {tabs.map((t) => (
-            <NavIcon key={t.href} tab={t} active={isActive(t.href, pathname)} tip />
-          ))}
-        </nav>
-        <div className="flex flex-col items-center gap-3">
-          <ThemeToggle />
-          <NavIcon tab={homeTab} active={isActive(homeTab.href, pathname)} tip />
-        </div>
-      </aside>
-
-      {/* Контент — единственная скролл-область */}
-      <div className="min-h-0 flex-1 p-2 sm:p-3 sm:pl-0">
-        <div className="h-full overflow-y-auto overflow-x-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm dark:border-neutral-800/70 dark:bg-neutral-950">
-          {children}
-        </div>
-      </div>
-
-      {/* Мобилка: нижняя панель — слева разделы, справа аватар (домой) и тема */}
-      <nav className="flex shrink-0 items-center justify-between px-3 pb-2 pt-1 sm:hidden">
+      {/* Мобилка: верхняя панель — слева разделы, справа аватар (домой) и тема */}
+      <nav className="flex shrink-0 items-center justify-between px-3 pb-1 pt-2 sm:hidden">
         <div className="flex items-center gap-1">
           {mainTabs.map((t) => (
             <NavIcon
@@ -136,6 +116,26 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <ThemeToggle />
         </div>
       </nav>
+
+      {/* Десктоп: вертикальный рельс слева на серой подложке */}
+      <aside className="hidden w-16 shrink-0 flex-col items-center justify-between py-4 sm:flex">
+        <nav className="flex flex-col items-center gap-2">
+          {tabs.map((t) => (
+            <NavIcon key={t.href} tab={t} active={isActive(t.href, pathname)} tip />
+          ))}
+        </nav>
+        <div className="flex flex-col items-center gap-3">
+          <ThemeToggle />
+          <NavIcon tab={homeTab} active={isActive(homeTab.href, pathname)} tip />
+        </div>
+      </aside>
+
+      {/* Контент — единственная скролл-область */}
+      <div className="min-h-0 flex-1 p-2 sm:p-3 sm:pl-0">
+        <div className="h-full overflow-y-auto overflow-x-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm [scrollbar-gutter:stable_both-edges] dark:border-neutral-800/70 dark:bg-neutral-950">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }
