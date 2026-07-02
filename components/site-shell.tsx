@@ -38,19 +38,23 @@ function isActive(href: string, pathname: string) {
 
 /**
  * Иконка навигации. tip=true рисует всплывающий тултип с подписью
- * (используется в десктопном рельсе). На мобильной панели тултип не нужен.
+ * (используется в десктопном рельсе). compact=true — чуть мельче (мобилка).
  */
 function NavIcon({
   tab,
   active,
   tip = false,
+  compact = false,
 }: {
   tab: Tab;
   active: boolean;
   tip?: boolean;
+  compact?: boolean;
 }) {
   const Icon = tab.icon;
-  const cls = `group relative inline-flex h-11 w-11 items-center justify-center rounded-xl transition ${
+  const cls = `group relative inline-flex items-center justify-center rounded-xl transition ${
+    compact ? "h-10 w-10" : "h-11 w-11"
+  } ${
     active
       ? "bg-accent/15 text-accent"
       : "text-neutral-500 hover:bg-black/5 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-white/5 dark:hover:text-neutral-100"
@@ -87,11 +91,14 @@ function NavIcon({
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const mainTabs = tabs.filter((t) => !t.external);
 
   return (
-    <div className="min-h-screen">
-      {/* Десктоп: вертикальный рельс на серой подложке слева */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col items-center justify-between py-4 sm:flex">
+    // Корень залочен на высоту вьюпорта и сам не скроллится — скролл живёт
+    // только внутри контентной карточки (как в GitLab).
+    <div className="flex h-[100dvh] flex-col overflow-hidden sm:flex-row">
+      {/* Десктоп: вертикальный рельс слева на серой подложке */}
+      <aside className="hidden w-16 shrink-0 flex-col items-center justify-between py-4 sm:flex">
         <nav className="flex flex-col items-center gap-2">
           {tabs.map((t) => (
             <NavIcon key={t.href} tab={t} active={isActive(t.href, pathname)} tip />
@@ -103,37 +110,31 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Контент — в белой карточке со скруглениями и отступами.
-          Карточка занимает высоту экрана минус отступы (снизу на мобилке —
-          место под нижние табы), а контент скроллится внутри неё. */}
-      <div className="sm:pl-16">
-        <div className="px-2 pt-16 pb-20 sm:p-3 sm:pb-3">
-          <div className="h-[calc(100dvh-9rem)] overflow-y-auto overflow-x-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm sm:h-[calc(100dvh-1.5rem)] dark:border-neutral-800/70 dark:bg-neutral-950">
-            {children}
-          </div>
+      {/* Контент — единственная скролл-область */}
+      <div className="min-h-0 flex-1 p-2 sm:p-3 sm:pl-0">
+        <div className="h-full overflow-y-auto overflow-x-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm dark:border-neutral-800/70 dark:bg-neutral-950">
+          {children}
         </div>
       </div>
 
-      {/* Мобилка: сверху — аватар (на главную) слева и смена темы справа,
-          на серой подложке над карточкой. */}
-      <Link
-        href="/"
-        aria-label="Домой"
-        className="fixed left-3 top-3 z-40 sm:hidden"
-      >
-        <AvatarToggle size={40} />
-      </Link>
-      <div className="fixed right-3 top-3 z-40 sm:hidden">
-        <ThemeToggle />
-      </div>
-
-      {/* Мобилка: снизу — основные разделы, без разделительной полосы */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-center gap-6 py-3 sm:hidden">
-        {tabs
-          .filter((t) => !t.external)
-          .map((t) => (
-            <NavIcon key={t.href} tab={t} active={isActive(t.href, pathname)} />
+      {/* Мобилка: нижняя панель — слева разделы, справа аватар (домой) и тема */}
+      <nav className="flex shrink-0 items-center justify-between px-3 pb-2 pt-1 sm:hidden">
+        <div className="flex items-center gap-1">
+          {mainTabs.map((t) => (
+            <NavIcon
+              key={t.href}
+              tab={t}
+              active={isActive(t.href, pathname)}
+              compact
+            />
           ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href="/" aria-label="Домой" className="inline-flex">
+            <AvatarToggle size={34} />
+          </Link>
+          <ThemeToggle />
+        </div>
       </nav>
     </div>
   );
