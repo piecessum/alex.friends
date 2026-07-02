@@ -220,15 +220,20 @@ export function WritingsGrid({
           Здесь пока пусто.
         </p>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {visible.map((t) => (
+        // Masonry-раскладка: карточки текут по колонкам с натуральной высотой
+        // (как доска Pinterest). Посты без обложки — без картинки-заглушки,
+        // компактнее, зато с более длинным текстом → разная высота «кирпичиков».
+        <div className="mt-8 gap-6 columns-1 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5">
+          {visible.map((t) => {
+            const hasCover = !!t.cover;
+            return (
             <Link
               key={t.key}
               href={t.href}
               onClick={saveStateForReturn}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700"
+              className="group mb-6 block break-inside-avoid overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700"
             >
-              {t.cover ? (
+              {t.cover && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={t.cover}
@@ -236,11 +241,9 @@ export function WritingsGrid({
                   loading="lazy"
                   className="aspect-[16/9] w-full object-cover"
                 />
-              ) : (
-                <div className="aspect-[16/9] w-full bg-gradient-to-br from-indigo-500/15 via-purple-500/10 to-transparent" />
               )}
 
-              <div className="flex flex-1 flex-col p-5">
+              <div className="flex flex-col p-5">
                 <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-500">
                   <span>{t.date}</span>
                   <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] uppercase tracking-wider dark:bg-neutral-900">
@@ -254,7 +257,11 @@ export function WritingsGrid({
                       {t.title}
                     </h2>
                     {t.excerpt && (
-                      <p className="mt-2 line-clamp-3 text-sm text-neutral-600 dark:text-neutral-400">
+                      <p
+                        className={`mt-2 text-sm text-neutral-600 dark:text-neutral-400 ${
+                          hasCover ? "line-clamp-3" : "line-clamp-[8]"
+                        }`}
+                      >
                         {t.excerpt}
                       </p>
                     )}
@@ -273,7 +280,11 @@ export function WritingsGrid({
                   </>
                 ) : (
                   <>
-                    <p className="mt-1.5 line-clamp-5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+                    <p
+                      className={`mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 ${
+                        hasCover ? "line-clamp-4" : "line-clamp-[14]"
+                      }`}
+                    >
                       {t.text || "(без текста)"}
                     </p>
                     {t.tags.length > 0 && (
@@ -297,7 +308,8 @@ export function WritingsGrid({
                 </span>
               </div>
             </Link>
-          ))}
+          );
+          })}
         </div>
       )}
     </div>
