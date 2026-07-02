@@ -130,9 +130,11 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Контент — единственная скролл-область */}
-      <div className="min-h-0 flex-1 p-2 sm:p-3 sm:pl-0">
-        <div className="h-full overflow-y-auto overflow-x-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm [scrollbar-gutter:stable_both-edges] dark:border-neutral-800/70 dark:bg-neutral-950">
+      {/* Контент — единственная скролл-область. На мобилке карточка прижата
+          к краям экрана (серая подложка только сверху, за панелью) и скруглена
+          лишь сверху; на десктопе — со всех сторон в отступах. */}
+      <div className="min-h-0 flex-1 sm:p-3 sm:pl-0">
+        <div className="h-full overflow-y-auto overflow-x-hidden rounded-t-2xl border-t border-neutral-200/70 bg-white shadow-sm [scrollbar-gutter:stable_both-edges] sm:rounded-2xl sm:border dark:border-neutral-800/70 dark:bg-neutral-950">
           {children}
         </div>
       </div>
