@@ -6,6 +6,24 @@ import path from "node:path";
 
 export const CHANNEL = "ux_review";
 
+/**
+ * Оборачивает картинку Telegram (CDN telesco.pe) в наш прокси `/api/tg-image`,
+ * чтобы ссылка на изображение не зависела от временных токенов и hotlink-защиты
+ * Telegram. Локальные пути (например, /notes/*.webp) и чужие хосты — без изменений.
+ */
+export function proxiedImage(url: string | undefined): string | undefined {
+  if (!url || !/^https?:\/\//i.test(url)) return url;
+  try {
+    const host = new URL(url).hostname;
+    if (/(^|\.)telesco\.pe$|(^|\.)telegram\.org$/.test(host)) {
+      return `/api/tg-image?u=${encodeURIComponent(url)}`;
+    }
+  } catch {
+    // невалидный URL — оставляем как есть
+  }
+  return url;
+}
+
 export type TgVideo = { thumb?: string; duration?: string; src?: string };
 export type TgLinkPreview = {
   url?: string;
@@ -153,13 +171,13 @@ function parse(html: string): TgPost[] {
       ...block.matchAll(
         /tgme_widget_message_photo_wrap[^"]*"[^>]*background-image:url\('([^']+)'\)/g
       ),
-    ].map((x) => x[1]);
+    ].map((x) => proxiedImage(x[1])!);
 
     const vThumbs = [
       ...block.matchAll(
         /tgme_widget_message_video_thumb[^"]*"[^>]*background-image:url\('([^']+)'\)/g
       ),
-    ].map((x) => x[1]);
+    ].map((x) => proxiedImage(x[1])!);
     const durations = [
       ...block.matchAll(/video_duration[^>]*>([^<]+)</g),
     ].map((x) => x[1]);
@@ -194,7 +212,7 @@ function parse(html: string): TgPost[] {
         site: field(block, /tgme_widget_message_site_name[^>]*>([^<]+)</),
         title: field(block, /tgme_widget_message_link_preview_title[^>]*>([\s\S]*?)<\/div>/)?.replace(/<[^>]+>/g, ""),
         description: field(block, /tgme_widget_message_link_preview_description[^>]*>([\s\S]*?)<\/div>/)?.replace(/<[^>]+>/g, ""),
-        image: field(block, /link_preview_image[^"]*"[^>]*background-image:url\('([^']+)'\)/),
+        image: proxiedImage(field(block, /link_preview_image[^"]*"[^>]*background-image:url\('([^']+)'\)/)),
       };
     }
 
