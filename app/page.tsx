@@ -62,7 +62,7 @@ const widgets: Widget[] = [
 
 export default function Dashboard() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="relative overflow-hidden">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,rgba(99,102,241,0.16),transparent_70%)]"

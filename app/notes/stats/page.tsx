@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { StatsDashboard, StatsTotals } from "@/components/stats-dashboard";
 import { GraphFrame } from "@/components/graph-frame";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
@@ -24,9 +22,7 @@ export default async function WritingsStatsPage() {
   const graph = buildTagGraph(posts, notes);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-      <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <Link
           href="/notes"
           className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
@@ -55,8 +51,6 @@ export default async function WritingsStatsPage() {
         <div className="mt-12">
           <StatsDashboard stats={stats} />
         </div>
-      </main>
-      <SiteFooter />
-    </div>
+    </main>
   );
 }

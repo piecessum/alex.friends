@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, PieChart } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { PieChart } from "lucide-react";
 import { WritingsGrid } from "@/components/writings-grid";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { fetchAllPosts } from "@/lib/telegram";
@@ -22,18 +20,8 @@ export default async function NotesPage() {
   const posts = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-      <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          На главную
-        </Link>
-
-        <div className="mt-6 flex items-center gap-3">
+    <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="flex items-center gap-3">
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Пишу
           </h1>
@@ -54,8 +42,6 @@ export default async function NotesPage() {
         <div className="mt-8">
           <WritingsGrid notes={notes} posts={posts} />
         </div>
-      </main>
-      <SiteFooter />
-    </div>
+    </main>
   );
 }

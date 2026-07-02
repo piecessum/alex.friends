@@ -162,8 +162,18 @@ export function VinylGallery({
   };
 
   const tabs = [
-    { key: "have" as const, label: "Что у меня есть", count: have.length },
-    { key: "want" as const, label: "Что я хочу", count: want.length },
+    {
+      key: "have" as const,
+      label: "Что у меня есть",
+      short: "Есть",
+      count: have.length,
+    },
+    {
+      key: "want" as const,
+      label: "Что я хочу",
+      short: "Хочу",
+      count: want.length,
+    },
   ];
 
   const q = query.trim().toLowerCase();
@@ -188,13 +198,15 @@ export function VinylGallery({
               type="button"
               onClick={() => setTab(t.key)}
               className={cn(
-                "rounded-xl px-4 py-2 text-sm font-medium transition",
+                "rounded-xl px-4 py-2 text-sm font-medium whitespace-nowrap transition",
                 tab === t.key
                   ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-800 dark:text-neutral-100"
                   : "text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
               )}
             >
-              {t.label} <span className="opacity-50">{t.count}</span>
+              <span className="sm:hidden">{t.short}</span>
+              <span className="hidden sm:inline">{t.label}</span>{" "}
+              <span className="opacity-50">{t.count}</span>
             </button>
           ))}
         </div>

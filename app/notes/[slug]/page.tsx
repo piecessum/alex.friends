@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Eye } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { TelegraphContent } from "@/components/telegraph-content";
 import { PostGraph } from "@/components/post-graph";
 import {
@@ -62,10 +60,7 @@ export default async function NotePage({
   const fullGraph = buildTagGraph(feed, notesIndex);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
+    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
         <div className="flex items-center justify-between gap-3">
           <Link
             href="/notes"
@@ -153,8 +148,6 @@ export default async function NotePage({
             Назад
           </Link>
         </div>
-      </main>
-      <SiteFooter />
-    </div>
+    </main>
   );
 }
