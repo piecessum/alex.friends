@@ -127,7 +127,7 @@ export default function Dashboard() {
             );
 
             const cardClass =
-              "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 p-6 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700";
+              "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 p-6 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-[#181818]/50 dark:hover:border-neutral-700";
 
             // На растянутом по высоте виджете пластинок добавляем
             // декоративную пластинку в углу, чтобы не было пустоты.

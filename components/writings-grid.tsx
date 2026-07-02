@@ -232,7 +232,7 @@ export function WritingsGrid({
         className={`shrink-0 rounded-full border px-3 py-1.5 text-sm transition ${
           active
             ? "border-indigo-500 bg-indigo-500 text-white"
-            : "border-neutral-200 bg-white/60 text-neutral-700 hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-300"
+            : "border-neutral-200 bg-white/60 text-neutral-700 hover:border-neutral-300 dark:border-neutral-800 dark:bg-[#181818]/60 dark:text-neutral-300"
         }`}
       >
         {label} <span className="opacity-60">{count}</span>
@@ -271,7 +271,7 @@ export function WritingsGrid({
               key={t.key}
               href={t.href}
               onClick={saveStateForReturn}
-              className="group block overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700"
+              className="group block overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-[#181818]/50 dark:hover:border-neutral-700"
             >
               {t.cover && (
                 // eslint-disable-next-line @next/next/no-img-element

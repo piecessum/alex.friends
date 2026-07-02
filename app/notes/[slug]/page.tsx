@@ -108,7 +108,7 @@ export default async function NotePage({
                   <Link
                     key={r.slug}
                     href={`/notes/${r.slug}`}
-                    className="group flex flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-md hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700"
+                    className="group flex flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-md hover:shadow-black/5 dark:border-neutral-800 dark:bg-[#181818]/50 dark:hover:border-neutral-700"
                   >
                     {r.cover ? (
                       // eslint-disable-next-line @next/next/no-img-element

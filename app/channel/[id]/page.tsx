@@ -63,7 +63,7 @@ function NavLink({
   return (
     <Link
       href={`/channel/${post.id}`}
-      className={`group flex flex-col rounded-xl border border-neutral-200 bg-white/50 p-4 backdrop-blur transition hover:border-neutral-300 hover:shadow-md hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700 ${className}`}
+      className={`group flex flex-col rounded-xl border border-neutral-200 bg-white/50 p-4 backdrop-blur transition hover:border-neutral-300 hover:shadow-md hover:shadow-black/5 dark:border-neutral-800 dark:bg-[#181818]/50 dark:hover:border-neutral-700 ${className}`}
     >
       <span
         className={`flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 ${

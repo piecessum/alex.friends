@@ -40,7 +40,7 @@ export default async function WritingsStatsPage() {
 
         {/* Граф слева, ключевые цифры столбиком справа */}
         <div className="mt-8 grid gap-4 lg:grid-cols-3">
-          <div className="h-[60vh] min-h-[420px] overflow-hidden rounded-2xl border border-neutral-200 bg-white/40 backdrop-blur lg:col-span-2 dark:border-neutral-800 dark:bg-neutral-950/40">
+          <div className="h-[60vh] min-h-[420px] overflow-hidden rounded-2xl border border-neutral-200 bg-white/40 backdrop-blur lg:col-span-2 dark:border-neutral-800 dark:bg-[#181818]/40">
             <GraphFrame data={graph} caption="Граф связей" />
           </div>
           <div className="grid grid-cols-2 gap-4 lg:h-[60vh] lg:min-h-[420px] lg:grid-cols-1 lg:grid-rows-4">

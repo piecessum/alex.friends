@@ -42,7 +42,7 @@ export function GraphFrame({
         onClick={() => setFull(true)}
         aria-label="Развернуть граф на весь экран"
         title="Развернуть на весь экран"
-        className="absolute top-2 right-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-neutral-200/70 bg-white/70 text-neutral-500 backdrop-blur transition hover:text-indigo-600 dark:border-neutral-800/70 dark:bg-neutral-950/60 dark:text-neutral-400 dark:hover:text-indigo-400"
+        className="absolute top-2 right-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-neutral-200/70 bg-white/70 text-neutral-500 backdrop-blur transition hover:text-indigo-600 dark:border-neutral-800/70 dark:bg-[#181818]/60 dark:text-neutral-400 dark:hover:text-indigo-400"
       >
         <Maximize2 className="h-4 w-4" />
       </button>
