@@ -57,6 +57,27 @@ function postExcerpt(html: string): string {
     .trim();
 }
 
+// Число колонок под ширину экрана — совпадает с брейкпоинтами Tailwind.
+const COLS = [
+  { min: 1536, n: 5 },
+  { min: 1280, n: 4 },
+  { min: 1024, n: 3 },
+  { min: 640, n: 2 },
+  { min: 0, n: 1 },
+];
+
+function useColumnCount(): number {
+  const [n, setN] = React.useState(3); // дефолт для SSR и первого рендера
+  React.useEffect(() => {
+    const calc = () =>
+      setN(COLS.find((c) => window.innerWidth >= c.min)?.n ?? 1);
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, []);
+  return n;
+}
+
 type Tile =
   | {
       kind: "note";
@@ -190,6 +211,17 @@ export function WritingsGrid({
     return tiles.filter((t) => t.tags.includes(filter));
   }, [tiles, filter]);
 
+  // Masonry: раскладываем посты по колонкам round-robin (i % N). Порядок
+  // слева-направо сохраняется (верхний ряд — 0,1,2,…), а высоты карточек
+  // разные — доска в стиле Pinterest. Обычный flex вместо CSS-колонок, чтобы
+  // не ломался backdrop-blur при наведении.
+  const columnCount = useColumnCount();
+  const columns = React.useMemo(() => {
+    const buckets: Tile[][] = Array.from({ length: columnCount }, () => []);
+    visible.forEach((t, i) => buckets[i % columnCount].push(t));
+    return buckets;
+  }, [visible, columnCount]);
+
   const renderChip = (key: string, label: string, count: number) => {
     const active = filter === key;
     return (
@@ -221,18 +253,25 @@ export function WritingsGrid({
           Здесь пока пусто.
         </p>
       ) : (
-        // Masonry-раскладка: карточки текут по колонкам с натуральной высотой
-        // (как доска Pinterest). Посты без обложки — без картинки-заглушки,
-        // компактнее, зато с более длинным текстом → разная высота «кирпичиков».
-        <div className="mt-8 gap-6 columns-1 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5">
-          {visible.map((t) => {
-            const hasCover = !!t.cover;
-            return (
+        <div className="mt-8 flex items-start gap-6">
+          {columns.map((col, ci) => (
+            <div key={ci} className="flex min-w-0 flex-1 flex-col gap-6">
+              {col.map(renderTile)}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  function renderTile(t: Tile) {
+    const hasCover = !!t.cover;
+    return (
             <Link
               key={t.key}
               href={t.href}
               onClick={saveStateForReturn}
-              className="group mb-6 block break-inside-avoid overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700"
+              className="group block overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-neutral-950/50 dark:hover:border-neutral-700"
             >
               {t.cover && (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -309,10 +348,6 @@ export function WritingsGrid({
                 </span>
               </div>
             </Link>
-          );
-          })}
-        </div>
-      )}
-    </div>
-  );
+    );
+  }
 }
