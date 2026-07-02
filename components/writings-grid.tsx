@@ -98,7 +98,8 @@ function buildTiles(notes: NoteIndexItem[], posts: TgPost[]): Tile[] {
       key: `post-${p.id}`,
       href: `/channel/${p.id}`,
       sortDate: new Date(p.date).getTime() || 0,
-      cover: p.photos[0] || p.videos[0]?.thumb || null,
+      // Обложка: фото → первый кадр видео → картинка превью-ссылки.
+      cover: p.photos[0] || p.videos[0]?.thumb || p.link?.image || null,
       date: formatPostDate(p.date),
       text: postExcerpt(postBody(p)),
       tags: p.tags,
