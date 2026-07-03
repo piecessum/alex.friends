@@ -60,41 +60,48 @@ export default async function VinylItemPage({
             {item.title}
           </h1>
 
-          <section className="mt-8">
-            <h2 className="text-lg font-bold tracking-tight">
-              {item.description?.length ? "Об издании" : "Список треков"}
-            </h2>
-
+          <div className="mt-8 space-y-8">
+            {/* Интересное об издании/пластинке — показываем, если есть */}
             {item.description?.length ? (
-              <div className="mt-4 space-y-3 text-neutral-700 dark:text-neutral-300">
-                {item.description.map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-              </div>
-            ) : item.tracks.length ? (
-              <ol className="mt-4 divide-y divide-neutral-200 dark:divide-neutral-800">
-                {item.tracks.map((track, i) => (
-                  <li
-                    key={i}
-                    className="flex items-baseline gap-3 py-2.5 text-neutral-700 dark:text-neutral-300"
-                  >
-                    <span className="w-6 shrink-0 text-right text-sm tabular-nums text-neutral-400 dark:text-neutral-600">
-                      {i + 1}
-                    </span>
-                    <span>{track}</span>
-                  </li>
-                ))}
-              </ol>
-            ) : item.want ? (
-              <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
-                Этой пластинки пока нет в коллекции — она в вишлисте.
+              <section>
+                <h2 className="text-lg font-bold tracking-tight">Об издании</h2>
+                <div className="mt-4 space-y-3 text-neutral-700 dark:text-neutral-300">
+                  {item.description.map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {/* Список треков — отдельной секцией, если есть */}
+            {item.tracks.length ? (
+              <section>
+                <h2 className="text-lg font-bold tracking-tight">Список треков</h2>
+                <ol className="mt-4">
+                  {item.tracks.map((track, i) => (
+                    <li
+                      key={i}
+                      className="flex items-baseline gap-3 py-2.5 text-neutral-700 dark:text-neutral-300"
+                    >
+                      <span className="w-6 shrink-0 text-right text-sm tabular-nums text-neutral-400 dark:text-neutral-600">
+                        {i + 1}
+                      </span>
+                      <span>{track}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ) : null}
+
+            {/* Ни описания, ни треков */}
+            {!item.description?.length && !item.tracks.length ? (
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                {item.want
+                  ? "Этой пластинки пока нет в коллекции — она в вишлисте."
+                  : "Список треков не указан."}
               </p>
-            ) : (
-              <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
-                Список треков не указан.
-              </p>
-            )}
-          </section>
+            ) : null}
+          </div>
         </div>
       </div>
     </main>
