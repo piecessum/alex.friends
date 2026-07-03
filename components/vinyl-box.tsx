@@ -187,8 +187,8 @@ export function VinylBox({
             }}
           >
             <span
-              className="whitespace-nowrap text-[9px] font-semibold uppercase tracking-widest text-white/60"
-              style={{ transform: "rotate(90deg)" }}
+              className="inline-block overflow-hidden text-ellipsis whitespace-nowrap text-[9px] font-semibold uppercase tracking-widest text-white/60"
+              style={{ transform: "rotate(90deg)", maxWidth: size - 40 }}
             >
               {title}
             </span>
