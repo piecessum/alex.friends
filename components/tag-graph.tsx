@@ -594,7 +594,7 @@ export function TagGraph({
       {hoverLabel &&
         createPortal(
           <div
-            className="pointer-events-none fixed z-[120] max-w-[40vw] rounded-md border border-neutral-200 bg-white/95 px-2 py-1 text-[11px] leading-tight text-neutral-800 shadow-lg backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/95 dark:text-neutral-200"
+            className="pointer-events-none fixed z-[120] max-w-[40vw] rounded-md border border-neutral-200 bg-white/95 px-2 py-1 text-[11px] leading-tight text-neutral-800 shadow-lg backdrop-blur dark:border-neutral-700 dark:bg-neutral-950/95 dark:text-neutral-200"
             style={{
               left: flipX ? hoverLabel.x - 12 : hoverLabel.x + 12,
               top: hoverLabel.y + 14,

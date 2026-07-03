@@ -18,7 +18,7 @@ export function ThemeToggle() {
       type="button"
       aria-label="Переключить тему"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white/60 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/60 transition hover:bg-neutral-100 dark:hover:bg-neutral-900"
+      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white/60 backdrop-blur dark:border-neutral-700 dark:bg-neutral-950/60 transition hover:bg-neutral-100 dark:hover:bg-neutral-900"
     >
       <AnimatePresence mode="wait" initial={false}>
         {isDark ? (

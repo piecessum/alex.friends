@@ -99,7 +99,7 @@ export default async function NotePage({
         </article>
 
         {related.length > 0 && (
-          <section className="mt-14 border-t border-neutral-200 pt-8 dark:border-neutral-800">
+          <section className="mt-14 border-t border-neutral-200 pt-8 dark:border-neutral-700">
             <h2 className="text-xl font-bold tracking-tight">Читать ещё</h2>
             <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
               {related.map((r) => {
@@ -108,7 +108,7 @@ export default async function NotePage({
                   <Link
                     key={r.slug}
                     href={`/notes/${r.slug}`}
-                    className="group flex flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-md hover:shadow-black/5 dark:border-neutral-800 dark:bg-[#181818]/50 dark:hover:border-neutral-700"
+                    className="group flex flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-md hover:shadow-black/5 dark:border-neutral-700 dark:bg-[#181818]/50 dark:hover:border-neutral-700"
                   >
                     {r.cover ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -138,7 +138,7 @@ export default async function NotePage({
           </section>
         )}
 
-        <div className="mt-12 border-t border-neutral-200 pt-6 dark:border-neutral-800">
+        <div className="mt-12 border-t border-neutral-200 pt-6 dark:border-neutral-700">
           <Link
             href="/notes"
             scroll={false}

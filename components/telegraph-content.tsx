@@ -82,7 +82,7 @@ function Node({ node }: { node: NoteNode }) {
     case "br":
       return <br />;
     case "hr":
-      return <hr className="my-8 border-neutral-200 dark:border-neutral-800" />;
+      return <hr className="my-8 border-neutral-200 dark:border-neutral-700" />;
     case "a": {
       const href =
         internalizeTelegraphUrl(attrs.href, ctx?.slugs ?? new Set()) ||
@@ -132,7 +132,7 @@ function Node({ node }: { node: NoteNode }) {
           src={attrs.src || ""}
           alt={attrs.alt || ""}
           onClick={clickable ? () => ctx!.openAt(idx!) : undefined}
-          className={`mx-auto h-auto rounded-xl border border-neutral-200 dark:border-neutral-800 ${
+          className={`mx-auto h-auto rounded-xl border border-neutral-200 dark:border-neutral-700 ${
             clickable ? "cursor-zoom-in" : ""
           }`}
         />
@@ -146,7 +146,7 @@ function Node({ node }: { node: NoteNode }) {
           loop
           muted
           playsInline
-          className="mx-auto h-auto w-full rounded-xl border border-neutral-200 dark:border-neutral-800"
+          className="mx-auto h-auto w-full rounded-xl border border-neutral-200 dark:border-neutral-700"
         />
       );
     case "iframe":

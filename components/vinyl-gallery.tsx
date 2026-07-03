@@ -191,7 +191,7 @@ export function VinylGallery({
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Сегментированный переключатель */}
-        <div className="inline-flex w-fit rounded-2xl border border-neutral-200 bg-neutral-100 p-1 dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="inline-flex w-fit rounded-2xl border border-neutral-200 bg-neutral-100 p-1 dark:border-neutral-700 dark:bg-neutral-950">
           {tabs.map((t) => (
             <button
               key={t.key}
@@ -200,7 +200,7 @@ export function VinylGallery({
               className={cn(
                 "rounded-xl px-4 py-2 text-sm font-medium whitespace-nowrap transition",
                 tab === t.key
-                  ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-800 dark:text-neutral-100"
+                  ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-700 dark:text-neutral-100"
                   : "text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
               )}
             >
@@ -219,7 +219,7 @@ export function VinylGallery({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Поиск по названию или треку"
-            className="w-full rounded-xl border border-neutral-200 bg-white/60 py-2 pr-3 pl-9 text-sm text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-indigo-400 dark:border-neutral-800 dark:bg-[#181818]/60 dark:text-neutral-200"
+            className="w-full rounded-xl border border-neutral-200 bg-white/60 py-2 pr-3 pl-9 text-sm text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-indigo-400 dark:border-neutral-700 dark:bg-[#181818]/60 dark:text-neutral-200"
           />
         </div>
       </div>
@@ -239,7 +239,7 @@ export function VinylGallery({
                     "shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition",
                     active
                       ? "border-indigo-600 bg-indigo-600 text-white"
-                      : "border-neutral-200 bg-white/60 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900 dark:border-neutral-800 dark:bg-[#181818]/40 dark:text-neutral-400 dark:hover:border-neutral-700 dark:hover:text-neutral-200"
+                      : "border-neutral-200 bg-white/60 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900 dark:border-neutral-700 dark:bg-[#181818]/40 dark:text-neutral-400 dark:hover:border-neutral-700 dark:hover:text-neutral-200"
                   )}
                 >
                   {g.name ?? "Все"}{" "}

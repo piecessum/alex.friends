@@ -108,7 +108,7 @@ export default function Dashboard() {
                     <Icon className="h-5 w-5" />
                   </div>
                   {w.soon ? (
-                    <span className="rounded-full border border-neutral-200 px-2.5 py-0.5 text-[11px] uppercase tracking-wider text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                    <span className="rounded-full border border-neutral-200 px-2.5 py-0.5 text-[11px] uppercase tracking-wider text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
                       скоро
                     </span>
                   ) : w.external ? (
@@ -127,7 +127,7 @@ export default function Dashboard() {
             );
 
             const cardClass =
-              "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 p-6 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-800 dark:bg-[#181818]/50 dark:hover:border-neutral-700";
+              "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 p-6 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-700 dark:bg-[#181818]/50 dark:hover:border-neutral-700";
 
             // На растянутом по высоте виджете пластинок добавляем
             // декоративную пластинку в углу, чтобы не было пустоты.

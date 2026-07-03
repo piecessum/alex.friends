@@ -26,7 +26,7 @@ const bodyClass =
 function Poll({ poll }: { poll: TgPoll }) {
   const leader = Math.max(...poll.options.map((o) => o.percent), 0);
   return (
-    <div className="mt-5 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
+    <div className="mt-5 rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
       <div className="text-[17px] font-semibold text-neutral-800 dark:text-neutral-100">
         {poll.question}
       </div>
@@ -147,7 +147,7 @@ export function ChannelPost({ post }: { post: TgPost }) {
           href={linkHref}
           target={linkInternal ? undefined : "_blank"}
           rel={linkInternal ? undefined : "noopener noreferrer"}
-          className="mt-4 flex gap-3 rounded-xl border border-neutral-200 p-3 transition hover:border-neutral-300 dark:border-neutral-800 dark:hover:border-neutral-700"
+          className="mt-4 flex gap-3 rounded-xl border border-neutral-200 p-3 transition hover:border-neutral-300 dark:border-neutral-700 dark:hover:border-neutral-700"
         >
           {post.link.image && (
             // eslint-disable-next-line @next/next/no-img-element

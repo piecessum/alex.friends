@@ -29,7 +29,7 @@ export default async function NotesPage() {
             href="/notes/stats"
             aria-label="Статистика"
             title="Статистика"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white/60 text-neutral-500 transition hover:border-indigo-400 hover:text-indigo-600 dark:border-neutral-800 dark:bg-[#181818]/60 dark:text-neutral-400 dark:hover:border-indigo-500 dark:hover:text-indigo-400"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white/60 text-neutral-500 transition hover:border-indigo-400 hover:text-indigo-600 dark:border-neutral-700 dark:bg-[#181818]/60 dark:text-neutral-400 dark:hover:border-indigo-500 dark:hover:text-indigo-400"
           >
             <PieChart className="h-4 w-4" />
           </Link>

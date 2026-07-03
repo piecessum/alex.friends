@@ -33,7 +33,7 @@ function StatCard({
   accent: string;
 }) {
   return (
-    <div className="flex h-full flex-col justify-center rounded-2xl border border-neutral-200 bg-white/50 p-5 backdrop-blur dark:border-neutral-800 dark:bg-[#181818]/50">
+    <div className="flex h-full flex-col justify-center rounded-2xl border border-neutral-200 bg-white/50 p-5 backdrop-blur dark:border-neutral-700 dark:bg-[#181818]/50">
       <div className={`text-[11px] font-semibold uppercase tracking-widest ${accent}`}>
         {label}
       </div>
@@ -452,7 +452,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white/50 p-6 backdrop-blur dark:border-neutral-800 dark:bg-[#181818]/50">
+    <section className="rounded-2xl border border-neutral-200 bg-white/50 p-6 backdrop-blur dark:border-neutral-700 dark:bg-[#181818]/50">
       <div className="mb-6 flex items-baseline justify-between gap-3">
         <h2 className="text-lg font-bold tracking-tight">{title}</h2>
         {hint && (

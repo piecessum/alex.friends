@@ -3,7 +3,7 @@ import { links } from "@/lib/site";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-neutral-200 dark:border-neutral-800">
+    <footer className="border-t border-neutral-200 dark:border-neutral-700">
       <div className="mx-auto max-w-5xl px-6 py-10">
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <p className="text-sm text-neutral-500 dark:text-neutral-400">

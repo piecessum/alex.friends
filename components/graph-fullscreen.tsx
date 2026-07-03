@@ -54,10 +54,10 @@ export function GraphFullscreen({
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex flex-col bg-background">
-      <div className="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800 sm:px-6">
+      <div className="flex items-center justify-between gap-3 border-b border-neutral-200 px-4 py-3 dark:border-neutral-700 sm:px-6">
         {/* Переключатель сам по себе говорит, что показано — отдельный заголовок не нужен. */}
         {canToggle ? (
-          <div className="flex shrink-0 overflow-hidden rounded-full border border-neutral-200 dark:border-neutral-800">
+          <div className="flex shrink-0 overflow-hidden rounded-full border border-neutral-200 dark:border-neutral-700">
             <button
               type="button"
               onClick={() => setView("local")}
@@ -84,7 +84,7 @@ export function GraphFullscreen({
           onClick={onClose}
           aria-label="Закрыть"
           title="Закрыть (Esc)"
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition hover:text-indigo-600 dark:border-neutral-800 dark:text-neutral-400 dark:hover:text-indigo-400"
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition hover:text-indigo-600 dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-indigo-400"
         >
           <X className="h-5 w-5" />
         </button>
