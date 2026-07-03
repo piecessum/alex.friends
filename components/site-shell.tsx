@@ -6,13 +6,10 @@ import {
   NotebookPen,
   Disc3,
   Camera,
-  Briefcase,
   Home,
   type LucideIcon,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { AvatarToggle } from "@/components/avatar-toggle";
-import { links } from "@/lib/site";
 
 type Tab = {
   label: string;
@@ -29,7 +26,6 @@ const tabs: Tab[] = [
   { label: "Пишу", icon: NotebookPen, href: "/notes", match: ["/notes", "/channel"] },
   { label: "Пластинки", icon: Disc3, href: "/vinyl" },
   { label: "Фоткаю", icon: Camera, href: "/photos" },
-  { label: "Ищу работу", icon: Briefcase, href: links.resume, external: true },
 ];
 
 // «Домой» живёт отдельно — в углу внизу рельса.
@@ -96,43 +92,32 @@ function NavIcon({
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const mainTabs = tabs.filter((t) => !t.external);
 
   return (
     // Корень залочен на высоту вьюпорта и сам не скроллится — скролл живёт
     // только внутри контентной карточки (как в GitLab).
     <div className="flex h-[100dvh] flex-col overflow-hidden sm:flex-row">
-      {/* Мобилка: верхняя панель — слева разделы, справа аватар (домой) и тема */}
+      {/* Мобилка: верхняя панель — слева домой + разделы, справа смена темы */}
       <nav className="flex shrink-0 items-center justify-between px-3 pb-1 pt-2 sm:hidden">
         <div className="flex items-center gap-1">
-          {mainTabs.map((t) => (
-            <NavIcon
-              key={t.href}
-              tab={t}
-              active={isActive(t, pathname)}
-              compact
-            />
+          <NavIcon tab={homeTab} active={isActive(homeTab, pathname)} compact />
+          {tabs.map((t) => (
+            <NavIcon key={t.href} tab={t} active={isActive(t, pathname)} compact />
           ))}
         </div>
-        <div className="flex items-center gap-2">
-          <Link href="/" aria-label="Домой" className="inline-flex">
-            <AvatarToggle size={34} />
-          </Link>
-          <ThemeToggle />
-        </div>
+        <ThemeToggle />
       </nav>
 
-      {/* Десктоп: вертикальный рельс слева на серой подложке */}
+      {/* Десктоп: вертикальный рельс слева на серой подложке.
+          Сверху — «Домой» и разделы, внизу в углу — только смена темы. */}
       <aside className="hidden w-16 shrink-0 flex-col items-center justify-between py-4 sm:flex">
         <nav className="flex flex-col items-center gap-2">
+          <NavIcon tab={homeTab} active={isActive(homeTab, pathname)} tip />
           {tabs.map((t) => (
             <NavIcon key={t.href} tab={t} active={isActive(t, pathname)} tip />
           ))}
         </nav>
-        <div className="flex flex-col items-center gap-3">
-          <ThemeToggle />
-          <NavIcon tab={homeTab} active={isActive(homeTab, pathname)} tip />
-        </div>
+        <ThemeToggle />
       </aside>
 
       {/* Контент — единственная скролл-область. На мобилке карточка прижата
