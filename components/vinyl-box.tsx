@@ -177,7 +177,6 @@ export function VinylBox({
           />
           {/* Левый торец (корешок) */}
           <div
-            className="flex items-center justify-center"
             style={{
               ...face,
               width: depth,
@@ -186,9 +185,17 @@ export function VinylBox({
               transform: `translate(-50%, -50%) rotateY(-90deg) translateZ(${size / 2}px)`,
             }}
           >
+            {/* Название вдоль корешка. Ширина строки = высоте коробки (после
+                поворота на 90° это длина строки), поэтому короткие названия
+                видны целиком, а слишком длинные обрезаются многоточием и не
+                вылезают за пределы коробки. Абсолютное позиционирование, чтобы
+                узкий торец не сжимал текст. */}
             <span
-              className="inline-block overflow-hidden text-ellipsis whitespace-nowrap text-[9px] font-semibold uppercase tracking-widest text-white/60"
-              style={{ transform: "rotate(90deg)", maxWidth: size - 40 }}
+              className="absolute left-1/2 top-1/2 overflow-hidden text-ellipsis whitespace-nowrap text-center text-[9px] font-semibold uppercase tracking-widest text-white/60"
+              style={{
+                width: size - 40,
+                transform: "translate(-50%, -50%) rotate(90deg)",
+              }}
             >
               {title}
             </span>
