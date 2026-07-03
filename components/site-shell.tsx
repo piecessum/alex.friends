@@ -19,11 +19,14 @@ type Tab = {
   icon: LucideIcon;
   href: string;
   external?: boolean;
+  /** Префиксы маршрутов, при которых таб считается активным. По умолчанию —
+   *  сам href. У «Пишу» посты открываются и на /notes, и на /channel. */
+  match?: string[];
 };
 
 // Основные разделы — вертикальный рельс слева вверху.
 const tabs: Tab[] = [
-  { label: "Пишу", icon: NotebookPen, href: "/notes" },
+  { label: "Пишу", icon: NotebookPen, href: "/notes", match: ["/notes", "/channel"] },
   { label: "Пластинки", icon: Disc3, href: "/vinyl" },
   { label: "Фоткаю", icon: Camera, href: "/photos" },
   { label: "Ищу работу", icon: Briefcase, href: links.resume, external: true },
@@ -32,8 +35,10 @@ const tabs: Tab[] = [
 // «Домой» живёт отдельно — в углу внизу рельса.
 const homeTab: Tab = { label: "Домой", icon: Home, href: "/" };
 
-function isActive(href: string, pathname: string) {
-  return href === "/" ? pathname === "/" : pathname.startsWith(href);
+function isActive(tab: Tab, pathname: string) {
+  if (tab.href === "/") return pathname === "/";
+  const prefixes = tab.match ?? [tab.href];
+  return prefixes.some((p) => pathname === p || pathname.startsWith(p + "/"));
 }
 
 /**
@@ -104,7 +109,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <NavIcon
               key={t.href}
               tab={t}
-              active={isActive(t.href, pathname)}
+              active={isActive(t, pathname)}
               compact
             />
           ))}
@@ -121,12 +126,12 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <aside className="hidden w-16 shrink-0 flex-col items-center justify-between py-4 sm:flex">
         <nav className="flex flex-col items-center gap-2">
           {tabs.map((t) => (
-            <NavIcon key={t.href} tab={t} active={isActive(t.href, pathname)} tip />
+            <NavIcon key={t.href} tab={t} active={isActive(t, pathname)} tip />
           ))}
         </nav>
         <div className="flex flex-col items-center gap-3">
           <ThemeToggle />
-          <NavIcon tab={homeTab} active={isActive(homeTab.href, pathname)} tip />
+          <NavIcon tab={homeTab} active={isActive(homeTab, pathname)} tip />
         </div>
       </aside>
 
