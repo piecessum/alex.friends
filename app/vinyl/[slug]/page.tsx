@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { VinylBox } from "@/components/vinyl-box";
 import { getAllVinylItems, getVinylItem } from "@/lib/vinyl";
 
@@ -70,6 +70,17 @@ export default async function VinylItemPage({
                     <p key={i}>{p}</p>
                   ))}
                 </div>
+                {item.source ? (
+                  <a
+                    href={item.source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 transition hover:text-indigo-700 hover:underline dark:text-indigo-400 dark:hover:text-indigo-300"
+                  >
+                    {item.source.label}
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
+                ) : null}
               </section>
             ) : null}
 

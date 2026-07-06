@@ -15,6 +15,8 @@ export type VinylItem = {
   front?: string;
   back?: string;
   genre?: string;
+  /** Ссылка-источник (Discogs, Wikipedia и т.п.) — «подробнее об издании». */
+  source?: { label: string; url: string };
 };
 
 /** Обогащение по slug: фото (front/back), уточнённые треки и флаг own.
@@ -28,6 +30,7 @@ type VinylExtra = Record<
     description?: string[];
     own?: boolean;
     genre?: string;
+    source?: { label: string; url: string };
   }
 >;
 
@@ -64,6 +67,7 @@ export function getAllVinylItems(): VinylItem[] {
       front: ex.front,
       back: ex.back,
       genre: ex.genre,
+      source: ex.source,
     };
   };
 
