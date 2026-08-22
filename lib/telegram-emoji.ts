@@ -9,11 +9,8 @@
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
 export type CustomEmojiInfo = {
-  /** file_id настоящего стикера — webm-видео, если isVideo. */
-  fileId: string;
-  /** file_id статичного превью (jpeg/webp) — годится и для tgs (lottie), и для видео-постера. */
+  /** file_id статичного превью (webp) — есть у любого стикера, видео или нет. */
   thumbFileId: string;
-  isVideo: boolean;
 };
 
 /** Резолвит пачку emoji-id одним запросом (лимит Bot API — 100 id за раз). */
@@ -40,14 +37,11 @@ export async function resolveCustomEmojis(
       for (const s of data.result as Array<{
         custom_emoji_id: string;
         file_id: string;
-        is_video?: boolean;
         thumbnail?: { file_id: string };
         thumb?: { file_id: string };
       }>) {
         out.set(s.custom_emoji_id, {
-          fileId: s.file_id,
           thumbFileId: s.thumbnail?.file_id ?? s.thumb?.file_id ?? s.file_id,
-          isVideo: !!s.is_video,
         });
       }
     } catch {

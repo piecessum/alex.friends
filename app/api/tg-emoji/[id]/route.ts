@@ -1,9 +1,15 @@
 import type { NextRequest } from "next/server";
 import { resolveCustomEmojis, getFilePath } from "@/lib/telegram-emoji";
 
-// Отдаёт реальный файл кастомного эмодзи (webm-анимация или статичное превью)
-// по его custom_emoji_id. Токен бота не покидает сервер — браузер видит
-// только этот прокси-URL, вшитый в HTML поста лентой (см. lib/telegram.ts).
+// Отдаёт статичное превью кастомного эмодзи (webp) по его custom_emoji_id.
+// Токен бота не покидает сервер — браузер видит только этот прокси-URL,
+// вшитый в HTML поста лентой (см. lib/telegram.ts).
+//
+// Намеренно всегда отдаём статичную картинку, а не реальный webm-стикер:
+// у видео-стикеров альфа-канал (прозрачный фон) корректно показывает
+// в <video> по сути только Chromium — в Safari/WebKit «прозрачные» пиксели
+// становятся сплошным чёрным квадратом. thumbnail же — обычный webp
+// с настоящей прозрачностью, одинаково работает везде.
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CACHE = "public, max-age=31536000, s-maxage=31536000, immutable";
@@ -20,15 +26,9 @@ export async function GET(
   const info = (await resolveCustomEmojis([id])).get(id);
   if (!info) return new Response("not found", { status: 404 });
 
-  // Видео — реальный webm-стикер; иначе (tgs/статика) — гарантированно
-  // растровое превью, которое можно показать как обычную картинку.
-  const fileId = info.isVideo ? info.fileId : info.thumbFileId;
-  const filePath = await getFilePath(fileId);
+  const filePath = await getFilePath(info.thumbFileId);
   if (!filePath) return new Response("not found", { status: 404 });
 
-  // Файл Telegram поддерживает Range — пробрасываем заголовок клиента как
-  // есть. Без этого Safari/WebKit молча отказывается проигрывать <video>
-  // (просто пустое место), даже если сам файл рабочий.
   const range = req.headers.get("range");
 
   let upstream: Response;
@@ -46,12 +46,8 @@ export async function GET(
   if (!upstream.ok) return new Response("upstream error", { status: 502 });
 
   const buf = await upstream.arrayBuffer();
-  // Файловый сервер Telegram сам обычно отдаёт application/octet-stream —
-  // тип по факту (webm/webp) уже известен из getCustomEmojiStickers.
-  const contentType = info.isVideo ? "video/webm" : "image/webp";
-
   const headers: Record<string, string> = {
-    "content-type": contentType,
+    "content-type": "image/webp",
     "cache-control": CACHE,
     "accept-ranges": "bytes",
   };

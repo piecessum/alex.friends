@@ -175,10 +175,13 @@ async function injectCustomEmojis(posts: TgPost[]): Promise<TgPost[]> {
     html.replace(CUSTOM_EMOJI_RE, (_m, id, fallback) => {
       const info = resolved.get(id);
       if (!info) return fallback;
-      const src = `/api/tg-emoji/${id}`;
-      return info.isVideo
-        ? `<video class="emoji" src="${src}" autoplay loop muted playsinline></video>`
-        : `<img class="emoji" src="${src}" alt="${fallback}" />`;
+      // Видео-стикеры (webm) кодируются с альфа-каналом, а его honor'ят
+      // по сути только Chromium — в Safari/WebKit «прозрачные» пиксели
+      // становятся сплошным чёрным квадратом. Поэтому везде используем
+      // статичное превью (webp с настоящей прозрачностью в <img>), даже
+      // если сам стикер анимированный — жертвуем движением ради того,
+      // чтобы картинка не ломалась в половине браузеров.
+      return `<img class="emoji" src="/api/tg-emoji/${id}" alt="${fallback}" />`;
     });
 
   return posts.map((p) => ({
