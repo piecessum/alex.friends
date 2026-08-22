@@ -57,6 +57,13 @@ export function getAnnouncedPostIds(): Set<string> {
   );
 }
 
+/** slug лонгрида по id поста-анонса — чтобы /channel/<id> редиректил на /notes/<slug>. */
+export function getSlugForAnnouncedPost(id: string): string | undefined {
+  return Object.entries(getTelegramLog()).find(
+    ([, e]) => String(e.message_id) === id
+  )?.[0];
+}
+
 export function getNotesIndex(): NoteIndexItem[] {
   const index: NoteIndexItem[] = JSON.parse(
     fs.readFileSync(path.join(DIR, "index.json"), "utf8")

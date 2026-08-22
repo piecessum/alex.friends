@@ -1,11 +1,15 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ChannelPost } from "@/components/channel-post";
 import { PostGraph } from "@/components/post-graph";
 import { fetchAllPosts, type TgPost } from "@/lib/telegram";
 import { postBody } from "@/lib/post-text";
-import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
+import {
+  getAnnouncedPostIds,
+  getNotesIndex,
+  getSlugForAnnouncedPost,
+} from "@/lib/notes";
 import { buildLocalGraph, buildTagGraph } from "@/lib/graph";
 
 export const revalidate = 3600;
@@ -14,8 +18,12 @@ export const revalidate = 3600;
 // открывает их мгновенно. Новые посты добавятся при следующей сборке/ревалидации.
 export async function generateStaticParams() {
   const posts = await fetchAllPosts();
+  const announced = getAnnouncedPostIds();
   // Склеенный форвард доступен и по своему id, и по id поглощённой подписи.
-  return posts.flatMap((p) => [p.id, ...(p.aliasIds ?? [])].map((id) => ({ id })));
+  // Посты-анонсы лонгридов сюда не идут — /channel/<id> для них редиректит на /notes/<slug>.
+  return posts
+    .filter((p) => !announced.has(p.id))
+    .flatMap((p) => [p.id, ...(p.aliasIds ?? [])].map((id) => ({ id })));
 }
 
 function stripHtml(html: string): string {
@@ -37,6 +45,9 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const announcedSlug = getSlugForAnnouncedPost(id);
+  if (announcedSlug) return {};
+
   const posts = await fetchAllPosts();
   const post = posts.find((p) => p.id === id || p.aliasIds?.includes(id));
   if (!post) return { title: "Пост не найден" };
@@ -86,6 +97,10 @@ export default async function ChannelItemPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  // Пост-анонс лонгрида — сам пост «представляет» лонгрид, вести должно сразу на него.
+  const announcedSlug = getSlugForAnnouncedPost(id);
+  if (announcedSlug) redirect(`/notes/${announcedSlug}`);
+
   const posts = await fetchAllPosts();
   const pos = posts.findIndex((p) => p.id === id || p.aliasIds?.includes(id));
   if (pos === -1) notFound();
