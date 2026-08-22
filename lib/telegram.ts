@@ -81,19 +81,45 @@ const UA =
 
 const ALLOWED = new Set([
   "a", "b", "strong", "i", "em", "u", "s", "del", "code", "pre", "br",
-  "blockquote",
+  "blockquote", "tg-spoiler", "tg-emoji",
 ]);
+
+/**
+ * В превью Telegram обычный эмодзи оборачивается в
+ * `<i class="emoji" style="background-image:url('//telegram.org/img/emoji/...')"><b>🙂</b></i>`,
+ * а кастомный — тем же самым внутри `<tg-emoji emoji-id="…">` (сама анимация
+ * недоступна без авторизованного Bot API, поэтому используем ту же картинку,
+ * что и для обычных эмодзи). Проверяем, что фон — реально телеграмовская
+ * картинка, и только тогда сохраняем style; иначе строку CSS не пропускаем.
+ */
+function sanitizeEmojiStyle(raw: string): string | null {
+  const m = raw.match(/^background-image:url\((['"]?)([^'")]+)\1\)$/);
+  if (!m) return null;
+  let url = m[2];
+  if (url.startsWith("//")) url = "https:" + url;
+  if (!/^https:\/\/telegram\.org\//.test(url)) return null;
+  return `background-image:url('${url}')`;
+}
 
 /** Оставляем только безопасный набор инлайн-тегов; у ссылок — только href. */
 function sanitize(html: string): string {
   let out = html
     .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, "")
+    // U+FFFC — служебный плейсхолдер, которым Telegram помечает в тексте место
+    // кастомного эмодзи перед самим <tg-emoji>; картинка эмодзи заменяет его
+    // с запасом, а лишний символ показывался бы «тофу»-квадратиком.
+    .replace(/￼/g, "")
     .replace(/<a\b[^>]*?href="([^"]*)"[^>]*>/gi,
-      (_m, href) => `<a href="${href}" target="_blank" rel="noopener noreferrer">`);
+      (_m, href) => `<a href="${href}" target="_blank" rel="noopener noreferrer">`)
+    .replace(/<i class="emoji"[^>]*style="([^"]*)"[^>]*>/gi, (_m, style) => {
+      const safe = sanitizeEmojiStyle(style);
+      return safe ? `<i class="emoji" style="${safe}">` : "<i>";
+    });
   // прочие теги: разрешённые — чистим атрибуты, остальные — выкидываем (текст оставляем)
   out = out.replace(/<\/?([a-zA-Z][a-zA-Z0-9-]*)\b[^>]*>/g, (tag, name) => {
     const n = String(name).toLowerCase();
     if (n === "a") return tag.startsWith("</") ? "</a>" : tag;
+    if (n === "i" && /^<i class="emoji" style="/.test(tag)) return tag;
     if (!ALLOWED.has(n)) return "";
     return tag.startsWith("</") ? `</${n}>` : `<${n}>`;
   });

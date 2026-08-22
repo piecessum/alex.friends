@@ -1,5 +1,6 @@
 import { Eye, ArrowUpRight, CornerUpRight } from "lucide-react";
 import { PostMedia } from "@/components/post-media";
+import { SpoilerHtml } from "@/components/spoiler-html";
 import type { TgPoll, TgPost } from "@/lib/telegram";
 import { getNotesIndex } from "@/lib/notes";
 import {
@@ -92,10 +93,7 @@ export function ChannelPost({ post }: { post: TgPost }) {
 
       {/* Твой комментарий к пересылке — твоим голосом, над самой цитатой. */}
       {post.forward && comment && (
-        <div
-          className={`mt-5 text-[17px] ${bodyClass}`}
-          dangerouslySetInnerHTML={{ __html: comment }}
-        />
+        <SpoilerHtml className={`mt-5 text-[17px] ${bodyClass}`} html={comment} />
       )}
 
       {post.forward ? (
@@ -123,18 +121,12 @@ export function ChannelPost({ post }: { post: TgPost }) {
             </span>
           </div>
           {post.html && (
-            <div
-              className={`mt-2 text-[16px] ${bodyClass}`}
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
+            <SpoilerHtml className={`mt-2 text-[16px] ${bodyClass}`} html={html} />
           )}
         </div>
       ) : (
         post.html && (
-          <div
-            className={`mt-5 text-[17px] ${bodyClass}`}
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
+          <SpoilerHtml className={`mt-5 text-[17px] ${bodyClass}`} html={html} />
         )
       )}
 

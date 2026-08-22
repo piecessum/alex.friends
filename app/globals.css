@@ -50,3 +50,43 @@ body {
   background: var(--accent);
   color: white;
 }
+
+/* Эмодзи из ленты Telegram — рисуем картинкой из превью, а не системным
+   юникод-глифом, чтобы выглядело как в самом Telegram. Юникод-фолбэк внутри
+   <b> оставляем только для скринридеров. */
+.emoji {
+  position: relative;
+  display: inline-flex;
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: -0.2em;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.emoji b {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Спойлер из Telegram (<tg-spoiler>) — блюр, снимается по клику. */
+tg-spoiler {
+  cursor: pointer;
+  border-radius: 4px;
+  background: rgba(120, 120, 128, 0.16);
+  filter: blur(5px);
+  transition: filter 0.15s ease, background-color 0.15s ease;
+}
+
+tg-spoiler.revealed {
+  background: transparent;
+  filter: none;
+}
