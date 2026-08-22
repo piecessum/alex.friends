@@ -9,7 +9,7 @@ const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CACHE = "public, max-age=31536000, s-maxage=31536000, immutable";
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
@@ -26,11 +26,19 @@ export async function GET(
   const filePath = await getFilePath(fileId);
   if (!filePath) return new Response("not found", { status: 404 });
 
+  // Файл Telegram поддерживает Range — пробрасываем заголовок клиента как
+  // есть. Без этого Safari/WebKit молча отказывается проигрывать <video>
+  // (просто пустое место), даже если сам файл рабочий.
+  const range = req.headers.get("range");
+
   let upstream: Response;
   try {
     upstream = await fetch(
       `https://api.telegram.org/file/bot${TOKEN}/${filePath}`,
-      { next: { revalidate: 86400 } }
+      {
+        headers: range ? { range } : undefined,
+        next: { revalidate: 86400 },
+      }
     );
   } catch {
     return new Response("fetch failed", { status: 502 });
@@ -42,8 +50,16 @@ export async function GET(
   // тип по факту (webm/webp) уже известен из getCustomEmojiStickers.
   const contentType = info.isVideo ? "video/webm" : "image/webp";
 
+  const headers: Record<string, string> = {
+    "content-type": contentType,
+    "cache-control": CACHE,
+    "accept-ranges": "bytes",
+  };
+  const contentRange = upstream.headers.get("content-range");
+  if (contentRange) headers["content-range"] = contentRange;
+
   return new Response(buf, {
-    status: 200,
-    headers: { "content-type": contentType, "cache-control": CACHE },
+    status: upstream.status,
+    headers,
   });
 }
