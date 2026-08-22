@@ -13,7 +13,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/piterkazan-cover.webp"
+            "src": "/notes/piterkazan-cover.webp",
+            "width": "955",
+            "height": "540"
           }
         },
         {

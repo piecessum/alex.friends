@@ -13,7 +13,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/b0aa946ff544a6ceb0524.webp"
+            "src": "/notes/b0aa946ff544a6ceb0524.webp",
+            "width": "1400",
+            "height": "933"
           }
         },
         {
@@ -42,7 +44,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/8b3e869b945f90939a5fb.webp"
+            "src": "/notes/8b3e869b945f90939a5fb.webp",
+            "width": "1400",
+            "height": "933"
           }
         },
         {
@@ -126,7 +130,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/0744c7895725ed11574d8.webp"
+            "src": "/notes/0744c7895725ed11574d8.webp",
+            "width": "1400",
+            "height": "933"
           }
         },
         {

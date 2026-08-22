@@ -31,7 +31,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/15692480896c55074be68.webp"
+            "src": "/notes/15692480896c55074be68.webp",
+            "width": "1400",
+            "height": "905"
           }
         },
         {
@@ -140,7 +142,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/5233a18932d604da4cfa5.webp"
+            "src": "/notes/5233a18932d604da4cfa5.webp",
+            "width": "1400",
+            "height": "1029"
           }
         },
         {
@@ -187,7 +191,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/8e1aa64d88b95e2820ddf.webp"
+            "src": "/notes/8e1aa64d88b95e2820ddf.webp",
+            "width": "1400",
+            "height": "905"
           }
         },
         {

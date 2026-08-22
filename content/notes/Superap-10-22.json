@@ -13,7 +13,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/dc1f27747757cf536f8ca.webp"
+            "src": "/notes/dc1f27747757cf536f8ca.webp",
+            "width": "1400",
+            "height": "758"
           }
         },
         {

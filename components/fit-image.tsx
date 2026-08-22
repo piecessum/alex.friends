@@ -8,32 +8,43 @@ import { useState } from "react";
  * экрана, чтобы помещаться без скролла. Обычные (горизонтальные/квадратные)
  * показываются во всю ширину колонки, как раньше.
  *
- * «Высоту» определяем по реальным пропорциям после загрузки: если
- * высота/ширина больше порога — считаем снимок вытянутым.
+ * Если реальные пропорции известны заранее (width/height из content/notes/*.json,
+ * см. scripts/import-telegraph.mjs) — решение «вытянутая или нет» принимается
+ * сразу при рендере, без скачка вёрстки. Если их нет (напр. фото из ленты
+ * Telegram, у которых размер заранее не известен) — определяем по факту
+ * загрузки через onLoad, как раньше.
  */
 export function FitImage({
   src,
   alt = "",
   className = "",
+  width,
+  height,
   threshold = 1.5,
   onClick,
 }: {
   src: string;
   alt?: string;
   className?: string;
+  width?: number;
+  height?: number;
   threshold?: number;
   onClick?: () => void;
 }) {
-  const [tall, setTall] = useState(false);
+  const knownTall = width && height ? height / width > threshold : undefined;
+  const [tall, setTall] = useState(knownTall ?? false);
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
       alt={alt}
+      width={width}
+      height={height}
       loading="lazy"
       onClick={onClick}
       onLoad={(e) => {
+        if (knownTall !== undefined) return; // размеры уже известны заранее
         const el = e.currentTarget;
         if (el.naturalWidth && el.naturalHeight / el.naturalWidth > threshold) {
           setTall(true);

@@ -131,6 +131,8 @@ function Node({ node }: { node: NoteNode }) {
         <FitImage
           src={attrs.src || ""}
           alt={attrs.alt || ""}
+          width={attrs.width ? Number(attrs.width) : undefined}
+          height={attrs.height ? Number(attrs.height) : undefined}
           onClick={clickable ? () => ctx!.openAt(idx!) : undefined}
           className={`mx-auto h-auto rounded-xl border border-neutral-200 dark:border-neutral-700 ${
             clickable ? "cursor-zoom-in" : ""

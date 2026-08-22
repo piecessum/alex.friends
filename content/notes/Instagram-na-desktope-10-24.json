@@ -25,7 +25,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/0fbcaddc4d2991a685b01.webp"
+            "src": "/notes/0fbcaddc4d2991a685b01.webp",
+            "width": "1400",
+            "height": "1400"
           }
         },
         {
@@ -48,7 +50,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/849d2af183d25b9fb884c.webp"
+            "src": "/notes/849d2af183d25b9fb884c.webp",
+            "width": "1400",
+            "height": "1400"
           }
         },
         {

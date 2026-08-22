@@ -115,6 +115,23 @@ const firstText = (nodes) => {
 let firstImage = null;
 const downloaded = new Set();
 
+// Реальные пиксельные размеры картинки — чтобы <img> резервировал место под
+// себя ещё до загрузки (см. components/fit-image.tsx: без этого решение
+// «вытянутая по высоте или нет» принималось после загрузки и вызывало
+// заметный скачок вёрстки).
+function imageSize(file) {
+  try {
+    const out = execFileSync("sips", ["-g", "pixelWidth", "-g", "pixelHeight", file], {
+      encoding: "utf8",
+    });
+    const w = out.match(/pixelWidth:\s*(\d+)/)?.[1];
+    const h = out.match(/pixelHeight:\s*(\d+)/)?.[1];
+    return w && h ? { width: w, height: h } : null;
+  } catch {
+    return null;
+  }
+}
+
 function walk(node) {
   if (typeof node === "string") return node;
   if (!node || typeof node !== "object") return node;
@@ -133,7 +150,11 @@ function walk(node) {
       downloaded.add(base);
     }
     node.attrs = { ...attrs, src: `/notes/${base}` };
-    if (node.tag === "img" && !firstImage) firstImage = `/notes/${base}`;
+    if (node.tag === "img") {
+      if (!firstImage) firstImage = `/notes/${base}`;
+      const size = imageSize(dest);
+      if (size) node.attrs = { ...node.attrs, ...size };
+    }
   }
 
   if (Array.isArray(node.children)) node.children = node.children.map(walk);

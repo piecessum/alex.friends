@@ -60,7 +60,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/5704cb023a67ef4981e57.webp"
+            "src": "/notes/5704cb023a67ef4981e57.webp",
+            "width": "930",
+            "height": "930"
           }
         },
         {
@@ -170,7 +172,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/db7059aacf348b5d82e3d.webp"
+            "src": "/notes/db7059aacf348b5d82e3d.webp",
+            "width": "930",
+            "height": "930"
           }
         },
         {
@@ -187,7 +191,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/fe7939ac4f62e3d0489ca.webp"
+            "src": "/notes/fe7939ac4f62e3d0489ca.webp",
+            "width": "930",
+            "height": "930"
           }
         },
         {
@@ -271,7 +277,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/674d6e3bfd4d6a175cbca.webp"
+            "src": "/notes/674d6e3bfd4d6a175cbca.webp",
+            "width": "930",
+            "height": "930"
           }
         },
         {

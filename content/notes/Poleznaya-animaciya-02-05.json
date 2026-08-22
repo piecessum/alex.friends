@@ -13,7 +13,9 @@
         {
           "tag": "img",
           "attrs": {
-            "src": "/notes/poleznaya-animaciya-cover.webp"
+            "src": "/notes/poleznaya-animaciya-cover.webp",
+            "width": "1400",
+            "height": "933"
           }
         },
         {
