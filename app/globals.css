@@ -53,7 +53,8 @@ body {
 
 /* Эмодзи из ленты Telegram — рисуем картинкой из превью, а не системным
    юникод-глифом, чтобы выглядело как в самом Telegram. Юникод-фолбэк внутри
-   <b> оставляем только для скринридеров. */
+   <b> оставляем только для скринридеров. Тот же класс на <img>/<video> — для
+   кастомных эмодзи, чью настоящую картинку резолвит Bot API. */
 .emoji {
   position: relative;
   display: inline-flex;
@@ -63,6 +64,7 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+  object-fit: contain;
 }
 
 .emoji b {

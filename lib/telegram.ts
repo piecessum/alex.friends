@@ -3,6 +3,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { resolveCustomEmojis } from "@/lib/telegram-emoji";
 
 export const CHANNEL = "ux_review";
 
@@ -101,6 +102,10 @@ function sanitizeEmojiStyle(raw: string): string | null {
   return `background-image:url('${url}')`;
 }
 
+function escAttr(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+}
+
 /** Оставляем только безопасный набор инлайн-тегов; у ссылок — только href. */
 function sanitize(html: string): string {
   let out = html
@@ -109,6 +114,15 @@ function sanitize(html: string): string {
     // кастомного эмодзи перед самим <tg-emoji>; картинка эмодзи заменяет его
     // с запасом, а лишний символ показывался бы «тофу»-квадратиком.
     .replace(/￼/g, "")
+    // Кастомный эмодзи: превью отдаёт для него только generic-заглушку
+    // (картинку фолбэк-юникода, а не настоящий рисунок стикера), поэтому
+    // сворачиваем весь фрагмент в компактный маркер с id и текстом-фолбэком —
+    // настоящую картинку/видео подставит injectCustomEmojis() через Bot API.
+    .replace(
+      /<tg-emoji emoji-id="(\d+)">[\s\S]*?<b>([^<]*)<\/b>[\s\S]*?<\/tg-emoji>/gi,
+      (_m, id, fallback) =>
+        `<tg-emoji data-cid="${id}" data-fb="${escAttr(fallback)}"></tg-emoji>`
+    )
     .replace(/<a\b[^>]*?href="([^"]*)"[^>]*>/gi,
       (_m, href) => `<a href="${href}" target="_blank" rel="noopener noreferrer">`)
     .replace(/<i class="emoji"[^>]*style="([^"]*)"[^>]*>/gi, (_m, style) => {
@@ -120,10 +134,58 @@ function sanitize(html: string): string {
     const n = String(name).toLowerCase();
     if (n === "a") return tag.startsWith("</") ? "</a>" : tag;
     if (n === "i" && /^<i class="emoji" style="/.test(tag)) return tag;
+    if (n === "tg-emoji" && /^<tg-emoji data-cid="/.test(tag)) return tag;
     if (!ALLOWED.has(n)) return "";
     return tag.startsWith("</") ? `</${n}>` : `<${n}>`;
   });
   return out.trim();
+}
+
+const CUSTOM_EMOJI_RE = /<tg-emoji data-cid="(\d+)" data-fb="([^"]*)"><\/tg-emoji>/g;
+
+/**
+ * Заменяет маркеры кастомных эмодзи на настоящую картинку/видео (через
+ * /api/tg-emoji/<id>), которая скачивается по Bot API. Один общий запрос на
+ * все id сразу, чтобы не дёргать Telegram по одному на каждый пост.
+ * Если id не резолвится (нет токена, сеть, id не найден) — остаётся фолбэк-юникод.
+ */
+async function injectCustomEmojis(posts: TgPost[]): Promise<TgPost[]> {
+  const ids = new Set<string>();
+  for (const p of posts) {
+    for (const m of (p.html + (p.comment ?? "")).matchAll(CUSTOM_EMOJI_RE)) {
+      ids.add(m[1]);
+    }
+  }
+  if (ids.size === 0) return posts;
+
+  const resolved = await resolveCustomEmojis([...ids]);
+  if (resolved.size === 0) {
+    // Ничего не резолвилось (нет токена и т.п.) — просто убираем маркеры,
+    // оставляя фолбэк-юникод текстом.
+    const strip = (html: string) =>
+      html.replace(CUSTOM_EMOJI_RE, (_m, _id, fallback) => fallback);
+    return posts.map((p) => ({
+      ...p,
+      html: strip(p.html),
+      comment: p.comment ? strip(p.comment) : p.comment,
+    }));
+  }
+
+  const replace = (html: string) =>
+    html.replace(CUSTOM_EMOJI_RE, (_m, id, fallback) => {
+      const info = resolved.get(id);
+      if (!info) return fallback;
+      const src = `/api/tg-emoji/${id}`;
+      return info.isVideo
+        ? `<video class="emoji" src="${src}" autoplay loop muted playsinline></video>`
+        : `<img class="emoji" src="${src}" alt="${fallback}" />`;
+    });
+
+  return posts.map((p) => ({
+    ...p,
+    html: replace(p.html),
+    comment: p.comment ? replace(p.comment) : p.comment,
+  }));
 }
 
 function field(block: string, re: RegExp): string | undefined {
@@ -299,7 +361,8 @@ export async function fetchAllPosts(): Promise<TgPost[]> {
     before = page.nextBefore;
   }
   all.sort((a, b) => Number(b.id) - Number(a.id));
-  return applyManualMerges(mergeForwardCaptions(all), loadManualMerges());
+  const merged = applyManualMerges(mergeForwardCaptions(all), loadManualMerges());
+  return injectCustomEmojis(merged);
 }
 
 // Ручной список постов, которые надо показать одним: Telegram иногда бьёт один
