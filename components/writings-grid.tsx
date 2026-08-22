@@ -66,9 +66,17 @@ const COLS = [
   { min: 0, n: 1 },
 ];
 
+// useEffect пересчитывает колонки уже ПОСЛЕ первой отрисовки — браузер успевает
+// показать кадр с дефолтными 3 колонками, и на экранах, которым положено 4/5
+// (или 1/2), все плитки заметно перескакивают. useLayoutEffect делает то же
+// самое синхронно, до отрисовки кадра — на сервере он не выполняется, поэтому
+// используем isomorphic-вариант, чтобы не ловить предупреждение React при SSR.
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
 function useColumnCount(): number {
-  const [n, setN] = React.useState(3); // дефолт для SSR и первого рендера
-  React.useEffect(() => {
+  const [n, setN] = React.useState(3); // дефолт для SSR и самого первого кадра
+  useIsomorphicLayoutEffect(() => {
     const calc = () =>
       setN(COLS.find((c) => window.innerWidth >= c.min)?.n ?? 1);
     calc();
