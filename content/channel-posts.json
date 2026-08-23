@@ -1,11 +1,12 @@
 [
   {
-    "id": "856",
-    "url": "https://t.me/ux_review/856",
-    "date": "2026-08-23T05:19:43.602Z",
-    "html": "Тест одиночного фото — удалю.",
+    "id": "857",
+    "url": "https://t.me/ux_review/857",
+    "date": "2026-08-23T05:19:47.266Z",
+    "html": "Тест галереи — удалю.",
     "photos": [
-      "/api/tg-post-image/AgACAgIAAx0EVmsbwgACA1hqioLvXlbaGHhhwl9wv-Fbv_CqWwAC5CBrG7xDWEjA8XK7KyzxLQEAAwIAA3gAAz0E"
+      "/api/tg-post-image/AgACAgIAAx0EVmsbwgACA1hqioLvXlbaGHhhwl9wv-Fbv_CqWwAC5CBrG7xDWEjA8XK7KyzxLQEAAwIAA3gAAz0E",
+      "/api/tg-post-image/AgACAgIAAxUHaoqC80QsbRJjTzk2tQ7o1MAK9-sAAuUgaxu8Q1hIYFqcNfge5SYBAAMCAAN4AAM9BA"
     ],
     "videos": [],
     "tags": []
