@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PieChart } from "lucide-react";
 import { WritingsGrid } from "@/components/writings-grid";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
-import { fetchAllPosts } from "@/lib/telegram";
+import { getFeedPosts } from "@/lib/channel-posts";
 
 // ISR: страница рендерится при сборке и обновляется не чаще раза в час.
 // Это даёт мгновенный переход с главной — Next отдаёт HTML из кэша,
@@ -17,7 +17,7 @@ export default async function NotesPage() {
   const notes = getNotesIndex();
   // Посты-анонсы лонгридов прячем — на сайте их «представляет» сам лонгрид.
   const announced = getAnnouncedPostIds();
-  const posts = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
+  const posts = (await getFeedPosts()).filter((p) => !announced.has(p.id));
 
   return (
     <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">

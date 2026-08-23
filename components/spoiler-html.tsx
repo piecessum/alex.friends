@@ -17,8 +17,10 @@ function spoilerGroup(el: Element): Element[] {
   return group;
 }
 
-// Рендерит уже санитизированный HTML поста и добавляет клик по <tg-spoiler>:
-// первый клик снимает блюр текста, как в самом Telegram.
+// Рендерит уже санитизированный HTML поста и добавляет клик по <tg-spoiler>
+// (первый клик снимает блюр, как в самом Telegram) и по раскрывающейся
+// цитате blockquote[data-expandable] (аналог Telegram-цитаты expandable —
+// см. lib/editor-doc-walk.ts), которая сама себе разворачивается по клику.
 export function SpoilerHtml({
   html,
   className,
@@ -30,12 +32,19 @@ export function SpoilerHtml({
     <div
       className={className}
       onClick={(e) => {
-        const spoiler = (e.target as HTMLElement).closest("tg-spoiler");
-        if (!spoiler) return;
-        const reveal = !spoiler.classList.contains("revealed");
-        for (const el of spoilerGroup(spoiler)) {
-          el.classList.toggle("revealed", reveal);
+        const target = e.target as HTMLElement;
+
+        const spoiler = target.closest("tg-spoiler");
+        if (spoiler) {
+          const reveal = !spoiler.classList.contains("revealed");
+          for (const el of spoilerGroup(spoiler)) {
+            el.classList.toggle("revealed", reveal);
+          }
+          return;
         }
+
+        const quote = target.closest('blockquote[data-expandable="1"]');
+        if (quote) quote.classList.toggle("revealed");
       }}
       dangerouslySetInnerHTML={{ __html: html }}
     />

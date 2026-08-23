@@ -1,0 +1,8 @@
+[
+  { "id": "5438624607689002582", "fallback": "🤯", "label": "exploding_head" },
+  { "id": "5458755643391351080", "fallback": "😁", "label": "grin" },
+  { "id": "5460632539804736868", "fallback": "🤔", "label": "thinking" },
+  { "id": "5461025099815590555", "fallback": "💨", "label": "smoke" },
+  { "id": "5773678137481105504", "fallback": "🤡", "label": "clown" },
+  { "id": "6327716471849878717", "fallback": "😱", "label": "scream" }
+]

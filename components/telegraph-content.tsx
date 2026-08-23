@@ -105,6 +105,18 @@ function Node({ node }: { node: NoteNode }) {
           {kids}
         </blockquote>
       );
+    case "pre":
+      return (
+        <pre className="my-6 overflow-x-auto rounded-xl bg-neutral-900 p-4 text-sm text-neutral-100">
+          {kids}
+        </pre>
+      );
+    case "code":
+      return (
+        <code className="rounded bg-neutral-100 px-1.5 py-0.5 text-[0.9em] dark:bg-neutral-800">
+          {kids}
+        </code>
+      );
     case "ul":
       return <ul className="my-5 list-disc space-y-1 pl-6">{kids}</ul>;
     case "ol":

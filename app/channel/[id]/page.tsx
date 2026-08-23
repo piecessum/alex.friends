@@ -3,7 +3,8 @@ import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ChannelPost } from "@/components/channel-post";
 import { PostGraph } from "@/components/post-graph";
-import { fetchAllPosts, type TgPost } from "@/lib/telegram";
+import type { TgPost } from "@/lib/telegram";
+import { getFeedPosts } from "@/lib/channel-posts";
 import { postBody } from "@/lib/post-text";
 import {
   getAnnouncedPostIds,
@@ -17,7 +18,7 @@ export const revalidate = 3600;
 // Пререндерим страницы существующих постов — переход с плитки на /notes
 // открывает их мгновенно. Новые посты добавятся при следующей сборке/ревалидации.
 export async function generateStaticParams() {
-  const posts = await fetchAllPosts();
+  const posts = await getFeedPosts();
   const announced = getAnnouncedPostIds();
   // Склеенный форвард доступен и по своему id, и по id поглощённой подписи.
   // Посты-анонсы лонгридов сюда не идут — /channel/<id> для них редиректит на /notes/<slug>.
@@ -48,7 +49,7 @@ export async function generateMetadata({
   const announcedSlug = getSlugForAnnouncedPost(id);
   if (announcedSlug) return {};
 
-  const posts = await fetchAllPosts();
+  const posts = await getFeedPosts();
   const post = posts.find((p) => p.id === id || p.aliasIds?.includes(id));
   if (!post) return { title: "Пост не найден" };
   const text = stripHtml(postBody(post)).slice(0, 60).trim();
@@ -101,7 +102,7 @@ export default async function ChannelItemPage({
   const announcedSlug = getSlugForAnnouncedPost(id);
   if (announcedSlug) redirect(`/notes/${announcedSlug}`);
 
-  const posts = await fetchAllPosts();
+  const posts = await getFeedPosts();
   const pos = posts.findIndex((p) => p.id === id || p.aliasIds?.includes(id));
   if (pos === -1) notFound();
 
