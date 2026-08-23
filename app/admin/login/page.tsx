@@ -34,6 +34,15 @@ export default async function AdminLoginPage({
           <code>NEXT_PUBLIC_TELEGRAM_BOT_USERNAME</code>.
         </p>
       )}
+
+      {process.env.NODE_ENV !== "production" && (
+        <a
+          href="/api/auth/dev-login"
+          className="text-xs text-neutral-400 underline decoration-dotted"
+        >
+          Служебный вход для локальной разработки (без Telegram)
+        </a>
+      )}
     </main>
   );
 }
