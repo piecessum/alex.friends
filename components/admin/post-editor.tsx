@@ -17,13 +17,11 @@ type TelegramResult = {
   messageId: number;
   url: string;
   photoFileIds?: string[];
-  slug?: string;
 };
 
 type PublishStatus =
   | { step: "idle" }
   | { step: "sending" }
-  | { step: "sent"; telegramUrl: string }
   | { step: "committing"; telegramUrl: string }
   | { step: "done"; telegramUrl: string; commitUrl: string }
   // canRetryCommit — Telegram уже принял пост, упал только коммит на сайт:
@@ -65,25 +63,12 @@ export function PostEditor({
 }: {
   emojiSet?: TelegramEmojiEntry[];
 }) {
-  const [mode, setMode] = React.useState<"short" | "note">("short");
-  const [title, setTitle] = React.useState("");
   const [status, setStatus] = React.useState<PublishStatus>({ step: "idle" });
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   // Пост уже ушёл в Telegram, но коммит на сайт ещё не прошёл — держим здесь,
   // чтобы «Повторить» не долбило Telegram ещё раз (см. commitToSite).
   const pendingCommitRef = React.useRef<TelegramResult | null>(null);
   const restoredDraft = React.useRef(false);
-  // onUpdate ниже захватывается один раз при создании editor — держим
-  // mode/title в ref, чтобы черновик сохранял актуальные значения, а не те,
-  // что были на момент создания редактора.
-  const modeRef = React.useRef(mode);
-  const titleRef = React.useRef(title);
-  React.useEffect(() => {
-    modeRef.current = mode;
-  }, [mode]);
-  React.useEffect(() => {
-    titleRef.current = title;
-  }, [title]);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -109,10 +94,7 @@ export function PostEditor({
     onUpdate: ({ editor }) => {
       if (pendingCommitRef.current) return;
       try {
-        localStorage.setItem(
-          DRAFT_KEY,
-          JSON.stringify({ mode: modeRef.current, title: titleRef.current, doc: editor.getJSON() })
-        );
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ doc: editor.getJSON() }));
       } catch {
         // localStorage недоступен (приватный режим и т.п.) — черновик просто не сохранится
       }
@@ -126,26 +108,13 @@ export function PostEditor({
     try {
       const raw = localStorage.getItem(DRAFT_KEY);
       if (!raw) return;
-      const draft = JSON.parse(raw) as { mode?: "short" | "note"; title?: string; doc?: unknown };
-      if (draft.mode === "note") setMode("note");
-      if (draft.title) setTitle(draft.title);
+      const draft = JSON.parse(raw) as { doc?: unknown };
       if (draft.doc) editor.commands.setContent(draft.doc as never);
     } catch {
       // повреждённый черновик — просто игнорируем
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor]);
-
-  // Заголовок/режим меняются вне onUpdate редактора — досохраняем черновик и здесь.
-  React.useEffect(() => {
-    if (!editor || !restoredDraft.current || pendingCommitRef.current) return;
-    try {
-      localStorage.setItem(DRAFT_KEY, JSON.stringify({ mode, title, doc: editor.getJSON() }));
-    } catch {
-      // см. onUpdate
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, title]);
 
   function clearDraft() {
     try {
@@ -174,7 +143,7 @@ export function PostEditor({
       const res = await fetch("/api/admin/publish/commit", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ mode, doc, title, telegramResult }),
+        body: JSON.stringify({ doc, telegramResult }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Ошибка коммита на сайт");
@@ -185,7 +154,6 @@ export function PostEditor({
         commitUrl: data.commit.htmlUrl,
       });
       editor?.commands.clearContent();
-      setTitle("");
       clearDraft();
     } catch (e) {
       setStatus({
@@ -199,10 +167,6 @@ export function PostEditor({
 
   async function publish() {
     if (!editor) return;
-    if (mode === "note" && !title.trim()) {
-      setStatus({ step: "error", message: "У лонгрида должен быть заголовок" });
-      return;
-    }
     const doc = editor.getJSON();
 
     setStatus({ step: "sending" });
@@ -211,7 +175,7 @@ export function PostEditor({
       const res = await fetch("/api/admin/publish", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ mode, doc, title }),
+        body: JSON.stringify({ doc }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Ошибка отправки в Telegram");
@@ -235,33 +199,6 @@ export function PostEditor({
 
   return (
     <div>
-      <div className="mb-4 flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800">
-        {(["short", "note"] as const).map((m) => (
-          <button
-            key={m}
-            type="button"
-            onClick={() => setMode(m)}
-            className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition ${
-              mode === m
-                ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-900 dark:text-neutral-100"
-                : "text-neutral-500 dark:text-neutral-400"
-            }`}
-          >
-            {m === "short" ? "Короткий пост" : "Лонгрид"}
-          </button>
-        ))}
-      </div>
-
-      {mode === "note" && (
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Заголовок лонгрида"
-          className="mb-3 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-lg font-semibold outline-none focus:border-indigo-400 dark:border-neutral-700 dark:bg-[#181818]"
-        />
-      )}
-
       <input
         ref={fileInputRef}
         type="file"
@@ -310,24 +247,20 @@ export function PostEditor({
           {"</>"}
         </ToolbarButton>
         <span className="mx-1 h-5 w-px bg-neutral-200 dark:bg-neutral-700" />
-        {mode === "note" && (
-          <ToolbarButton
-            title="Заголовок"
-            active={editor.isActive("heading", { level: 3 })}
-            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          >
-            H
-          </ToolbarButton>
-        )}
-        {mode === "short" && (
-          <ToolbarButton
-            title="Спойлер"
-            active={editor.isActive("spoiler")}
-            onClick={() => editor.chain().focus().toggleSpoiler().run()}
-          >
-            🙈
-          </ToolbarButton>
-        )}
+        <ToolbarButton
+          title="Заголовок (жирным — у Telegram нет настоящих заголовков)"
+          active={editor.isActive("heading", { level: 3 })}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+        >
+          H
+        </ToolbarButton>
+        <ToolbarButton
+          title="Спойлер"
+          active={editor.isActive("spoiler")}
+          onClick={() => editor.chain().focus().toggleSpoiler().run()}
+        >
+          🙈
+        </ToolbarButton>
         <ToolbarButton
           title="Цитата"
           active={editor.isActive("blockquote")}
@@ -335,21 +268,19 @@ export function PostEditor({
         >
           "
         </ToolbarButton>
-        {mode === "short" && (
-          <ToolbarButton
-            title="Раскрывающаяся цитата (только у выделенной цитаты)"
-            active={editor.isActive("blockquote", { expandable: true })}
-            onClick={() =>
-              editor
-                .chain()
-                .focus()
-                .setBlockquoteExpandable(!editor.isActive("blockquote", { expandable: true }))
-                .run()
-            }
-          >
-            ▾"
-          </ToolbarButton>
-        )}
+        <ToolbarButton
+          title="Раскрывающаяся цитата (только у выделенной цитаты)"
+          active={editor.isActive("blockquote", { expandable: true })}
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .setBlockquoteExpandable(!editor.isActive("blockquote", { expandable: true }))
+              .run()
+          }
+        >
+          ▾"
+        </ToolbarButton>
         <ToolbarButton
           title="Блок кода"
           active={editor.isActive("codeBlock")}
@@ -375,7 +306,7 @@ export function PostEditor({
         >
           🔗
         </ToolbarButton>
-        {mode === "short" && <EmojiPicker editor={editor} emojiSet={emojiSet} />}
+        <EmojiPicker editor={editor} emojiSet={emojiSet} />
         <ToolbarButton
           title="Картинка (несколько файлов — галерея)"
           onClick={() => fileInputRef.current?.click()}

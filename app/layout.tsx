@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SiteShell } from "@/components/site-shell";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -48,7 +47,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SiteShell>{children}</SiteShell>
+          {children}
         </ThemeProvider>
       </body>
     </html>
