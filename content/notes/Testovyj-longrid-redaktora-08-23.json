@@ -1,0 +1,71 @@
+{
+  "slug": "Testovyj-longrid-redaktora-08-23",
+  "title": "Тестовый лонгрид редактора",
+  "author": "Алексей Масюта",
+  "views": 0,
+  "month": 8,
+  "day": 23,
+  "year": 2026,
+  "original": "",
+  "content": [
+    {
+      "tag": "p",
+      "children": [
+        "Вводный абзац лонгрида для проверки."
+      ]
+    },
+    {
+      "tag": "h3",
+      "children": [
+        "Подзаголовок"
+      ]
+    },
+    {
+      "tag": "figure",
+      "children": [
+        {
+          "tag": "img",
+          "attrs": {
+            "src": "/notes/24844ae5b32c63dac6e1.webp",
+            "width": "800",
+            "height": "600"
+          }
+        }
+      ]
+    },
+    {
+      "tag": "blockquote",
+      "children": [
+        {
+          "tag": "p",
+          "children": [
+            "Цитата в лонгриде."
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "ul",
+      "children": [
+        {
+          "tag": "li",
+          "children": [
+            "Пункт один"
+          ]
+        },
+        {
+          "tag": "li",
+          "children": [
+            "Пункт два"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "pre",
+      "children": [
+        "const x = 1;"
+      ]
+    }
+  ]
+}
