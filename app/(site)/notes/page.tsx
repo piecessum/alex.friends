@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PieChart } from "lucide-react";
+import { NotesTabs } from "@/components/notes-tabs";
 import { WritingsGrid } from "@/components/writings-grid";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { getFeedPosts } from "@/lib/channel-posts";
@@ -16,10 +17,11 @@ export default async function NotesPage() {
 
   return (
     <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Пишу
           </h1>
+          <NotesTabs active="self" />
           <Link
             href="/notes/stats"
             aria-label="Статистика"

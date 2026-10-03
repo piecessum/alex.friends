@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "sync": "tsx scripts/sync-channel.ts"
+    "sync": "tsx scripts/sync-channel.ts",
+    "sync:work": "tsx scripts/sync-work.ts"
   },
   "dependencies": {
     "@octokit/rest": "^22.0.1",

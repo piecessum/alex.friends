@@ -1,0 +1,265 @@
+[
+  {
+    "id": "case-filters-redesign",
+    "source": "resume",
+    "href": "https://alexmasuta.vercel.app/cases/filters-redesign",
+    "title": "Редизайн системы фильтров в B2B-маркетплейсе",
+    "excerpt": "Часть большого редизайна навигации, разобранная подробно: через интервью выявил два сценария поиска и разделил категории и фильтры на независимые блоки — для дизайна, фронта и бэка.",
+    "tag": "Системный анализ"
+  },
+  {
+    "id": "case-knowledge-base",
+    "source": "resume",
+    "href": "https://alexmasuta.vercel.app/cases/knowledge-base",
+    "title": "База знаний с нуля для всей команды",
+    "excerpt": "Собрал общую живую базу знаний для команды из 6 разработчиков, дизайна, QA и менеджеров — и подключил к ней AI-ассистента. Вопросов ко мне в личку стало вдвое меньше.",
+    "tag": "База знаний · AI"
+  },
+  {
+    "id": "case-utility-to-platform",
+    "source": "resume",
+    "href": "https://alexmasuta.vercel.app/cases/utility-to-platform",
+    "title": "Из утилиты — в платформу. Или в чём разница онлайн-склада и онлайн-шоурума",
+    "excerpt": "Провёл глубинные интервью с клиентами и поймал инсайт, который развернул продукт: наш маркетплейс воспринимали как онлайн-склад, а хотели — платформу, которая сама продаёт, ближе к онлайн-шоуруму. Этот вывод стал отправной точкой для всех остальных кейсов.",
+    "tag": "UX-исследование"
+  },
+  {
+    "id": "case-requirements-foundation",
+    "source": "resume",
+    "href": "https://alexmasuta.vercel.app/cases/requirements-foundation",
+    "title": "Фундамент требований: от догадок к общему языку",
+    "excerpt": "Чтобы команда проектировала платформу от пользователя, а не от интуиции, я собрал фундамент: целевую аудиторию, архетипы, User Stories и сквозные сценарии. Получилась единая карта, по которой работают дизайн, фронт и бэк.",
+    "tag": "Системный анализ"
+  },
+  {
+    "id": "case-product-principles",
+    "source": "resume",
+    "href": "https://alexmasuta.vercel.app/cases/product-principles",
+    "title": "Принципы продукта и потребности, которых бизнес не видел",
+    "excerpt": "Сформулировал и назвал 8 принципов продукта и разрешил частый конфликт: бизнес видит свою сторону сделки и не замечает потребностей пользователя. Эти принципы вскрыли потребности, о которых бизнес не знал, и стали фундаментом дизайна. Аудиторию и приоритеты разбираю отдельно — в фундаменте требований.",
+    "tag": "Продуктовая аналитика"
+  },
+  {
+    "id": "case-navigation-redesign",
+    "source": "resume",
+    "href": "https://alexmasuta.vercel.app/cases/navigation-redesign",
+    "title": "Редизайн системы навигации: информативнее, дружелюбнее",
+    "excerpt": "Прямое продолжение исследования из кейса «Из утилиты — в платформу»: перенёс вывод на экраны. Пересобрал систему навигации — интерфейс стал информативнее и дружелюбнее: на тех же экранах клиент видит больше пользы, и продавать теперь умеет не только главная, а каждый блок. Ниже — пары «было → стало» по ключевым экранам.",
+    "tag": "UX-редизайн",
+    "cover": "/work/case-navigation-redesign.webp",
+    "coverSize": [
+      960,
+      627
+    ]
+  },
+  {
+    "id": "tdv-b2b-lists-report",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/b2b-lists-report",
+    "title": "Списки товаров в B2B-маркетплейсах: отчёт 2026",
+    "excerpt": "Как готовые подборки, спецификации, избранное и «купленные ранее» меняют поведение покупателей, ускоряют закупки и растят выручку платформы. Данные 15+ источников.",
+    "date": "2026-04-13",
+    "tag": "Отчёт",
+    "cover": "/work/tdv-b2b-lists-report.webp",
+    "coverSize": [
+      960,
+      640
+    ]
+  },
+  {
+    "id": "tdv-b2b-platforms-report",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/b2b-platforms-report",
+    "title": "B2B eCommerce Платформы: Россия vs Мировой рынок",
+    "excerpt": "Комплексный обзор 13 платформ — функциональность, дизайн лендингов, цены и рекомендации по выбору.",
+    "date": "2026-03-15",
+    "tag": "Отчёт",
+    "cover": "/work/tdv-b2b-platforms-report.webp",
+    "coverSize": [
+      960,
+      540
+    ]
+  },
+  {
+    "id": "tdv-keis-dreviz",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-dreviz",
+    "title": "Кейс: Древиз — Мебельные материалы",
+    "excerpt": "Крупнейший дистрибьютор мебельных материалов в ЦФО автоматизировал оптовые продажи и работу с дилерами с помощью b2bmotion",
+    "date": "2026-02-15",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-dreviz.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-rosek",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-rosek",
+    "title": "Кейс: РОСЭК — Электротехника",
+    "excerpt": "Федеральный дистрибьютор электротехнического оборудования, одна из ведущих инжиниринговых компаний в области энергетики и климатики. Входит в ТОП-5 электротехнических компаний Урала",
+    "date": "2026-01-20",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-rosek.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-hogart",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-hogart",
+    "title": "Кейс: Хогарт — Сантехника и инженерное оборудование",
+    "excerpt": "Поставщик инженерного оборудования, отопления, вентиляции и сантехники от ведущих мировых производителей. Более 200 брендов",
+    "date": "2025-12-10",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-hogart.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-raid21",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-raid21",
+    "title": "Кейс: РЭЙД-21 — FMCG",
+    "excerpt": "Крупнейшая дистрибьюторская компания в Республике Башкортостан. Более 5000 наименований продуктов питания и бытовой химии",
+    "date": "2025-11-05",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-raid21.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-baza-el",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-baza-el",
+    "title": "Кейс: База Электроматериалов — Электротехника",
+    "excerpt": "Дистрибьютор электротехнического оборудования и инжиниринговых решений в области энергетики и климатики. Комплексные поставки для монтажных организаций и проектных институтов",
+    "date": "2025-10-22",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-baza-el.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-vesta",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-vesta",
+    "title": "Кейс: Веста — Сантехника",
+    "excerpt": "Ведущий поставщик сантехники и оборудования для ванных комнат на российском рынке. Более 10 лет занимается оптовыми поставками",
+    "date": "2025-09-18",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-vesta.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-protek",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-protek",
+    "title": "Кейс: ПРОТЭК — Безопасность и видеонаблюдение",
+    "excerpt": "Поставщик систем безопасности, видеонаблюдения, управления доступом, охранной и пожарной сигнализации с отгрузкой по всей России",
+    "date": "2025-08-25",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-protek.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-stroymix",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-stroymix",
+    "title": "Кейс: СТРОЙМИКС — Строительные материалы",
+    "excerpt": "Продавец строительных и отделочных материалов в Центральном Черноземье. Официальные представители проверенных производителей",
+    "date": "2025-07-14",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-stroymix.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-irbis",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-irbis",
+    "title": "Кейс: Ирбис — Сетевая инфраструктура",
+    "excerpt": "Дистрибьютор кабеля, материалов и оборудования для строительства и эксплуатации сетей связи, видеонаблюдения на территории Сибири, Дальнего Востока, Урала",
+    "date": "2025-06-20",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-irbis.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-ros-elektro",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-ros-elektro",
+    "title": "Кейс: РОС-Электро — Электротехника",
+    "excerpt": "Крупная региональная сеть электрооборудования, кабельно-проводниковой и светотехнической продукции крупнейших производителей",
+    "date": "2025-05-12",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-ros-elektro.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-elektricheskie-tekhnologii",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-elektricheskie-tekhnologii",
+    "title": "Кейс: Электрические Технологии — Светотехника",
+    "excerpt": "Оптовый поставщик электрооборудования и светотехники для профессионалов электромонтажа — десятки тысяч SKU с точными техническими характеристиками",
+    "date": "2025-04-08",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-elektricheskie-tekhnologii.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-kristal",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-kristal",
+    "title": "Кейс: Кристалл — Электротехника",
+    "excerpt": "Поставщик электротехнического оборудования и кабельной продукции в Кировской области. Широкий ассортимент электрики для строительства и промышленности",
+    "date": "2025-02-18",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-kristal.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  },
+  {
+    "id": "tdv-keis-b2b-motion",
+    "source": "tridavinci",
+    "href": "https://wiki.tridavinci.org/blog/keis-b2b-motion",
+    "title": "Кейс: Разработка B2B-системы для компании «АВС-электро»",
+    "excerpt": "Создание оптового интернет-магазина с нуля: цели, результаты и технологии",
+    "date": "2023-03-15",
+    "tag": "История успеха",
+    "cover": "/work/tdv-keis-b2b-motion.webp",
+    "coverSize": [
+      960,
+      641
+    ]
+  }
+]
