@@ -88,7 +88,7 @@ export default async function NotePage({
           )}
         </div>
 
-        <article className="mt-8 font-serif text-[18px]">
+        <article className="mt-8 text-[17px]">
           <TelegraphContent
             content={note.content}
             noteSlugs={getNotesIndex().map((n) => n.slug)}

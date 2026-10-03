@@ -96,12 +96,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     // Корень залочен на высоту вьюпорта и сам не скроллится — скролл живёт
     // только внутри контентной карточки (как в GitLab).
-    <div className="site relative flex h-[100dvh] flex-col overflow-hidden sm:flex-row">
-      {/* Матовое стекло: цветные пятна позади и зерно поверх (globals.css). */}
-      <div aria-hidden className="matte-bg" />
-      <div aria-hidden className="matte-grain" />
+    <div className="flex h-[100dvh] flex-col overflow-hidden sm:flex-row">
       {/* Мобилка: верхняя панель — слева домой + разделы, справа смена темы */}
-      <nav className="relative z-10 flex shrink-0 items-center justify-between px-3 pb-1 pt-2 sm:hidden">
+      <nav className="flex shrink-0 items-center justify-between px-3 pb-1 pt-2 sm:hidden">
         <div className="flex items-center gap-1">
           <NavIcon tab={homeTab} active={isActive(homeTab, pathname)} compact />
           {tabs.map((t) => (
@@ -113,7 +110,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
       {/* Десктоп: вертикальный рельс слева на серой подложке.
           Сверху — «Домой» и разделы, внизу в углу — только смена темы. */}
-      <aside className="relative z-10 hidden w-16 shrink-0 flex-col items-center justify-between py-4 sm:flex">
+      <aside className="hidden w-16 shrink-0 flex-col items-center justify-between py-4 sm:flex">
         <nav className="flex flex-col items-center gap-2">
           <NavIcon tab={homeTab} active={isActive(homeTab, pathname)} tip />
           {tabs.map((t) => (
@@ -126,8 +123,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       {/* Контент — единственная скролл-область. На мобилке карточка прижата
           к краям экрана (серая подложка только сверху, за панелью) и скруглена
           лишь сверху; на десктопе — со всех сторон в отступах. */}
-      <div className="relative z-10 min-h-0 min-w-0 flex-1 sm:p-3 sm:pl-0">
-        <div className="glass-panel h-full overflow-y-auto overflow-x-hidden rounded-2xl border-t shadow-sm [scrollbar-gutter:stable_both-edges] sm:border">
+      <div className="min-h-0 min-w-0 flex-1 sm:p-3 sm:pl-0">
+        <div className="h-full overflow-y-auto overflow-x-hidden rounded-2xl border-t border-neutral-200/70 bg-white shadow-sm [scrollbar-gutter:stable_both-edges] sm:border dark:border-neutral-800/70 dark:bg-[#181818]">
           {children}
         </div>
       </div>

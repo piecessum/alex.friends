@@ -22,7 +22,7 @@ function formatDate(iso: string): string {
 
 // Общий стиль текста поста — используем и для комментария, и для текста форварда.
 const bodyClass =
-  "font-serif whitespace-pre-line leading-relaxed break-words text-neutral-800 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:text-neutral-200 dark:[&_a]:text-indigo-400";
+  "whitespace-pre-line leading-relaxed break-words text-neutral-800 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:text-neutral-200 dark:[&_a]:text-indigo-400";
 
 /** Опрос из Telegram — показываем результаты (голосовать можно в самом канале). */
 function Poll({ poll }: { poll: TgPoll }) {
