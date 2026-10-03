@@ -1,11 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Onest, Literata, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const inter = Inter({
+// Интерфейс, карточки, подписи — Onest: современный гротеск, нарисованный
+// под кириллицу.
+const onest = Onest({
   variable: "--font-sans",
   subsets: ["latin", "cyrillic"],
+  display: "swap",
+});
+
+// Заголовки и текст постов — Literata: книжная антиква для долгого чтения,
+// даёт сайту «блоговый» голос. Ось opsz — крупные заголовки рисуются
+// контрастнее, мелкий текст — плотнее.
+const literata = Literata({
+  variable: "--font-serif",
+  subsets: ["latin", "cyrillic"],
+  axes: ["opsz"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -38,7 +51,7 @@ export default function RootLayout({
     <html
       lang="ru"
       suppressHydrationWarning
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${onest.variable} ${literata.variable} ${jetbrainsMono.variable}`}
     >
       <body className="h-[100dvh] overflow-hidden bg-background text-foreground antialiased">
         <ThemeProvider
