@@ -325,6 +325,7 @@ function parse(html: string): TgPost[] {
       };
     }
 
+    const forward = parseForward(block);
     posts.push({
       id,
       url: `https://t.me/${CHANNEL}/${id}`,
@@ -333,10 +334,13 @@ function parse(html: string): TgPost[] {
       photos,
       videos,
       link,
-      forward: parseForward(block),
+      forward,
       poll: parsePoll(block),
       views: field(block, /tgme_widget_message_views">([^<]+)</),
-      tags: extractTags(textRaw ?? ""),
+      // Хэштеги в тексте пересланного сообщения — чужие (их ставил автор
+      // оригинала). Свои теги к форварду идут отдельной подписью, см.
+      // mergeForwardCaptions / mergeTagOnlyPosts.
+      tags: forward ? [] : extractTags(textRaw ?? ""),
       // У видео-постов этот блок тоже есть — как запасной вариант плеера,
       // сам пост при этом показывается нормально.
       ...(/message_media_not_supported/.test(block) && !hasVideo ? { unsupported: true } : {}),

@@ -163,7 +163,8 @@ async function richPost(p: TgPost, prev: TgPost | undefined): Promise<TgPost> {
     // html/photos/tags — для превью в ленте, поиска, графа и статистики.
     html: rich.flatMap((b) => (b.type === "text" ? [b.html] : [])).join("\n\n"),
     photos: rich.flatMap((b) => (b.type === "photo" ? [b.src] : [])),
-    tags: [...new Set([...p.tags, ...draft.tags])],
+    // У пересланного поста хэштеги в тексте чужие — оставляем только свои.
+    tags: p.forward ? p.tags : [...new Set([...p.tags, ...draft.tags])],
     sizes: { ...p.sizes, ...sizes },
     unsupported: undefined,
   };
