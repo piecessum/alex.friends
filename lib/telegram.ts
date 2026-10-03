@@ -1,5 +1,6 @@
 // Чтение публичной ленты Telegram-канала через веб-превью t.me/s/<channel>.
-// Без API-ключей. Кэшируется на час (новые посты подтягиваются сами).
+// Без API-ключей. Вызывается только синхронизацией (scripts/sync-channel.ts):
+// сайт читает уже готовое зеркало content/channel-feed.json.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -8,9 +9,9 @@ import { resolveCustomEmojis } from "@/lib/telegram-emoji";
 export const CHANNEL = "ux_review";
 
 /**
- * Оборачивает картинку Telegram (CDN telesco.pe) в наш прокси `/api/tg-image`,
- * чтобы ссылка на изображение не зависела от временных токенов и hotlink-защиты
- * Telegram. Локальные пути (например, /notes/*.webp) и чужие хосты — без изменений.
+ * Оборачивает картинку Telegram (CDN telesco.pe) в наш прокси `/api/tg-image`.
+ * Запасной вариант синхронизации — для картинок, которые не удалось скачать
+ * в public/channel. Локальные пути и чужие хосты — без изменений.
  */
 export function proxiedImage(url: string | undefined): string | undefined {
   if (!url || !/^https?:\/\//i.test(url)) return url;
@@ -41,6 +42,15 @@ export type TgPoll = {
   type?: string;
   options: TgPollOption[];
 };
+/**
+ * Блок поста в новой вёрстке Telegram (текст с картинками посреди и подписями).
+ * Веб-превью t.me/s такие посты не отдаёт — их достаёт lib/telegram-rich.ts
+ * через Bot API при синхронизации (scripts/sync-channel.ts).
+ */
+export type TgRichBlock =
+  | { type: "text"; html: string }
+  | { type: "photo"; src: string; width?: number; height?: number; caption?: string };
+
 export type TgPost = {
   id: string;
   url: string;
@@ -59,6 +69,14 @@ export type TgPost = {
   tags: string[];
   /** id сообщений, склеенных в этот пост (подпись к пересылке). См. mergeForwardCaptions. */
   aliasIds?: string[];
+  /** Пост в новой вёрстке Telegram — рисуется блоками вместо html + photos. */
+  rich?: TgRichBlock[];
+  /** Размеры локальных картинок поста (src → [ширина, высота]), чтобы
+   *  вёрстка не прыгала при загрузке. Заполняет scripts/sync-channel.ts. */
+  sizes?: Record<string, [number, number]>;
+  /** Веб-превью ответило «Please open Telegram to view this post» —
+   *  контент надо брать через Bot API. Служебный флаг синхронизации. */
+  unsupported?: boolean;
 };
 export type TgPage = { posts: TgPost[]; nextBefore: string | null };
 
@@ -262,13 +280,13 @@ function parse(html: string): TgPost[] {
       ...block.matchAll(
         /tgme_widget_message_photo_wrap[^"]*"[^>]*background-image:url\('([^']+)'\)/g
       ),
-    ].map((x) => proxiedImage(x[1])!);
+    ].map((x) => x[1]);
 
     const vThumbs = [
       ...block.matchAll(
         /tgme_widget_message_video_thumb[^"]*"[^>]*background-image:url\('([^']+)'\)/g
       ),
-    ].map((x) => proxiedImage(x[1])!);
+    ].map((x) => x[1]);
     const durations = [
       ...block.matchAll(/video_duration[^>]*>([^<]+)</g),
     ].map((x) => x[1]);
@@ -303,7 +321,7 @@ function parse(html: string): TgPost[] {
         site: field(block, /tgme_widget_message_site_name[^>]*>([^<]+)</),
         title: field(block, /tgme_widget_message_link_preview_title[^>]*>([\s\S]*?)<\/div>/)?.replace(/<[^>]+>/g, ""),
         description: field(block, /tgme_widget_message_link_preview_description[^>]*>([\s\S]*?)<\/div>/)?.replace(/<[^>]+>/g, ""),
-        image: proxiedImage(field(block, /link_preview_image[^"]*"[^>]*background-image:url\('([^']+)'\)/)),
+        image: field(block, /link_preview_image[^"]*"[^>]*background-image:url\('([^']+)'\)/),
       };
     }
 
@@ -319,6 +337,9 @@ function parse(html: string): TgPost[] {
       poll: parsePoll(block),
       views: field(block, /tgme_widget_message_views">([^<]+)</),
       tags: extractTags(textRaw ?? ""),
+      // У видео-постов этот блок тоже есть — как запасной вариант плеера,
+      // сам пост при этом показывается нормально.
+      ...(/message_media_not_supported/.test(block) && !hasVideo ? { unsupported: true } : {}),
     });
   }
   return posts;
@@ -364,7 +385,10 @@ export async function fetchAllPosts(): Promise<TgPost[]> {
     before = page.nextBefore;
   }
   all.sort((a, b) => Number(b.id) - Number(a.id));
-  const merged = applyManualMerges(mergeForwardCaptions(all), loadManualMerges());
+  const merged = applyManualMerges(
+    mergeTagOnlyPosts(mergeForwardCaptions(all)),
+    loadManualMerges()
+  );
   return injectCustomEmojis(merged);
 }
 
@@ -488,6 +512,49 @@ function mergeForwardCaptions(posts: TgPost[]): TgPost[] {
     out.push(mergedAt.get(p.id) ?? p); // форвард заменяем склеенным
   }
   return out.sort((a, b) => Number(b.id) - Number(a.id));
+}
+
+// Бывает, что хэштеги улетают отдельным сообщением в ту же секунду, что и
+// сам пост (видео с текстом, а следом «#хорошо»). Такое сообщение без
+// собственного содержимого приклеиваем к соседу: теги — ему, id — в alias.
+function isTagOnly(p: TgPost): boolean {
+  if (!p.tags.length || p.forward || p.poll || p.link) return false;
+  if (p.photos.length || p.videos.length || p.unsupported) return false;
+  const text = p.html.replace(/<[^>]+>/g, " ").replace(/#[\p{L}\p{N}_]+/gu, "");
+  return !text.trim();
+}
+
+function mergeTagOnlyPosts(posts: TgPost[]): TgPost[] {
+  const asc = [...posts].sort((a, b) => Number(a.id) - Number(b.id));
+  const time = (p: TgPost) => (p.date ? new Date(p.date).getTime() : NaN);
+  const byId = new Map(asc.map((p) => [p.id, p]));
+  const consumed = new Set<string>();
+
+  for (let i = 0; i < asc.length; i++) {
+    const tagPost = asc[i];
+    if (!isTagOnly(tagPost)) continue;
+    // Сосед — ближайший по id пост, отправленный почти одновременно; при
+    // двух кандидатах — тот, что раньше (хэштеги обычно идут следом).
+    const target = [asc[i - 1], asc[i + 1]].find(
+      (q) =>
+        q &&
+        !consumed.has(q.id) &&
+        !isTagOnly(q) &&
+        Math.abs(time(q) - time(tagPost)) / 1000 <= CAPTION_WINDOW_SEC
+    );
+    if (!target) continue;
+    const cur = byId.get(target.id)!;
+    byId.set(target.id, {
+      ...cur,
+      tags: [...new Set([...cur.tags, ...tagPost.tags])],
+      aliasIds: [...(cur.aliasIds ?? []), tagPost.id, ...(tagPost.aliasIds ?? [])],
+    });
+    consumed.add(tagPost.id);
+  }
+
+  return [...byId.values()]
+    .filter((p) => !consumed.has(p.id))
+    .sort((a, b) => Number(b.id) - Number(a.id));
 }
 
 export async function getPostById(id: string): Promise<TgPost | null> {

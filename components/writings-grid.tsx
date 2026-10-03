@@ -109,6 +109,28 @@ type Tile =
       tags: string[];
     };
 
+/**
+ * Обложка плитки. Если картинка всё же не загрузилась — вместо пустого
+ * квадрата со значком «?» убираем её, карточка остаётся текстовой.
+ * Первый ряд грузим сразу (eager), остальное — по мере прокрутки.
+ */
+function TileCover({ src, eager }: { src: string; eager: boolean }) {
+  const [failed, setFailed] = React.useState(false);
+  if (failed) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : undefined}
+      decoding="async"
+      onError={() => setFailed(true)}
+      className="aspect-[16/9] w-full object-cover"
+    />
+  );
+}
+
 function buildTiles(notes: NoteIndexItem[], posts: TgPost[]): Tile[] {
   const tiles: Tile[] = [
     ...notes.map<Tile>((n) => ({
@@ -264,7 +286,7 @@ export function WritingsGrid({
         <div className="mt-8 flex items-start gap-6">
           {columns.map((col, ci) => (
             <div key={ci} className="flex min-w-0 flex-1 flex-col gap-6">
-              {col.map(renderTile)}
+              {col.map((t, row) => renderTile(t, row === 0))}
             </div>
           ))}
         </div>
@@ -272,7 +294,7 @@ export function WritingsGrid({
     </div>
   );
 
-  function renderTile(t: Tile) {
+  function renderTile(t: Tile, firstRow: boolean) {
     const hasCover = !!t.cover;
     return (
             <Link
@@ -281,15 +303,7 @@ export function WritingsGrid({
               onClick={saveStateForReturn}
               className="group block overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 backdrop-blur transition hover:border-neutral-300 hover:shadow-lg hover:shadow-black/5 dark:border-neutral-700 dark:bg-[#181818]/50 dark:hover:border-neutral-700"
             >
-              {t.cover && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={t.cover}
-                  alt=""
-                  loading="lazy"
-                  className="aspect-[16/9] w-full object-cover"
-                />
-              )}
+              {t.cover && <TileCover src={t.cover} eager={firstRow} />}
 
               <div className="flex flex-col p-5">
                 <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-500">
@@ -328,13 +342,16 @@ export function WritingsGrid({
                   </>
                 ) : (
                   <>
-                    <p
-                      className={`mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 ${
-                        hasCover ? "line-clamp-4" : "line-clamp-[14]"
-                      }`}
-                    >
-                      {t.text || "(без текста)"}
-                    </p>
+                    {/* Картинка с одним хэштегом в подписи — текст не нужен. */}
+                    {(t.text || !hasCover) && (
+                      <p
+                        className={`mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 ${
+                          hasCover ? "line-clamp-4" : "line-clamp-[14]"
+                        }`}
+                      >
+                        {t.text || "(без текста)"}
+                      </p>
+                    )}
                     {t.tags.length > 0 && (
                       <div className="mt-3 flex flex-wrap gap-x-2 gap-y-1">
                         {t.tags.map((tag) => (

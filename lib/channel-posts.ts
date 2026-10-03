@@ -4,18 +4,43 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { fetchAllPosts, type TgPost } from "@/lib/telegram";
+import type { TgPost } from "@/lib/telegram";
 
 const FILE = path.join(process.cwd(), "content", "channel-posts.json");
+// Зеркало канала, собранное scripts/sync-channel.ts: посты + локальные
+// картинки в public/channel. Сайт в рантайме в Telegram не ходит.
+const FEED_FILE = path.join(process.cwd(), "content", "channel-feed.json");
 
-export function getLocalChannelPosts(): TgPost[] {
-  if (!fs.existsSync(FILE)) return [];
+function readPosts(file: string): TgPost[] {
+  if (!fs.existsSync(file)) return [];
   try {
-    const data = JSON.parse(fs.readFileSync(FILE, "utf8"));
+    const data = JSON.parse(fs.readFileSync(file, "utf8"));
     return Array.isArray(data) ? data : [];
   } catch {
     return [];
   }
+}
+
+export function getLocalChannelPosts(): TgPost[] {
+  return readPosts(FILE);
+}
+
+/** Пост, которому есть что показать (Telegram не отдал содержимое — нет). */
+function hasContent(p: TgPost): boolean {
+  return !!(
+    p.html ||
+    p.comment ||
+    p.photos.length ||
+    p.videos.length ||
+    p.link ||
+    p.poll ||
+    p.forward
+  );
+}
+
+/** Зеркало канала из content/channel-feed.json, без пустых постов. */
+export function getChannelFeed(): TgPost[] {
+  return readPosts(FEED_FILE).filter(hasContent);
 }
 
 /** Сериализованное содержимое файла для коммита (см. lib/github-commit.ts). */
@@ -57,7 +82,7 @@ export function mergeChannelFeed(local: TgPost[], scraped: TgPost[]): TgPost[] {
   return merged.sort((a, b) => Number(b.id) - Number(a.id));
 }
 
-/** Лента для /notes и /channel/[id]: локальные посты + скрейпленный архив. */
+/** Лента для /notes и /channel/[id]: локальные посты + зеркало канала. */
 export async function getFeedPosts(): Promise<TgPost[]> {
-  return mergeChannelFeed(getLocalChannelPosts(), await fetchAllPosts());
+  return mergeChannelFeed(getLocalChannelPosts(), getChannelFeed());
 }

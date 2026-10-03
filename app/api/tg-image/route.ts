@@ -25,23 +25,34 @@ export async function GET(req: NextRequest) {
     return new Response("forbidden host", { status: 403 });
   }
 
-  let upstream: Response;
-  try {
-    upstream = await fetch(target.toString(), {
-      headers: {
-        "user-agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/537.36",
-        accept: "image/avif,image/webp,image/*,*/*",
-      },
-      // Кэшируем апстрим на сутки на уровне Next data cache.
-      next: { revalidate: 86400 },
-    });
-  } catch {
-    return new Response("fetch failed", { status: 502 });
+  // CDN Telegram при пачке параллельных запросов (лента грузит десятки
+  // картинок разом) иногда отвечает 5xx/обрывом — одна повторная попытка
+  // с паузой убирает почти все такие сбои.
+  let upstream: Response | null = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    if (attempt) await new Promise((r) => setTimeout(r, 400));
+    try {
+      upstream = await fetch(target.toString(), {
+        headers: {
+          "user-agent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/537.36",
+          accept: "image/avif,image/webp,image/*,*/*",
+        },
+        // Кэшируем апстрим на сутки на уровне Next data cache.
+        next: { revalidate: 86400 },
+      });
+    } catch {
+      upstream = null;
+    }
+    if (upstream && upstream.status < 500) break;
   }
 
+  if (!upstream) return new Response("fetch failed", { status: 502 });
   if (!upstream.ok) {
-    return new Response("upstream error", { status: 502 });
+    return new Response("upstream error", {
+      status: 502,
+      headers: { "cache-control": "no-store" },
+    });
   }
 
   const buf = await upstream.arrayBuffer();

@@ -10,11 +10,8 @@ import {
   getRelatedNotes,
   formatDate,
 } from "@/lib/notes";
-import { fetchAllPosts } from "@/lib/telegram";
+import { getChannelFeed } from "@/lib/channel-posts";
 import { buildLocalGraph, buildTagGraph } from "@/lib/graph";
-
-// Локальный граф тянет ленту канала — обновляем не чаще раза в час.
-export const revalidate = 3600;
 
 export function generateStaticParams() {
   return getNotesIndex().map((n) => ({ slug: n.slug }));
@@ -54,7 +51,7 @@ export default async function NotePage({
   // Локальный граф: этот лонгрид, его теги и соседи по тегам. Общий — для
   // переключателя локальный/общий в полноэкранном виде.
   const announced = getAnnouncedPostIds();
-  const feed = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
+  const feed = getChannelFeed().filter((p) => !announced.has(p.id));
   const notesIndex = getNotesIndex();
   const localGraph = buildLocalGraph(feed, notesIndex, `note:${slug}`);
   const fullGraph = buildTagGraph(feed, notesIndex);

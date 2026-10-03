@@ -3,11 +3,9 @@ import { ArrowLeft } from "lucide-react";
 import { StatsDashboard, StatsTotals } from "@/components/stats-dashboard";
 import { GraphFrame } from "@/components/graph-frame";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
-import { fetchAllPosts } from "@/lib/telegram";
+import { getChannelFeed } from "@/lib/channel-posts";
 import { computeWritingsStats } from "@/lib/writings-stats";
 import { buildTagGraph } from "@/lib/graph";
-
-export const revalidate = 3600;
 
 export const metadata = {
   title: "Статистика — Пишу — Алексей Масюта",
@@ -17,7 +15,7 @@ export default async function WritingsStatsPage() {
   const notes = getNotesIndex();
   // Посты-анонсы лонгридов не считаем — иначе один материал учтётся дважды.
   const announced = getAnnouncedPostIds();
-  const posts = (await fetchAllPosts()).filter((p) => !announced.has(p.id));
+  const posts = getChannelFeed().filter((p) => !announced.has(p.id));
   const stats = computeWritingsStats(posts, notes);
   const graph = buildTagGraph(posts, notes);
 

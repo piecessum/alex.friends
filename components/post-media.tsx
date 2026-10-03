@@ -15,10 +15,13 @@ export function PostMedia({
   photos,
   videos,
   url,
+  sizes,
 }: {
   photos: string[];
   videos: TgVideo[];
   url: string;
+  /** Размеры локальных картинок (src → [w, h]) — см. TgPost.sizes. */
+  sizes?: Record<string, [number, number]>;
 }) {
   // null = лайтбокс закрыт, иначе индекс открытой фотографии.
   const [index, setIndex] = useState<number | null>(null);
@@ -35,6 +38,9 @@ export function PostMedia({
       {photos.length === 1 && (
         <FitImage
           src={photos[0]}
+          width={sizes?.[photos[0]]?.[0]}
+          height={sizes?.[photos[0]]?.[1]}
+          eager
           onClick={() => setIndex(0)}
           className="mx-auto h-auto cursor-zoom-in rounded-xl"
         />

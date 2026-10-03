@@ -13,10 +13,9 @@ import {
 } from "@/lib/notes";
 import { buildLocalGraph, buildTagGraph } from "@/lib/graph";
 
-export const revalidate = 3600;
-
 // Пререндерим страницы существующих постов — переход с плитки на /notes
-// открывает их мгновенно. Новые посты добавятся при следующей сборке/ревалидации.
+// открывает их мгновенно. Лента статическая (content/channel-feed.json), новые
+// посты появляются после синхронизации и деплоя.
 export async function generateStaticParams() {
   const posts = await getFeedPosts();
   const announced = getAnnouncedPostIds();

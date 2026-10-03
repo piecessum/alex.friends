@@ -4,11 +4,6 @@ import { WritingsGrid } from "@/components/writings-grid";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { getFeedPosts } from "@/lib/channel-posts";
 
-// ISR: страница рендерится при сборке и обновляется не чаще раза в час.
-// Это даёт мгновенный переход с главной — Next отдаёт HTML из кэша,
-// а посты из Telegram подтянутся в следующем окне ревалидации.
-export const revalidate = 3600;
-
 export const metadata = {
   title: "Пишу — Алексей Масюта",
 };

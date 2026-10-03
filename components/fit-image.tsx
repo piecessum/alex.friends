@@ -21,6 +21,7 @@ export function FitImage({
   width,
   height,
   threshold = 1.5,
+  eager = false,
   onClick,
 }: {
   src: string;
@@ -29,6 +30,8 @@ export function FitImage({
   width?: number;
   height?: number;
   threshold?: number;
+  /** Грузить сразу, а не по мере прокрутки — для картинок в первом экране. */
+  eager?: boolean;
   onClick?: () => void;
 }) {
   const knownTall = width && height ? height / width > threshold : undefined;
@@ -41,7 +44,9 @@ export function FitImage({
       alt={alt}
       width={width}
       height={height}
-      loading="lazy"
+      loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : undefined}
+      decoding="async"
       onClick={onClick}
       onLoad={(e) => {
         if (knownTall !== undefined) return; // размеры уже известны заранее

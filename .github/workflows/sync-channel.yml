@@ -1,0 +1,49 @@
+# Раз в час забирает свежие посты канала в статику (scripts/sync-channel.ts)
+# и, если лента изменилась, коммитит — пуш в main запускает деплой Vercel.
+# Нужны секреты репозитория TELEGRAM_BOT_TOKEN и TELEGRAM_OWNER_ID.
+
+name: Sync Telegram channel
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-channel
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run sync
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_OWNER_ID: ${{ secrets.TELEGRAM_OWNER_ID }}
+
+      - name: Commit if changed
+        run: |
+          git add content/channel-feed.json public/channel
+          if git diff --cached --quiet; then
+            echo "Без изменений"
+            exit 0
+          fi
+          # Автор — владелец аккаунта Vercel: коммиты от других авторов
+          # Vercel на бесплатном плане может не деплоить.
+          git config user.name "Алексей Масюта"
+          git config user.email "alexmas1998kot@gmail.com"
+          git commit -m "sync: лента канала"
+          git push

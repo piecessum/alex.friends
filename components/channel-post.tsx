@@ -1,5 +1,6 @@
 import { Eye, ArrowUpRight, CornerUpRight } from "lucide-react";
 import { PostMedia } from "@/components/post-media";
+import { RichPostBody } from "@/components/rich-post-body";
 import { SpoilerHtml } from "@/components/spoiler-html";
 import type { TgPoll, TgPost } from "@/lib/telegram";
 import { getNotesIndex } from "@/lib/notes";
@@ -78,6 +79,12 @@ export function ChannelPost({ post }: { post: TgPost }) {
     : "";
   const linkHref = internalizeTelegraphUrl(post.link?.url, slugs) || post.url;
   const linkInternal = linkHref.startsWith("/");
+  // Пересланный пост рисуется цитатой (ниже), блочный вид — только для своих.
+  const rich = post.rich?.length && !post.forward
+    ? post.rich.map((b) =>
+        b.type === "text" ? { ...b, html: internalizeTelegraphLinks(b.html, slugs) } : b
+      )
+    : null;
 
   return (
     <article>
@@ -124,6 +131,9 @@ export function ChannelPost({ post }: { post: TgPost }) {
             <SpoilerHtml className={`mt-2 text-[16px] ${bodyClass}`} html={html} />
           )}
         </div>
+      ) : rich ? (
+        // Новая вёрстка Telegram: картинки посреди текста, с подписями.
+        <RichPostBody blocks={rich} textClassName={`text-[17px] ${bodyClass}`} />
       ) : (
         post.html && (
           <SpoilerHtml className={`mt-5 text-[17px] ${bodyClass}`} html={html} />
@@ -132,7 +142,14 @@ export function ChannelPost({ post }: { post: TgPost }) {
 
       {post.poll && <Poll poll={post.poll} />}
 
-      <PostMedia photos={post.photos} videos={post.videos} url={post.url} />
+      {!rich && (
+        <PostMedia
+          photos={post.photos}
+          videos={post.videos}
+          url={post.url}
+          sizes={post.sizes}
+        />
+      )}
 
       {post.link && (post.link.title || post.link.image) && (
         <a
