@@ -18,10 +18,25 @@ const COLS = [
 // низу (данные уже на клиенте, сеть тут не участвует — только DOM).
 const CHUNK = 150;
 
+// Лонгскрины и прочие очень высокие пины обрезаем до 1:2 (видна верхняя
+// часть) — иначе одна колонка уезжает вниз, а рядом остаётся пустота.
+// Целиком картинка открывается по клику.
+const MAX_RATIO = 2;
+const ratio = (pin: Pin) => Math.min(pin.h / pin.w, MAX_RATIO);
+
 // Как в writings-grid: число колонок считаем до первой отрисовки кадра,
 // чтобы сетка не перескакивала.
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
+/** Ближайший прокручиваемый предок — страница скроллится внутри панели
+ *  (SiteShell), а не окном. */
+function scrollParent(el: HTMLElement): HTMLElement | null {
+  for (let p = el.parentElement; p; p = p.parentElement) {
+    if (/(auto|scroll)/.test(getComputedStyle(p).overflowY)) return p;
+  }
+  return null;
+}
 
 function useColumnCount(): number {
   const [n, setN] = React.useState(5);
@@ -56,7 +71,7 @@ export function PinsGrid({ pins }: { pins: Pin[] }) {
     visible.forEach((pin, i) => {
       const c = heights.indexOf(Math.min(...heights));
       cols[c].push({ pin, i });
-      heights[c] += pin.h / pin.w;
+      heights[c] += ratio(pin);
     });
     return cols;
   }, [visible, columnCount]);
@@ -70,7 +85,10 @@ export function PinsGrid({ pins }: { pins: Pin[] }) {
           setShown((s) => Math.min(s + CHUNK, pins.length));
         }
       },
-      { rootMargin: "1500px 0px" }
+      // root — сама панель: иначе запас rootMargin считается от окна, а
+      // панель обрезает его, и порция подгружалась бы, только когда низ
+      // сетки уже на экране (рваный край с пустотой).
+      { root: scrollParent(el), rootMargin: "3000px 0px" }
     );
     io.observe(el);
     return () => io.disconnect();
@@ -91,7 +109,7 @@ export function PinsGrid({ pins }: { pins: Pin[] }) {
                 onClick={() => setOpen(i)}
                 aria-label={pin.title || "Открыть пин"}
                 className="block w-full cursor-zoom-in"
-                style={{ aspectRatio: `${pin.w} / ${pin.h}`, background: pin.color }}
+                style={{ aspectRatio: `1 / ${ratio(pin)}`, background: pin.color }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -103,7 +121,7 @@ export function PinsGrid({ pins }: { pins: Pin[] }) {
                   height={pin.h}
                   loading={i < eagerRows ? "eager" : "lazy"}
                   decoding="async"
-                  className="block h-full w-full object-cover"
+                  className="block h-full w-full object-cover object-top"
                 />
               </button>
             ))}
