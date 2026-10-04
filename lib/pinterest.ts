@@ -33,8 +33,6 @@ const UA =
 
 type RawPin = {
   id: string;
-  title?: string;
-  grid_title?: string;
   dominant_color?: string;
   images?: Record<string, { url: string; width: number; height: number }>;
 };
@@ -43,14 +41,12 @@ function toPin(p: RawPin): Pin | null {
   const big = p.images?.["736x"] ?? p.images?.["474x"];
   const m = big?.url.match(/^https:\/\/i\.pinimg\.com\/[^/]+\/(.+)$/);
   if (!big || !m) return null;
-  const title = (p.grid_title || p.title || "").trim();
   return {
     id: p.id,
     img: m[1],
     w: big.width,
     h: big.height,
     ...(p.dominant_color ? { color: p.dominant_color } : {}),
-    ...(title ? { title } : {}),
   };
 }
 

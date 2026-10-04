@@ -107,7 +107,7 @@ export function PinsGrid({ pins }: { pins: Pin[] }) {
                 key={pin.id}
                 type="button"
                 onClick={() => setOpen(i)}
-                aria-label={pin.title || "Открыть пин"}
+                aria-label="Открыть пин"
                 className="block w-full cursor-zoom-in"
                 style={{ aspectRatio: `1 / ${ratio(pin)}`, background: pin.color }}
               >
@@ -116,7 +116,7 @@ export function PinsGrid({ pins }: { pins: Pin[] }) {
                   src={pinSrc(pin)}
                   srcSet={pinSrcSet(pin)}
                   sizes={sizes}
-                  alt={pin.title ?? ""}
+                  alt=""
                   width={pin.w}
                   height={pin.h}
                   loading={i < eagerRows ? "eager" : "lazy"}

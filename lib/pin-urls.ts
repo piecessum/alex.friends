@@ -10,7 +10,6 @@ export type Pin = {
   h: number;
   /** Средний цвет — заливка места, пока картинка грузится. */
   color?: string;
-  title?: string;
 };
 
 const SIZES = [236, 474, 736] as const;
