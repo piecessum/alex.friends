@@ -8,11 +8,10 @@ import {
   NotebookPen,
   Disc3,
   Camera,
-  Briefcase,
+  Pin,
 } from "lucide-react";
 import { AvatarToggle } from "@/components/avatar-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { links } from "@/lib/site";
 
 type Widget = {
   title: string;
@@ -51,12 +50,11 @@ const widgets: Widget[] = [
     accent: "from-amber-500/15 text-amber-500 dark:text-amber-400",
   },
   {
-    title: "Я ищу работу",
-    description: "Сайт-резюме для работодателя.",
-    icon: Briefcase,
-    href: links.resume,
-    external: true,
-    accent: "from-emerald-500/15 text-emerald-500 dark:text-emerald-400",
+    title: "Вдохновляюсь",
+    description: "Всё, что сохранил в Pinterest.",
+    icon: Pin,
+    href: "/pins",
+    accent: "from-rose-500/15 text-rose-500 dark:text-rose-400",
   },
 ];
 
