@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "sync": "tsx scripts/sync-channel.ts",
-    "sync:work": "tsx scripts/sync-work.ts"
+    "sync:work": "tsx scripts/sync-work.ts",
+    "sync:pins": "tsx scripts/sync-pinterest.ts"
   },
   "dependencies": {
     "@octokit/rest": "^22.0.1",

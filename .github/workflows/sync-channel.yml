@@ -1,5 +1,6 @@
 # Раз в час забирает свежие посты канала в статику (scripts/sync-channel.ts)
-# и, если лента изменилась, коммитит — пуш в main запускает деплой Vercel.
+# и сохранённые пины Pinterest (scripts/sync-pinterest.ts); если что-то
+# изменилось, коммитит — пуш в main запускает деплой Vercel.
 # Нужны секреты репозитория TELEGRAM_BOT_TOKEN и TELEGRAM_OWNER_ID.
 
 name: Sync Telegram channel
@@ -34,9 +35,14 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_OWNER_ID: ${{ secrets.TELEGRAM_OWNER_ID }}
 
+      # Pinterest может не пустить запрос с серверов GitHub — тогда пины
+      # просто не обновятся, лента канала от этого не страдает.
+      - run: npm run sync:pins
+        continue-on-error: true
+
       - name: Commit if changed
         run: |
-          git add content/channel-feed.json public/channel
+          git add content/channel-feed.json public/channel content/pins.json
           if git diff --cached --quiet; then
             echo "Без изменений"
             exit 0
@@ -45,5 +51,5 @@ jobs:
           # Vercel на бесплатном плане может не деплоить.
           git config user.name "Алексей Масюта"
           git config user.email "alexmas1998kot@gmail.com"
-          git commit -m "sync: лента канала"
+          git commit -m "sync: лента канала и пины"
           git push
