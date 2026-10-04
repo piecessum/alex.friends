@@ -77,11 +77,27 @@ const hash = (s: string) => crypto.createHash("sha1").update(s).digest("hex").sl
  * хэш адреса без query: адреса стабильны между скрейпами, так что уже
  * скачанное не качается повторно. Если скачать не вышло — оставляем прокси.
  */
+/**
+ * Картинку из веб-превью (CDN telesco.pe) — в локальный webp. Если в прошлой
+ * версии ленты на этом месте уже была локальная картинка и файл на диске —
+ * берём её как есть: адреса telesco.pe зависят от того, откуда скрейпят
+ * (с серверов GitHub они другие), и без этого каждая синхронизация
+ * перекачивала бы и переименовывала все картинки. Если скачать не вышло —
+ * оставляем прокси.
+ */
 async function localize(
   url: string | undefined,
+  prevSrc: string | undefined,
+  prevSizes: Record<string, [number, number]> | undefined,
   sizes: Record<string, [number, number]>
 ): Promise<string | undefined> {
   if (!url || url.startsWith("/")) return url;
+  if (prevSrc?.startsWith("/channel/") && fs.existsSync(path.join(ROOT, "public", prevSrc))) {
+    used.add(path.basename(prevSrc));
+    const size = prevSizes?.[prevSrc];
+    if (size) sizes[prevSrc] = size;
+    return prevSrc;
+  }
   try {
     const { src, size } = await saveImage(hash(url.split("?")[0]), () => download(url));
     sizes[src] = size;
@@ -92,13 +108,41 @@ async function localize(
   }
 }
 
-async function localizePost(p: TgPost): Promise<TgPost> {
+/**
+ * Ссылка на mp4 в веб-превью — с токеном, и он разный при каждом скрейпе.
+ * Старая ссылка живёт долго, поэтому, пока она открывается, оставляем её —
+ * иначе лента «менялась» бы каждый час.
+ */
+async function keepVideoSrc(fresh: string | undefined, prev: string | undefined) {
+  if (!fresh || !prev || fresh === prev) return fresh;
+  try {
+    const res = await fetch(prev, { headers: { range: "bytes=0-0" } });
+    await res.body?.cancel();
+    return res.ok ? prev : fresh;
+  } catch {
+    return fresh;
+  }
+}
+
+async function localizePost(p: TgPost, prev: TgPost | undefined): Promise<TgPost> {
   const sizes: Record<string, [number, number]> = {};
   const photos: string[] = [];
-  for (const u of p.photos) photos.push((await localize(u, sizes))!);
+  // У rich-поста картинки берутся из блоков (richPost), а не из превью.
+  for (const [i, u] of (p.unsupported ? [] : p.photos).entries()) {
+    photos.push((await localize(u, prev?.photos[i], prev?.sizes, sizes))!);
+  }
   const videos = [];
-  for (const v of p.videos) videos.push({ ...v, thumb: await localize(v.thumb, sizes) });
-  const link = p.link ? { ...p.link, image: await localize(p.link.image, sizes) } : undefined;
+  for (const [i, v] of p.videos.entries()) {
+    const pv = prev?.videos[i];
+    videos.push({
+      ...v,
+      thumb: await localize(v.thumb, pv?.thumb, prev?.sizes, sizes),
+      src: await keepVideoSrc(v.src, pv?.src),
+    });
+  }
+  const link = p.link
+    ? { ...p.link, image: await localize(p.link.image, prev?.link?.image, prev?.sizes, sizes) }
+    : undefined;
   return {
     ...p,
     photos,
@@ -122,6 +166,13 @@ async function richPost(p: TgPost, prev: TgPost | undefined): Promise<TgPost> {
       sizes: { ...p.sizes, ...prev.sizes },
       unsupported: undefined,
     };
+  }
+
+  if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_OWNER_ID) {
+    // Без бота забрать нечем. Пустым пост не помечаем — попробуем в
+    // следующую синхронизацию, когда токен будет.
+    console.warn(`  ! ${p.id}: нет TELEGRAM_BOT_TOKEN/TELEGRAM_OWNER_ID — пропускаю`);
+    return p;
   }
 
   console.log(`  rich ${p.id}: забираю через бота`);
@@ -189,7 +240,7 @@ async function main() {
   const feed: TgPost[] = [];
   for (const p of scraped) {
     // Превью ссылок и видео есть и у rich-постов — локализуем всем.
-    const local = await localizePost(p);
+    const local = await localizePost(p, prevById.get(p.id));
     const post = p.unsupported ? await richPost(local, prevById.get(p.id)) : local;
     // JSON.stringify сам выкинет undefined-поля (unsupported у разобранных).
     feed.push(post);
