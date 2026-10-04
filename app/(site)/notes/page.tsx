@@ -4,6 +4,7 @@ import { NotesTabs } from "@/components/notes-tabs";
 import { WritingsGrid } from "@/components/writings-grid";
 import { getAnnouncedPostIds, getNotesIndex } from "@/lib/notes";
 import { getFeedPosts } from "@/lib/channel-posts";
+import { getWorkPosts } from "@/lib/work-posts";
 
 export const metadata = {
   title: "Пишу — Алексей Масюта",
@@ -21,7 +22,13 @@ export default async function NotesPage() {
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Пишу
           </h1>
-          <NotesTabs active="self" />
+          <NotesTabs
+            active="self"
+            counts={{
+              self: notes.length + posts.length,
+              work: getWorkPosts().length,
+            }}
+          />
           <Link
             href="/notes/stats"
             aria-label="Статистика"
