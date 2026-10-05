@@ -1,5 +1,6 @@
 // Публикация исследований в Telegram-канал: npm run research:publish
-// Каждое исследование, чья дата уже наступила и которое ещё не постилось
+// Каждое исследование, чьё время уже наступило (telegramAt, иначе date) и
+// которое ещё не постилось
 // (нет поля telegram), уходит в канал: превью + заголовок + лид + ссылка на
 // сайт. После отправки в JSON пишется telegram.messageId — повторно не уйдёт.
 // Запускать ПОСЛЕ деплоя, чтобы ссылка на сайт уже открывалась.
@@ -74,8 +75,8 @@ async function main() {
   const files = fs.readdirSync(DIR).filter((f) => f.endsWith(".json"));
   const due = files
     .map((f) => ({ p: path.join(DIR, f), r: JSON.parse(fs.readFileSync(path.join(DIR, f), "utf8")) as Research }))
-    .filter(({ r }) => !r.telegram && new Date(r.date).getTime() <= now)
-    .sort((a, b) => a.r.date.localeCompare(b.r.date)); // старые — первыми
+    .filter(({ r }) => !r.telegram && new Date(r.telegramAt ?? r.date).getTime() <= now)
+    .sort((a, b) => (a.r.telegramAt ?? a.r.date).localeCompare(b.r.telegramAt ?? b.r.date)); // старые — первыми
 
   for (const { p, r } of due) {
     if (!r.cover) {

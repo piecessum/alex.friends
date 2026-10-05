@@ -4,6 +4,7 @@
 #   1) рисуем превью (Cloudflare Workers AI, бесплатно) и коммитим (пуш запускает деплой Vercel);
 #   2) ждём, пока новое исследование откроется на сайте;
 #   3) постим в канал и коммитим отметку telegram.messageId.
+# Раз в час — публикация отложенных (поле telegramAt).
 # Нужны секреты CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, TELEGRAM_BOT_TOKEN
 # (бот — админ канала).
 
@@ -13,6 +14,9 @@ on:
   push:
     branches: [main]
     paths: ["content/research/*.json"]
+  # Раз в час — запас исследований уходит в канал по своему telegramAt.
+  schedule:
+    - cron: "40 * * * *"
   workflow_dispatch:
     inputs:
       refresh:
@@ -68,7 +72,7 @@ jobs:
             for (const f of fs.readdirSync(dir).filter((f) => f.endsWith(".json"))) {
               const r = JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8"));
               const refresh = (process.env.REFRESH || "").split(",").includes(r.slug);
-              if ((!r.telegram || refresh) && r.cover && new Date(r.date) <= new Date()) console.log(`${r.slug} ${r.cover}`);
+              if ((!r.telegram || refresh) && r.cover && new Date(r.telegramAt ?? r.date) <= new Date()) console.log(`${r.slug} ${r.cover}`);
             }')
           echo "$slugs"
           [ -z "$slugs" ] && exit 0
