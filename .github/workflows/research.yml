@@ -1,0 +1,87 @@
+# Исследования: превью + публикация в Telegram-канал.
+# Ежедневный облачный агент только пишет content/research/<slug>.json и пушит
+# (у него нет ключей). Дальше — здесь, где ключи лежат в секретах:
+#   1) рисуем превью через OpenAI и коммитим (пуш запускает деплой Vercel);
+#   2) ждём, пока новое исследование откроется на сайте;
+#   3) постим в канал и коммитим отметку telegram.messageId.
+# Нужны секреты OPENAI_API_KEY, TELEGRAM_BOT_TOKEN (бот — админ канала).
+
+name: Research publish
+
+on:
+  push:
+    branches: [main]
+    paths: ["content/research/*.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: research-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      RESEARCH_CHANNEL_ID: ${{ secrets.RESEARCH_CHANNEL_ID }}
+      SITE_URL: https://alex-friends.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: git config user.name "Алексей Масюта" && git config user.email "alexmas1998kot@gmail.com"
+
+      - name: Превью
+        run: |
+          npm run research:cover
+          git add content/research public/research
+          if ! git diff --cached --quiet; then
+            git commit -m "research: превью"
+            git pull --rebase && git push
+          fi
+
+      - name: Ждём деплой новых исследований
+        run: |
+          # Неопубликованные исследования, дата которых наступила.
+          slugs=$(node -e '
+            const fs = require("fs");
+            const dir = "content/research";
+            for (const f of fs.readdirSync(dir).filter((f) => f.endsWith(".json"))) {
+              const r = JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8"));
+              if (!r.telegram && r.cover && new Date(r.date) <= new Date()) console.log(`${r.slug} ${r.cover}`);
+            }')
+          echo "$slugs"
+          [ -z "$slugs" ] && exit 0
+          # До 15 минут ждём, пока страница И превью открываются на сайте.
+          for i in $(seq 1 90); do
+            ok=1
+            while read -r slug cover; do
+              [ -z "$slug" ] && continue
+              p=$(curl -s -o /dev/null -w "%{http_code}" "$SITE_URL/research/$slug")
+              c=$(curl -s -o /dev/null -w "%{http_code}" "$SITE_URL$cover")
+              [ "$p" = 200 ] && [ "$c" = 200 ] || ok=0
+            done <<< "$slugs"
+            [ $ok = 1 ] && echo "задеплоено" && exit 0
+            sleep 10
+          done
+          echo "::error::Сайт так и не отдал новые исследования — в канал не постим"
+          exit 1
+
+      - name: Публикация в канал
+        run: |
+          npm run research:publish
+          git add content/research
+          if ! git diff --cached --quiet; then
+            git commit -m "research: опубликовано в канал"
+            git pull --rebase && git push
+          fi

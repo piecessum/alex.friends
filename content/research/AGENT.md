@@ -86,17 +86,19 @@ Group, Baymard, отраслевые отчёты, «Честный знак»).
 
 ```bash
 npm ci
-npm run research:cover <slug>   # превью через OpenAI
-npx next build                   # должна пройти без ошибок
-git add content/research public/research
+npx next build      # должна пройти без ошибок
+git add content/research/<slug>.json
 git commit -m "research: <title>"
 git push origin main
-# подожди деплой: curl -s https://alex-friends.vercel.app/research/<slug> → 200
-npm run research:publish        # пост в Telegram-канал
-git add content/research && git commit -m "research: опубликовано в канал" && git push
 ```
 
-Коммиты — с подписью `Co-Authored-By: Claude <noreply@anthropic.com>`.
+Коммит — с подписью `Co-Authored-By: Claude <noreply@anthropic.com>`.
 
-Если что-то сломалось (нет ключа, бот не админ канала, сборка падает) — не
-публикуй полуготовое: откати свои изменения и опиши проблему в итоговом ответе.
+Дальше всё делает GitHub Action `.github/workflows/research.yml` — у тебя
+нет ключей, и они тебе не нужны: он нарисует превью по `coverPrompt`, дождётся
+деплоя и запостит в Telegram-канал. Поля `cover`, `coverSize` и `telegram`
+**не заполняй**.
+
+Если что-то сломалось (сборка падает, не нашёл достойного исследования с
+данными) — не публикуй полуготовое: откати свои изменения и опиши проблему в
+итоговом ответе.
