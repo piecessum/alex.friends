@@ -14,6 +14,11 @@ on:
     branches: [main]
     paths: ["content/research/*.json"]
   workflow_dispatch:
+    inputs:
+      refresh:
+        description: "Перерисовать превью и обновить пост в канале (slug через запятую)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -32,6 +37,7 @@ jobs:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       RESEARCH_CHANNEL_ID: ${{ secrets.RESEARCH_CHANNEL_ID }}
       SITE_URL: https://alex-friends.vercel.app
+      REFRESH: ${{ inputs.refresh }}
     steps:
       - uses: actions/checkout@v4
 
@@ -46,7 +52,7 @@ jobs:
 
       - name: Превью
         run: |
-          npm run research:cover
+          npm run research:cover -- "$REFRESH"
           git add content/research public/research
           if ! git diff --cached --quiet; then
             git commit -m "research: превью"
@@ -61,7 +67,8 @@ jobs:
             const dir = "content/research";
             for (const f of fs.readdirSync(dir).filter((f) => f.endsWith(".json"))) {
               const r = JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8"));
-              if (!r.telegram && r.cover && new Date(r.date) <= new Date()) console.log(`${r.slug} ${r.cover}`);
+              const refresh = (process.env.REFRESH || "").split(",").includes(r.slug);
+              if ((!r.telegram || refresh) && r.cover && new Date(r.date) <= new Date()) console.log(`${r.slug} ${r.cover}`);
             }')
           echo "$slugs"
           [ -z "$slugs" ] && exit 0
@@ -82,7 +89,7 @@ jobs:
 
       - name: Публикация в канал
         run: |
-          npm run research:publish
+          npm run research:publish -- "--refresh=$REFRESH"
           git add content/research
           if ! git diff --cached --quiet; then
             git commit -m "research: опубликовано в канал"
