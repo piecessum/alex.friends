@@ -21,29 +21,97 @@
     {
       "type": "stats",
       "items": [
-        { "value": "2 трлн ₽", "label": "объём B2B-онлайн-торговли в России в 2025 году, +11% за год", "source": "Data Insight" },
-        { "value": "$13,9 млрд", "label": "мировой рынок B2B-платформ в 2026-м, а к 2034-му обещают $61,8 млрд", "source": "прогноз, рост 20,5% в год" }
+        {
+          "value": "2 трлн ₽",
+          "label": "объём B2B-онлайн-торговли в России в 2025 году, +11% за год",
+          "source": "Data Insight"
+        },
+        {
+          "value": "$13,9 млрд",
+          "label": "мировой рынок B2B-платформ в 2026-м, а к 2034-му обещают $61,8 млрд",
+          "source": "прогноз, рост 20,5% в год"
+        }
       ]
     },
-    { "type": "heading", "text": "Кто сильнее" },
+    {
+      "type": "heading",
+      "text": "Кто сильнее"
+    },
     {
       "type": "bars",
       "title": "Общая оценка платформ",
       "subtitle": "по 10-балльной шкале, российские выделены",
       "items": [
-        { "label": "Salesforce B2B", "value": 9.1, "display": "9,1" },
-        { "label": "Shopify Plus", "value": 9.0, "display": "9,0" },
-        { "label": "SAP Commerce", "value": 8.9, "display": "8,9" },
-        { "label": "BigCommerce", "value": 8.8, "display": "8,8" },
-        { "label": "Adobe Commerce", "value": 8.7, "display": "8,7" },
-        { "label": "Compo", "value": 8.5, "display": "8,5", "highlight": true },
-        { "label": "Odoo", "value": 8.4, "display": "8,4" },
-        { "label": "WooCommerce", "value": 8.3, "display": "8,3" },
-        { "label": "B2B Движение", "value": 8.2, "display": "8,2", "highlight": true },
-        { "label": "Agora", "value": 8.0, "display": "8,0", "highlight": true },
-        { "label": "Yo!Kart", "value": 7.8, "display": "7,8" },
-        { "label": "АЛЬФА: B2B", "value": 7.3, "display": "7,3", "highlight": true },
-        { "label": "Sellty", "value": 7.0, "display": "7,0", "highlight": true }
+        {
+          "label": "Salesforce B2B",
+          "value": 9.1,
+          "display": "9,1"
+        },
+        {
+          "label": "Shopify Plus",
+          "value": 9,
+          "display": "9,0"
+        },
+        {
+          "label": "SAP Commerce",
+          "value": 8.9,
+          "display": "8,9"
+        },
+        {
+          "label": "BigCommerce",
+          "value": 8.8,
+          "display": "8,8"
+        },
+        {
+          "label": "Adobe Commerce",
+          "value": 8.7,
+          "display": "8,7"
+        },
+        {
+          "label": "Compo",
+          "value": 8.5,
+          "display": "8,5",
+          "highlight": true
+        },
+        {
+          "label": "Odoo",
+          "value": 8.4,
+          "display": "8,4"
+        },
+        {
+          "label": "WooCommerce",
+          "value": 8.3,
+          "display": "8,3"
+        },
+        {
+          "label": "B2B Движение",
+          "value": 8.2,
+          "display": "8,2",
+          "highlight": true
+        },
+        {
+          "label": "Agora",
+          "value": 8,
+          "display": "8,0",
+          "highlight": true
+        },
+        {
+          "label": "Yo!Kart",
+          "value": 7.8,
+          "display": "7,8"
+        },
+        {
+          "label": "АЛЬФА: B2B",
+          "value": 7.3,
+          "display": "7,3",
+          "highlight": true
+        },
+        {
+          "label": "Sellty",
+          "value": 7,
+          "display": "7,0",
+          "highlight": true
+        }
       ],
       "source": "моя оценка по функциям, внедрению, поддержке и отзывам G2 / Capterra"
     },
@@ -55,30 +123,93 @@
       "type": "fact",
       "text": "Закон о персональных данных (ФЗ-152) из коробки соблюдают все 5 российских платформ и ни одна из 8 мировых. А с 1С у Shopify, Salesforce и BigCommerce можно подружиться только через сторонние коннекторы."
     },
-    { "type": "heading", "text": "Где отставание на самом деле" },
+    {
+      "type": "heading",
+      "text": "Где отставание на самом деле"
+    },
     {
       "type": "text",
       "md": "По функциям импортозамещение состоялось. По экосистеме — нет. У Salesforce и Shopify сотни готовых интеграций, свои магазины приложений и по 100+ кейсов на сайте. У российских — 5–10 кейсов и коннекторы, которые пилит сама команда платформы.\n\nСреднему бизнесу это не мешает. А вот для enterprise пока стоп-фактор: когда у тебя двадцать систем, хочется подключать их кнопкой, а не ТЗ на три месяца."
     },
-    { "type": "heading", "text": "Сайты продают плохо" },
+    {
+      "type": "heading",
+      "text": "Сайты продают плохо"
+    },
     {
       "type": "bars",
       "title": "Качество сайта самой платформы",
       "subtitle": "дизайн, навигация и контент, баллы из 10; российские выделены",
       "items": [
-        { "label": "BigCommerce", "value": 9.0, "display": "9,0" },
-        { "label": "Shopify Plus", "value": 9.0, "display": "9,0" },
-        { "label": "Compo", "value": 8.7, "display": "8,7", "highlight": true },
-        { "label": "Salesforce B2B", "value": 8.7, "display": "8,7" },
-        { "label": "Odoo", "value": 8.3, "display": "8,3" },
-        { "label": "Agora", "value": 8.0, "display": "8,0", "highlight": true },
-        { "label": "Adobe Commerce", "value": 7.7, "display": "7,7" },
-        { "label": "WooCommerce", "value": 7.7, "display": "7,7" },
-        { "label": "B2B Движение", "value": 7.3, "display": "7,3", "highlight": true },
-        { "label": "SAP Commerce", "value": 7.3, "display": "7,3" },
-        { "label": "Sellty", "value": 7.0, "display": "7,0", "highlight": true },
-        { "label": "Yo!Kart", "value": 7.0, "display": "7,0" },
-        { "label": "АЛЬФА: B2B", "value": 6.3, "display": "6,3", "highlight": true }
+        {
+          "label": "BigCommerce",
+          "value": 9,
+          "display": "9,0"
+        },
+        {
+          "label": "Shopify Plus",
+          "value": 9,
+          "display": "9,0"
+        },
+        {
+          "label": "Compo",
+          "value": 8.7,
+          "display": "8,7",
+          "highlight": true
+        },
+        {
+          "label": "Salesforce B2B",
+          "value": 8.7,
+          "display": "8,7"
+        },
+        {
+          "label": "Odoo",
+          "value": 8.3,
+          "display": "8,3"
+        },
+        {
+          "label": "Agora",
+          "value": 8,
+          "display": "8,0",
+          "highlight": true
+        },
+        {
+          "label": "Adobe Commerce",
+          "value": 7.7,
+          "display": "7,7"
+        },
+        {
+          "label": "WooCommerce",
+          "value": 7.7,
+          "display": "7,7"
+        },
+        {
+          "label": "B2B Движение",
+          "value": 7.3,
+          "display": "7,3",
+          "highlight": true
+        },
+        {
+          "label": "SAP Commerce",
+          "value": 7.3,
+          "display": "7,3"
+        },
+        {
+          "label": "Sellty",
+          "value": 7,
+          "display": "7,0",
+          "highlight": true
+        },
+        {
+          "label": "Yo!Kart",
+          "value": 7,
+          "display": "7,0"
+        },
+        {
+          "label": "АЛЬФА: B2B",
+          "value": 6.3,
+          "display": "6,3",
+          "highlight": true
+        }
       ],
       "source": "мой аудит лендингов"
     },
@@ -86,23 +217,42 @@
       "type": "text",
       "md": "Тут я сам себе выстрелил в ногу: сайт B2B Движения, где я работаю, получил 7,3. Минимум анимаций, нет тёмной темы, демо — только видео. У Shopify и BigCommerce интерактивное демо: продукт можно потыкать до разговора с продажником. Российским платформам есть куда расти в сторителлинге — и мне в том числе."
     },
-    { "type": "heading", "text": "Сколько стоит войти" },
+    {
+      "type": "heading",
+      "text": "Сколько стоит войти"
+    },
     {
       "type": "versus",
       "title": "Стартовая цена за год",
       "subtitle": "без учёта внедрения",
-      "left": { "label": "Sellty — малый бизнес", "value": 48000, "display": "≈48 тыс. ₽" },
-      "right": { "label": "Salesforce B2B — enterprise", "value": 2000000, "display": "2+ млн ₽" },
+      "left": {
+        "label": "Sellty — малый бизнес",
+        "value": 48000,
+        "display": "≈48 тыс. ₽"
+      },
+      "right": {
+        "label": "Salesforce B2B — enterprise",
+        "value": 2000000,
+        "display": "2+ млн ₽"
+      },
       "source": "открытые тарифы платформ"
     },
     {
       "type": "text",
       "md": "Разница в 40 раз — и это до внедрения, которое у Salesforce идёт 3–6 месяцев, а у SAP до года. Если коротко:\n\n- малый бизнес в России — Sellty, старт за часы;\n- средний бизнес с 1С — B2B Движение, Agora или АЛЬФА: B2B;\n- enterprise в России — Compo;\n- за рубежом и без 1С — BigCommerce, лучший баланс цены и мощности."
     },
-    { "type": "heading", "text": "Что дальше" },
+    {
+      "type": "heading",
+      "text": "Что дальше"
+    },
     {
       "type": "text",
       "md": "Gartner обещает, что к 2028 году 90% B2B-закупок будут вести AI-агенты. Закупщик перестанет тыкать фильтры — он поставит задачу боту, а бот сам договорится с платформой.\n\nВыходит, следующая гонка платформ будет за то, насколько удобно с ними работать машине. Красивый каталог роботу до лампочки. Интересно, кто первым сделает личный кабинет для робота."
     }
+  ],
+  "cover": "/research/b2b-platforms-report.webp",
+  "coverSize": [
+    1024,
+    1000
   ]
 }
