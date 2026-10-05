@@ -30,15 +30,30 @@ const STYLE =
 // чистим, иначе fetch падает на невалидном заголовке.
 const clean = (v: string | undefined) => (v ?? "").trim().replace(/^Bearer\s+/i, "").trim();
 
+/** Проверка формата секрета без вывода самого значения. */
+function checkSecret(name: string, value: string, re: RegExp) {
+  if (re.test(value)) return;
+  const bad = [...new Set([...value].filter((c) => !/[A-Za-z0-9_-]/.test(c)))]
+    .map((c) => (/\s/.test(c) ? "пробел/перенос" : /[^\x00-\x7f]/.test(c) ? "не-латиница" : c))
+    .join(", ");
+  throw new Error(
+    `${name} выглядит неправильно: длина ${value.length}, лишние символы: ${bad || "нет"}. ` +
+      `Вставь в секрет только само значение, без кавычек, «Bearer» и примеров кода.`
+  );
+}
+
 async function generateCloudflare(prompt: string): Promise<Buffer> {
   const account = clean(process.env.CLOUDFLARE_ACCOUNT_ID);
+  const token = clean(process.env.CLOUDFLARE_API_TOKEN);
+  checkSecret("CLOUDFLARE_ACCOUNT_ID", account, /^[0-9a-f]{32}$/);
+  checkSecret("CLOUDFLARE_API_TOKEN", token, /^[A-Za-z0-9_-]{20,}$/);
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${CF_MODEL}`,
     {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${clean(process.env.CLOUDFLARE_API_TOKEN)}`,
+        authorization: `Bearer ${token}`,
       },
       // schnell рисует квадрат 1024×1024; 8 шагов — максимум и лучшее качество.
       body: JSON.stringify({ prompt, steps: 8 }),
