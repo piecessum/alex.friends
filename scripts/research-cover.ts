@@ -26,7 +26,7 @@ const STYLE =
   "Isometric 16-bit pixel art illustration with a soft matte finish: diffused even lighting, " +
   "no glossy highlights, gentle dithering, crisp pixel edges, muted pastel palette with " +
   "indigo and warm accents, plain soft neutral background, small cozy diorama composition, " +
-  "centered, generous empty space around. Absolutely no text, letters, numbers or logos. Scene: ";
+  "centered, the whole diorama fully inside the frame. Absolutely no text, letters, numbers or logos. Scene: ";
 
 // Секреты часто вставляют с переносом строки или вместе со словом «Bearer» —
 // чистим, иначе fetch падает на невалидном заголовке.
@@ -91,7 +91,7 @@ async function generate(scene: string): Promise<Buffer> {
   throw new Error("Нет ключей: задай CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN (бесплатно) или OPENAI_API_KEY");
 }
 
-// Превью 3:2. Пиксели делаем обработкой, а не надеждой на промпт: модель
+// Превью 3:2 (см. toWide). Пиксели делаем обработкой, а не надеждой на промпт: модель
 // рисует гладкую изометрию, мы уменьшаем её в PX раз, сводим к ограниченной
 // палитре и увеличиваем обратно без сглаживания — честные квадратные пиксели
 // и «матовые» приглушённые цвета.
@@ -100,8 +100,26 @@ const H = 684;
 const PX = 4;
 const COLOURS = 48;
 
+/** Квадрат модели → 3:2: сцена целиком, по бокам — цвет фона
+ *  (фон однотонный, берём из угла картинки). */
+async function toWide(input: Buffer): Promise<Buffer> {
+  const { data } = await sharp(input).extract({ left: 0, top: 0, width: 1, height: 1 }).raw().toBuffer({ resolveWithObject: true });
+  const background = { r: data[0], g: data[1], b: data[2] };
+  // Квадрат чуть крупнее высоты превью: сверху/снизу срезается только пустой
+  // фон, сцена остаётся целиком и крупнее; бока дописываются цветом фона.
+  const S = Math.round(H * 1.17);
+  const side = Math.round((W - S) / 2);
+  const square = await sharp(input)
+    .resize(S, S, { fit: "cover" })
+    .extract({ left: 0, top: Math.round((S - H) / 2), width: S, height: H })
+    .toBuffer();
+  return sharp(square)
+    .extend({ left: side, right: W - S - side, top: 0, bottom: 0, background })
+    .toBuffer();
+}
+
 async function pixelate(input: Buffer): Promise<Buffer> {
-  const base = await sharp(input).resize(W, H, { fit: "cover" }).toBuffer();
+  const base = await toWide(input);
   const small = await sharp(base)
     .resize(W / PX, H / PX, { kernel: "lanczos3" })
     .png({ palette: true, colours: COLOURS, dither: 0.6 })
