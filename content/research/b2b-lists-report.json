@@ -175,5 +175,9 @@
   "coverSize": [
     1024,
     1000
-  ]
+  ],
+  "telegram": {
+    "messageId": 4,
+    "postedAt": "2026-10-05T19:15:09.985Z"
+  }
 }
