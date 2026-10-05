@@ -26,15 +26,19 @@ const STYLE =
   "indigo and warm accents, plain soft neutral background, small cozy diorama composition, " +
   "centered, generous empty space around. Absolutely no text, letters, numbers or logos. Scene: ";
 
+// Секреты часто вставляют с переносом строки или вместе со словом «Bearer» —
+// чистим, иначе fetch падает на невалидном заголовке.
+const clean = (v: string | undefined) => (v ?? "").trim().replace(/^Bearer\s+/i, "").trim();
+
 async function generateCloudflare(prompt: string): Promise<Buffer> {
-  const account = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const account = clean(process.env.CLOUDFLARE_ACCOUNT_ID);
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${CF_MODEL}`,
     {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${process.env.CLOUDFLARE_API_TOKEN}`,
+        authorization: `Bearer ${clean(process.env.CLOUDFLARE_API_TOKEN)}`,
       },
       // schnell рисует квадрат 1024×1024; 8 шагов — максимум и лучшее качество.
       body: JSON.stringify({ prompt, steps: 8 }),
@@ -52,7 +56,7 @@ async function generateOpenAI(prompt: string): Promise<Buffer> {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      authorization: `Bearer ${clean(process.env.OPENAI_API_KEY)}`,
     },
     body: JSON.stringify({ model: OPENAI_MODEL, prompt, size: "1536x1024", quality: "medium", n: 1 }),
   });
