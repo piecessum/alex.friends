@@ -1,10 +1,11 @@
 # Исследования: превью + публикация в Telegram-канал.
 # Ежедневный облачный агент только пишет content/research/<slug>.json и пушит
 # (у него нет ключей). Дальше — здесь, где ключи лежат в секретах:
-#   1) рисуем превью через OpenAI и коммитим (пуш запускает деплой Vercel);
+#   1) рисуем превью (Cloudflare Workers AI, бесплатно) и коммитим (пуш запускает деплой Vercel);
 #   2) ждём, пока новое исследование откроется на сайте;
 #   3) постим в канал и коммитим отметку telegram.messageId.
-# Нужны секреты OPENAI_API_KEY, TELEGRAM_BOT_TOKEN (бот — админ канала).
+# Нужны секреты CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, TELEGRAM_BOT_TOKEN
+# (бот — админ канала).
 
 name: Research publish
 
@@ -25,6 +26,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       RESEARCH_CHANNEL_ID: ${{ secrets.RESEARCH_CHANNEL_ID }}
