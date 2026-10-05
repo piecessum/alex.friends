@@ -2,7 +2,7 @@ import { PinsGrid } from "@/components/pins-grid";
 import { getPins, PINTEREST_USER } from "@/lib/pinterest";
 
 export const metadata = {
-  title: "Вдохновляюсь — Алексей Масюта",
+  title: "Сохранёнки — Алексей Масюта",
 };
 
 export default function PinsPage() {
@@ -11,7 +11,7 @@ export default function PinsPage() {
   return (
     <main className="w-full flex-1">
       <div className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Вдохновляюсь</h1>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Сохранёнки</h1>
         <p className="mt-3 max-w-2xl text-neutral-600 dark:text-neutral-400">
           Мой лоскутный ковёр вдохновения. В{" "}
           <a

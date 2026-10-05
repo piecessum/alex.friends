@@ -27,7 +27,7 @@ const tabs: Tab[] = [
   { label: "Пишу", icon: NotebookPen, href: "/notes", match: ["/notes", "/channel"] },
   { label: "Пластинки", icon: Disc3, href: "/vinyl" },
   { label: "Фоткаю", icon: Camera, href: "/photos" },
-  { label: "Вдохновляюсь", icon: Pin, href: "/pins" },
+  { label: "Сохранёнки", icon: Pin, href: "/pins" },
 ];
 
 // «Домой» живёт отдельно — в углу внизу рельса.

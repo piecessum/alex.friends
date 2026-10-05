@@ -50,7 +50,7 @@ const widgets: Widget[] = [
     accent: "from-amber-500/15 text-amber-500 dark:text-amber-400",
   },
   {
-    title: "Вдохновляюсь",
+    title: "Сохранёнки",
     description: "Всё, что сохранил в Pinterest.",
     icon: Pin,
     href: "/pins",
