@@ -8,7 +8,9 @@
     "start": "next start",
     "sync": "tsx scripts/sync-channel.ts",
     "sync:work": "tsx scripts/sync-work.ts",
-    "sync:pins": "tsx scripts/sync-pinterest.ts"
+    "sync:pins": "tsx scripts/sync-pinterest.ts",
+    "research:cover": "tsx scripts/research-cover.ts",
+    "research:publish": "tsx scripts/research-publish.ts"
   },
   "dependencies": {
     "@octokit/rest": "^22.0.1",

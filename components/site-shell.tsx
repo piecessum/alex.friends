@@ -8,6 +8,7 @@ import {
   Camera,
   Home,
   Pin,
+  FlaskConical,
   type LucideIcon,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -27,6 +28,7 @@ const tabs: Tab[] = [
   { label: "Пишу", icon: NotebookPen, href: "/notes", match: ["/notes", "/channel"] },
   { label: "Пластинки", icon: Disc3, href: "/vinyl" },
   { label: "Фоткаю", icon: Camera, href: "/photos" },
+  { label: "Исследования", icon: FlaskConical, href: "/research" },
   { label: "Сохранёнки", icon: Pin, href: "/pins" },
 ];
 
