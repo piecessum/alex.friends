@@ -19,6 +19,7 @@ import type { Research } from "@/lib/research";
 const DIR = path.join(process.cwd(), "content", "research");
 const IMG_DIR = path.join(process.cwd(), "public", "research");
 const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/leonardo/lucid-origin";
+const FALLBACK_MODEL = "@cf/black-forest-labs/flux-1-schnell";
 const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 
 // Общий стиль всех превью — меняется здесь, а не в каждом исследовании.
@@ -50,13 +51,13 @@ function checkSecret(name: string, value: string, re: RegExp) {
   );
 }
 
-async function generateCloudflare(prompt: string): Promise<Buffer> {
+async function generateCloudflare(prompt: string, model = CF_MODEL): Promise<Buffer> {
   const account = clean(process.env.CLOUDFLARE_ACCOUNT_ID);
   const token = clean(process.env.CLOUDFLARE_API_TOKEN);
   checkSecret("CLOUDFLARE_ACCOUNT_ID", account, /^[0-9a-f]{32}$/);
   checkSecret("CLOUDFLARE_API_TOKEN", token, /^[A-Za-z0-9_-]{20,}$/);
   const res = await fetch(
-    `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${CF_MODEL}`,
+    `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${model}`,
     {
       method: "POST",
       headers: {
@@ -66,7 +67,7 @@ async function generateCloudflare(prompt: string): Promise<Buffer> {
       // FLUX schnell рисует квадрат 1024×1024 (8 шагов — максимум); модели
       // Leonardo умеют сразу в 3:2.
       body: JSON.stringify(
-        CF_MODEL.includes("leonardo")
+        model.includes("leonardo")
           ? { prompt, width: 1536, height: 1024 }
           : { prompt, steps: 8 }
       ),
@@ -96,7 +97,13 @@ async function generateOpenAI(prompt: string): Promise<Buffer> {
 async function generate(scene: string): Promise<Buffer> {
   const prompt = STYLE + scene;
   if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN) {
-    return generateCloudflare(prompt);
+    try {
+      return await generateCloudflare(prompt);
+    } catch (e) {
+      // Фильтр модели иногда ложно срабатывает на безобидный промпт — пробуем FLUX.
+      console.warn(`  ! ${CF_MODEL}: ${e} — пробую FLUX`);
+      return generateCloudflare(prompt, FALLBACK_MODEL);
+    }
   }
   if (process.env.OPENAI_API_KEY) return generateOpenAI(prompt);
   throw new Error("Нет ключей: задай CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN (бесплатно) или OPENAI_API_KEY");
@@ -132,13 +139,23 @@ async function render(input: Buffer): Promise<Buffer> {
 async function main() {
   const only = process.argv[2]?.split(",").filter(Boolean);
   fs.mkdirSync(IMG_DIR, { recursive: true });
+  let failed = 0;
   for (const file of fs.readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
     const p = path.join(DIR, file);
     const r: Research = JSON.parse(fs.readFileSync(p, "utf8"));
     if (only?.length ? !only.includes(r.slug) : r.cover) continue;
 
     console.log(`Рисую превью: ${r.slug}`);
-    const out = await render(await generate(r.coverPrompt));
+    let out: Buffer;
+    try {
+      out = await render(await generate(r.coverPrompt));
+    } catch (e) {
+      // Одно неудачное превью не должно ронять остальные; без превью пост
+      // в канал не уйдёт и будет перерисован при следующем запуске.
+      console.warn(`  ! ${r.slug}: превью не получилось — ${e}`);
+      failed++;
+      continue;
+    }
     const name = `${r.slug}-${crypto.createHash("sha1").update(out).digest("hex").slice(0, 8)}.webp`;
     fs.writeFileSync(path.join(IMG_DIR, name), out);
     // Старое превью этого исследования больше не нужно.
@@ -149,6 +166,7 @@ async function main() {
     r.coverSize = [W, H];
     fs.writeFileSync(p, JSON.stringify(r, null, 2) + "\n");
   }
+  if (failed) console.warn(`Не получилось превью: ${failed}`);
 }
 
 main().catch((e) => {
