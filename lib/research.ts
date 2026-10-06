@@ -105,8 +105,8 @@ export type Research = {
   /** Промпт для превью (пиксельная матовая изометрия), см. scripts/research-cover.ts. */
   coverPrompt: string;
   blocks: ResearchBlock[];
-  /** Когда постить в Telegram-канал (ISO). Нет — сразу с публикацией на
-   *  сайте (date). Нужен, чтобы запас исследований уходил в канал по одному. */
+  /** Не постить в Telegram-канал раньше этого времени (ISO). В канал всё
+   *  равно уходит не больше одного поста в день — см. research-publish. */
   telegramAt?: string;
   /** Заполняется после публикации в Telegram-канал. */
   telegram?: {

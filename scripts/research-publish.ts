@@ -1,5 +1,6 @@
 // Публикация исследований в Telegram-канал: npm run research:publish
-// Каждое исследование, чьё время уже наступило (telegramAt, иначе date) и
+// Не больше одного поста в сутки, с 08:00 МСК — самое старое из ожидающих
+// исследований, чьё время уже наступило (telegramAt, иначе date) и
 // которое ещё не постилось
 // (нет поля telegram), уходит в канал: превью + заголовок + лид + ссылка на
 // сайт. После отправки в JSON пишется telegram.messageId — повторно не уйдёт.
@@ -17,6 +18,9 @@ import type { Research } from "@/lib/research";
 const DIR = path.join(process.cwd(), "content", "research");
 const SITE = process.env.SITE_URL || "https://alex-friends.vercel.app";
 const CHANNEL = process.env.RESEARCH_CHANNEL_ID || "-1004400783573";
+
+/** Раньше этого часа (МСК) в канал не постим. */
+const POST_FROM_HOUR = 8;
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -85,10 +89,30 @@ async function main() {
 
   const now = Date.now();
   const files = fs.readdirSync(DIR).filter((f) => f.endsWith(".json"));
-  const due = files
-    .map((f) => ({ p: path.join(DIR, f), r: JSON.parse(fs.readFileSync(path.join(DIR, f), "utf8")) as Research }))
-    .filter(({ r }) => !r.telegram && new Date(r.telegramAt ?? r.date).getTime() <= now)
-    .sort((a, b) => (a.r.telegramAt ?? a.r.date).localeCompare(b.r.telegramAt ?? b.r.date)); // старые — первыми
+  const all = files.map((f) => ({
+    p: path.join(DIR, f),
+    r: JSON.parse(fs.readFileSync(path.join(DIR, f), "utf8")) as Research,
+  }));
+
+  // Правило канала: не больше одного поста в сутки (по Москве) и не раньше
+  // 08:00. На сайте исследования появляются сразу, а в канал уходят по
+  // очереди — самое старое из ожидающих (telegramAt — «не раньше»).
+  const mskDay = (t: number) => new Date(t + 3 * 3600_000).toISOString().slice(0, 10);
+  const mskHour = new Date(now + 3 * 3600_000).getUTCHours();
+  const postedToday = all.some(
+    ({ r }) => r.telegram && mskDay(new Date(r.telegram.postedAt).getTime()) === mskDay(now)
+  );
+  const queue = all
+    .filter(({ r }) => !r.telegram && r.cover && new Date(r.telegramAt ?? r.date).getTime() <= now)
+    .sort((a, b) => (a.r.telegramAt ?? a.r.date).localeCompare(b.r.telegramAt ?? b.r.date));
+  const due = postedToday || mskHour < POST_FROM_HOUR ? [] : queue.slice(0, 1);
+  if (queue.length && !due.length) {
+    console.log(
+      postedToday
+        ? `Сегодня в канале уже был пост — в очереди ждут: ${queue.length}`
+        : `До ${POST_FROM_HOUR}:00 МСК в канал не постим — в очереди: ${queue.length}`
+    );
+  }
 
   for (const { p, r } of due) {
     if (!r.cover) {
@@ -100,7 +124,7 @@ async function main() {
     fs.writeFileSync(p, JSON.stringify(r, null, 2) + "\n");
     console.log(`Опубликовано: ${r.slug} → сообщение ${messageId}`);
   }
-  if (due.length === 0 && refresh.length === 0) console.log("Нечего публиковать.");
+  if (queue.length === 0 && refresh.length === 0) console.log("Нечего публиковать.");
 }
 
 main().catch((e) => {
