@@ -26,11 +26,13 @@ const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 // (8-битный спрайт, выдавленный в объём), с чёрной обводкой, яркие плоские
 // цвета, светло-серый фон.
 const STYLE =
-  "A single 3D voxel icon: an 8-bit pixel-art sprite extruded into chunky cubes, every pixel " +
-  "is a visible small cube, thick black voxel outline around the shape, bright flat saturated " +
-  "colors, soft even studio lighting, slight three-quarter isometric angle, the object centered " +
-  "and fully inside the frame, isolated on a plain solid light grey background, no ground, no " +
-  "scenery, no extra objects. Absolutely no text, letters or numbers. The object: ";
+  "Voxel art render in MagicaVoxel style: a single low-resolution 8-bit pixel-art sprite " +
+  "(about 20x20 pixels) extruded into 3D, built entirely from identical chunky cubes, the cube " +
+  "grid clearly visible on every face, blocky stepped edges like Lego, a thick black voxel " +
+  "outline around the silhouette, bright flat saturated colors with simple cel shading, soft " +
+  "studio light, three-quarter isometric angle, large and centered, filling most of the frame, " +
+  "on a plain solid light grey background with no floor and no scenery. No smooth surfaces, no " +
+  "text, no letters, no numbers. The object: ";
 
 // Секреты часто вставляют с переносом строки или вместе со словом «Bearer» —
 // чистим, иначе fetch падает на невалидном заголовке.
