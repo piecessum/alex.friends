@@ -63,8 +63,13 @@ async function generateCloudflare(prompt: string): Promise<Buffer> {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,
       },
-      // schnell рисует квадрат 1024×1024; 8 шагов — максимум и лучшее качество.
-      body: JSON.stringify({ prompt, steps: 8 }),
+      // FLUX schnell рисует квадрат 1024×1024 (8 шагов — максимум); модели
+      // Leonardo умеют сразу в 3:2.
+      body: JSON.stringify(
+        CF_MODEL.includes("leonardo")
+          ? { prompt, width: 1536, height: 1024 }
+          : { prompt, steps: 8 }
+      ),
     }
   );
   const data = await res.json();
@@ -101,13 +106,14 @@ async function generate(scene: string): Promise<Buffer> {
 const W = 1024;
 const H = 684;
 
-/** Квадрат модели → 3:2: сцена целиком, по бокам — цвет фона
- *  (фон однотонный, берём из угла картинки). */
+/** Картинка модели → 3:2. Если модель уже рисует широко — просто подгоняем.
+ *  Квадрат: чуть крупнее высоты превью (сверху/снизу срезается только пустой
+ *  фон), а бока продолжаются краевыми пикселями — фон плавный, без швов. */
 async function toWide(input: Buffer): Promise<Buffer> {
-  const { data } = await sharp(input).extract({ left: 0, top: 0, width: 1, height: 1 }).raw().toBuffer({ resolveWithObject: true });
-  const background = { r: data[0], g: data[1], b: data[2] };
-  // Квадрат чуть крупнее высоты превью: сверху/снизу срезается только пустой
-  // фон, сцена остаётся целиком и крупнее; бока дописываются цветом фона.
+  const { width = 0, height = 1 } = await sharp(input).metadata();
+  if (width / height > 1.3) {
+    return sharp(input).resize(W, H, { fit: "cover" }).toBuffer();
+  }
   const S = Math.round(H * 1.17);
   const side = Math.round((W - S) / 2);
   const square = await sharp(input)
@@ -115,7 +121,7 @@ async function toWide(input: Buffer): Promise<Buffer> {
     .extract({ left: 0, top: Math.round((S - H) / 2), width: S, height: H })
     .toBuffer();
   return sharp(square)
-    .extend({ left: side, right: W - S - side, top: 0, bottom: 0, background })
+    .extend({ left: side, right: W - S - side, top: 0, bottom: 0, extendWith: "copy" })
     .toBuffer();
 }
 

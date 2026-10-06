@@ -23,6 +23,10 @@ on:
         description: "Перерисовать превью и обновить пост в канале (slug через запятую)"
         required: false
         default: ""
+      image_model:
+        description: "Модель Cloudflare для превью (пусто — по умолчанию)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -42,6 +46,7 @@ jobs:
       RESEARCH_CHANNEL_ID: ${{ secrets.RESEARCH_CHANNEL_ID }}
       SITE_URL: https://alex-friends.vercel.app
       REFRESH: ${{ inputs.refresh }}
+      CLOUDFLARE_IMAGE_MODEL: ${{ inputs.image_model }}
     steps:
       - uses: actions/checkout@v4
 
