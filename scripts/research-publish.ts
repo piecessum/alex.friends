@@ -47,7 +47,10 @@ async function editPhoto(messageId: number, photo: Buffer, caption: string): Pro
   form.set("photo", new Blob([new Uint8Array(photo)]), "cover.jpg");
   const res = await fetch(`https://api.telegram.org/bot${token}/editMessageMedia`, { method: "POST", body: form });
   const data = await res.json();
-  if (!data.ok) throw new Error(`Telegram: ${data.error_code} ${data.description}`);
+  // Та же картинка и подпись — Telegram отвечает «not modified», это не ошибка.
+  if (!data.ok && !/not modified/i.test(data.description)) {
+    throw new Error(`Telegram: ${data.error_code} ${data.description}`);
+  }
 }
 
 const caption = (r: Research) =>
@@ -60,6 +63,13 @@ const coverJpeg = (r: Research) =>
 
 async function main() {
   const refresh = process.argv.find((a) => a.startsWith("--refresh="))?.slice(10).split(",").filter(Boolean) ?? [];
+  // Превью перерисовалось (новый стиль и т.п.) — пост в канале тоже обновить.
+  for (const f of fs.readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
+    const r: Research = JSON.parse(fs.readFileSync(path.join(DIR, f), "utf8"));
+    if (r.telegram && r.cover && r.telegram.cover !== r.cover && !refresh.includes(r.slug)) {
+      refresh.push(r.slug);
+    }
+  }
   for (const slug of refresh) {
     const p = path.join(DIR, `${slug}.json`);
     const r: Research = JSON.parse(fs.readFileSync(p, "utf8"));
@@ -68,6 +78,8 @@ async function main() {
       continue;
     }
     await editPhoto(r.telegram.messageId, await coverJpeg(r), caption(r));
+    r.telegram.cover = r.cover;
+    fs.writeFileSync(p, JSON.stringify(r, null, 2) + "\n");
     console.log(`Обновлено в канале: ${slug} (сообщение ${r.telegram.messageId})`);
   }
 
@@ -84,7 +96,7 @@ async function main() {
       continue;
     }
     const messageId = await sendPhoto(await coverJpeg(r), caption(r));
-    r.telegram = { messageId, postedAt: new Date().toISOString() };
+    r.telegram = { messageId, postedAt: new Date().toISOString(), cover: r.cover };
     fs.writeFileSync(p, JSON.stringify(r, null, 2) + "\n");
     console.log(`Опубликовано: ${r.slug} → сообщение ${messageId}`);
   }

@@ -1,5 +1,5 @@
 // Превью исследований: npm run research:cover [slug,slug — перерисовать]
-// Для каждого исследования без обложки рисует картинку по его coverPrompt в
+// Для каждого исследования без обложки (или со старым стилем) рисует картинку по его coverPrompt в
 // едином стиле раздела (воксельный пиксель-арт, см. STYLE), кладёт в
 // public/research/<slug>-<хэш>.webp и прописывает cover/coverSize в JSON.
 // Хэш в имени — чтобы перерисованное превью не залипало в кэше браузера/CDN.
@@ -26,6 +26,10 @@ const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 // Референс — доска «8 бит» в Pinterest: один предмет, собранный из кубиков
 // (8-битный спрайт, выдавленный в объём), с чёрной обводкой, яркие плоские
 // цвета. Фон — матовый цвет темы (TOPIC_COLORS, тона с референса-кассет).
+// Меняешь стиль (промпт, фон, обработку) — подними версию: все превью
+// перерисуются сами, а посты в канале обновятся (см. research-publish).
+const COVER_STYLE = "voxel-topic-bg-1";
+
 const STYLE =
   "Voxel art render in MagicaVoxel style: a single low-resolution 8-bit pixel-art sprite " +
   "(about 20x20 pixels) extruded into 3D, built entirely from identical chunky cubes, the cube " +
@@ -207,7 +211,7 @@ async function main() {
   for (const file of fs.readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
     const p = path.join(DIR, file);
     const r: Research = JSON.parse(fs.readFileSync(p, "utf8"));
-    if (only?.length ? !only.includes(r.slug) : r.cover) continue;
+    if (only?.length ? !only.includes(r.slug) : r.cover && r.coverStyle === COVER_STYLE) continue;
 
     console.log(`Рисую превью: ${r.slug}`);
     let out: Buffer;
@@ -229,6 +233,7 @@ async function main() {
     }
     r.cover = `/research/${name}`;
     r.coverSize = [W, H];
+    r.coverStyle = COVER_STYLE;
     fs.writeFileSync(p, JSON.stringify(r, null, 2) + "\n");
   }
   if (failed) console.warn(`Не получилось превью: ${failed}`);

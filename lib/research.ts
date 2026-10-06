@@ -99,6 +99,9 @@ export type Research = {
   readingMinutes: number;
   cover?: string;
   coverSize?: [number, number];
+  /** Версия стиля превью (COVER_STYLE в scripts/research-cover.ts). Другая —
+   *  превью перерисуется само при следующей синхронизации. */
+  coverStyle?: string;
   /** Промпт для превью (пиксельная матовая изометрия), см. scripts/research-cover.ts. */
   coverPrompt: string;
   blocks: ResearchBlock[];
@@ -106,7 +109,12 @@ export type Research = {
    *  сайте (date). Нужен, чтобы запас исследований уходил в канал по одному. */
   telegramAt?: string;
   /** Заполняется после публикации в Telegram-канал. */
-  telegram?: { messageId: number; postedAt: string };
+  telegram?: {
+    messageId: number;
+    postedAt: string;
+    /** С каким превью пост сейчас в канале; сменилось превью — пост обновится. */
+    cover?: string;
+  };
 };
 
 const DIR = path.join(process.cwd(), "content", "research");
