@@ -26,6 +26,29 @@ export const TOPICS: Record<ResearchTopic, string> = {
   b2b: "B2B",
 };
 
+/** Фон превью по теме — матовые тона с доски-референса (кассеты). Запасной
+ *  тон для новой темы — сливочно-жёлтый #f5d37f. */
+/** Как назвать цвет фона модели превью (по-английски, см. research-cover). */
+export const TOPIC_COLOR_NAMES: Record<ResearchTopic, string> = {
+  interfaces: "muted warm orange",
+  ai: "dusty mauve grey",
+  brain: "deep muted aubergine purple",
+  market: "warm muted golden yellow",
+  gadgets: "muted olive taupe brown",
+  cars: "muted terracotta",
+  b2b: "muted sandy beige",
+};
+
+export const TOPIC_COLORS: Record<ResearchTopic, string> = {
+  interfaces: "#df8f48",
+  ai: "#7f7277",
+  brain: "#452243",
+  market: "#e6ba6b",
+  gadgets: "#937b5d",
+  cars: "#c97a4d",
+  b2b: "#a98d70",
+};
+
 export type ResearchBlock =
   /** Абзацы. Поддерживается **жирный**, *курсив*, [ссылка](url) и списки «- ». */
   | { type: "text"; md: string }

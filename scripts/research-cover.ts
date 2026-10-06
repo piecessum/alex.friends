@@ -14,7 +14,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import type { Research } from "@/lib/research";
+import { TOPIC_COLOR_NAMES, TOPIC_COLORS, type Research } from "@/lib/research";
 
 const DIR = path.join(process.cwd(), "content", "research");
 const IMG_DIR = path.join(process.cwd(), "public", "research");
@@ -25,15 +25,15 @@ const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 // Общий стиль всех превью — меняется здесь, а не в каждом исследовании.
 // Референс — доска «8 бит» в Pinterest: один предмет, собранный из кубиков
 // (8-битный спрайт, выдавленный в объём), с чёрной обводкой, яркие плоские
-// цвета, светло-серый фон.
+// цвета. Фон — матовый цвет темы (TOPIC_COLORS, тона с референса-кассет).
 const STYLE =
   "Voxel art render in MagicaVoxel style: a single low-resolution 8-bit pixel-art sprite " +
   "(about 20x20 pixels) extruded into 3D, built entirely from identical chunky cubes, the cube " +
   "grid clearly visible on every face, blocky stepped edges like Lego, a thick black voxel " +
   "outline around the silhouette, bright flat saturated colors with simple cel shading, soft " +
   "studio light, three-quarter isometric angle, large and centered, filling most of the frame, " +
-  "on a plain solid light grey background with no floor and no scenery. No smooth surfaces, no " +
-  "text, no letters, no numbers. The object: ";
+  "on a plain solid flat matte {BG} background with no floor and no scenery, object colors " +
+  "contrasting with the background. No smooth surfaces, no text, no letters, no numbers. The object: ";
 
 // Секреты часто вставляют с переносом строки или вместе со словом «Bearer» —
 // чистим, иначе fetch падает на невалидном заголовке.
@@ -94,8 +94,8 @@ async function generateOpenAI(prompt: string): Promise<Buffer> {
   return Buffer.from(data.data[0].b64_json, "base64");
 }
 
-async function generate(scene: string): Promise<Buffer> {
-  const prompt = STYLE + scene;
+async function generate(scene: string, bg: string): Promise<Buffer> {
+  const prompt = STYLE.replace("{BG}", bg) + scene;
   if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN) {
     try {
       return await generateCloudflare(prompt);
@@ -132,8 +132,72 @@ async function toWide(input: Buffer): Promise<Buffer> {
     .toBuffer();
 }
 
-async function render(input: Buffer): Promise<Buffer> {
-  return sharp(await toWide(input)).webp({ quality: 90 }).toBuffer();
+/**
+ * Выравнивает фон до точного цвета темы. Модель уже рисует на фоне этого
+ * тона, но оттенок у неё «плавает» — фон заливкой от краёв находим по тону
+ * (хроматичности, без учёта яркости), поэтому тени (тот же тон, темнее)
+ * попадают в фон, а детали предмета другого тона — нет. Тени сохраняются:
+ * цвет темы умножается на то, насколько пиксель темнее фона.
+ */
+async function recolorBackground(input: Buffer, hex: string): Promise<Buffer> {
+  const { data, info } = await sharp(input).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const { width: w, height: h } = info;
+  const target = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  const lum = (i: number) => 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+  const chroma = (i: number) => {
+    const sum = data[i] + data[i + 1] + data[i + 2] || 1;
+    return [data[i] / sum, data[i + 1] / sum, data[i + 2] / sum];
+  };
+
+  // Цвет фона — медиана рамки картинки (по каждому каналу).
+  const ring: number[] = [];
+  for (let x = 0; x < w; x += 4) ring.push(x * 3, ((h - 1) * w + x) * 3);
+  for (let y = 0; y < h; y += 4) ring.push(y * w * 3, (y * w + w - 1) * 3);
+  const median = (arr: number[]) => arr.sort((a, b) => a - b)[arr.length >> 1];
+  const bgRgb = [0, 1, 2].map((c) => median(ring.map((i) => data[i + c])));
+  const bgLum = 0.299 * bgRgb[0] + 0.587 * bgRgb[1] + 0.114 * bgRgb[2] || 1;
+  const bgSum = bgRgb[0] + bgRgb[1] + bgRgb[2] || 1;
+  const bgChroma = bgRgb.map((v) => v / bgSum);
+
+  const isBg = (p: number) => {
+    const i = p * 3;
+    const ratio = lum(i) / bgLum;
+    if (ratio <= 0.3 || ratio >= 1.25) return false;
+    const c = chroma(i);
+    const dist = Math.abs(c[0] - bgChroma[0]) + Math.abs(c[1] - bgChroma[1]) + Math.abs(c[2] - bgChroma[2]);
+    return dist < 0.06;
+  };
+
+  const seen = new Uint8Array(w * h);
+  const queue = new Int32Array(w * h);
+  let head = 0, tail = 0;
+  const push = (p: number) => {
+    if (!seen[p] && isBg(p)) { seen[p] = 1; queue[tail++] = p; }
+  };
+  for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
+  for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
+  while (head < tail) {
+    const p = queue[head++];
+    const x = p % w, y = (p / w) | 0;
+    if (x > 0) push(p - 1);
+    if (x < w - 1) push(p + 1);
+    if (y > 0) push(p - w);
+    if (y < h - 1) push(p + w);
+  }
+
+  const out = Buffer.from(data);
+  for (let p = 0; p < w * h; p++) {
+    if (!seen[p]) continue;
+    const i = p * 3;
+    const ratio = Math.min(lum(i) / bgLum, 1);
+    for (let c = 0; c < 3; c++) out[i + c] = Math.round(target[c] * ratio);
+  }
+  return sharp(out, { raw: { width: w, height: h, channels: 3 } }).png().toBuffer();
+}
+
+async function render(input: Buffer, topicColor: string): Promise<Buffer> {
+  const wide = await toWide(input);
+  return sharp(await recolorBackground(wide, topicColor)).webp({ quality: 90 }).toBuffer();
 }
 
 async function main() {
@@ -148,7 +212,8 @@ async function main() {
     console.log(`Рисую превью: ${r.slug}`);
     let out: Buffer;
     try {
-      out = await render(await generate(r.coverPrompt));
+      const bg = `${TOPIC_COLOR_NAMES[r.topic]} (${TOPIC_COLORS[r.topic]})`;
+      out = await render(await generate(r.coverPrompt, bg), TOPIC_COLORS[r.topic]);
     } catch (e) {
       // Одно неудачное превью не должно ронять остальные; без превью пост
       // в канал не уйдёт и будет перерисован при следующем запуске.
