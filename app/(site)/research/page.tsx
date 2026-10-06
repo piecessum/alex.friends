@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { getAllResearch, TOPICS } from "@/lib/research";
+import { getAllResearch, TOPIC_COLORS, TOPICS } from "@/lib/research";
 import { formatRuDate } from "@/lib/utils";
 
 export const metadata = {
@@ -40,10 +40,16 @@ export default function ResearchPage() {
                   height={r.coverSize?.[1]}
                   loading={i < 4 ? "eager" : "lazy"}
                   decoding="async"
-                  className="aspect-[3/2] w-full bg-neutral-200/60 object-cover dark:bg-neutral-800/60"
+                  // Пока превью грузится — фон цвета темы, как у самого превью.
+                  style={{ background: TOPIC_COLORS[r.topic] }}
+                  className="aspect-[3/2] w-full object-cover"
                 />
               ) : (
-                <div className="flex aspect-[3/2] w-full items-end bg-gradient-to-br from-indigo-500/20 via-indigo-500/5 to-transparent p-5 text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                // Превью ещё не нарисовано — плашка цвета темы с её названием.
+                <div
+                  style={{ background: TOPIC_COLORS[r.topic] }}
+                  className="flex aspect-[3/2] w-full items-end p-5 text-sm font-medium text-white/90"
+                >
                   {TOPICS[r.topic]}
                 </div>
               )}

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ResearchBlocks } from "@/components/research-blocks";
-import { getAllResearch, getResearch, TOPICS } from "@/lib/research";
+import { getAllResearch, getResearch, TOPIC_COLORS, TOPICS } from "@/lib/research";
 import { formatRuDate } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -57,7 +57,8 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
           width={r.coverSize?.[0]}
           height={r.coverSize?.[1]}
           fetchPriority="high"
-          className="mt-8 aspect-[3/2] w-full rounded-2xl bg-neutral-200/60 object-cover dark:bg-neutral-800/60"
+          style={{ background: TOPIC_COLORS[r.topic] }}
+          className="mt-8 aspect-[3/2] w-full rounded-2xl object-cover"
         />
       )}
 
