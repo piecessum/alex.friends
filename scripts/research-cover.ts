@@ -4,7 +4,7 @@
 // public/research/<slug>-<хэш>.webp и прописывает cover/coverSize в JSON.
 // Хэш в имени — чтобы перерисованное превью не залипало в кэше браузера/CDN.
 //
-// Чем рисуем — бесплатно, Cloudflare Workers AI (FLUX.1 schnell, бесплатный
+// Чем рисуем — бесплатно, Cloudflare Workers AI (Leonardo Lucid Origin, бесплатный
 // лимит 10 000 «нейронов» в день — это десятки картинок, нам нужна одна):
 // нужны CLOUDFLARE_ACCOUNT_ID и CLOUDFLARE_API_TOKEN. Если вместо них задан
 // OPENAI_API_KEY — рисует OpenAI gpt-image (платно, но чуть лучше).
@@ -18,7 +18,7 @@ import type { Research } from "@/lib/research";
 
 const DIR = path.join(process.cwd(), "content", "research");
 const IMG_DIR = path.join(process.cwd(), "public", "research");
-const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/black-forest-labs/flux-1-schnell";
+const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/leonardo/lucid-origin";
 const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 
 // Общий стиль всех превью — меняется здесь, а не в каждом исследовании.
