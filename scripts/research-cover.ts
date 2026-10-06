@@ -1,6 +1,6 @@
 // Превью исследований: npm run research:cover [slug,slug — перерисовать]
 // Для каждого исследования без обложки рисует картинку по его coverPrompt в
-// едином стиле раздела, пикселизует (см. pixelate), кладёт в
+// едином стиле раздела (воксельный пиксель-арт, см. STYLE), кладёт в
 // public/research/<slug>-<хэш>.webp и прописывает cover/coverSize в JSON.
 // Хэш в имени — чтобы перерисованное превью не залипало в кэше браузера/CDN.
 //
@@ -22,11 +22,15 @@ const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/black-forest-labs/fl
 const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 
 // Общий стиль всех превью — меняется здесь, а не в каждом исследовании.
+// Референс — доска «8 бит» в Pinterest: один предмет, собранный из кубиков
+// (8-битный спрайт, выдавленный в объём), с чёрной обводкой, яркие плоские
+// цвета, светло-серый фон.
 const STYLE =
-  "Isometric 16-bit pixel art illustration with a soft matte finish: diffused even lighting, " +
-  "no glossy highlights, gentle dithering, crisp pixel edges, muted pastel palette with " +
-  "indigo and warm accents, plain soft neutral background, small cozy diorama composition, " +
-  "centered, the whole diorama fully inside the frame. Absolutely no text, letters, numbers or logos. Scene: ";
+  "A single 3D voxel icon: an 8-bit pixel-art sprite extruded into chunky cubes, every pixel " +
+  "is a visible small cube, thick black voxel outline around the shape, bright flat saturated " +
+  "colors, soft even studio lighting, slight three-quarter isometric angle, the object centered " +
+  "and fully inside the frame, isolated on a plain solid light grey background, no ground, no " +
+  "scenery, no extra objects. Absolutely no text, letters or numbers. The object: ";
 
 // Секреты часто вставляют с переносом строки или вместе со словом «Bearer» —
 // чистим, иначе fetch падает на невалидном заголовке.
@@ -91,14 +95,9 @@ async function generate(scene: string): Promise<Buffer> {
   throw new Error("Нет ключей: задай CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN (бесплатно) или OPENAI_API_KEY");
 }
 
-// Превью 3:2 (см. toWide). Пиксели делаем обработкой, а не надеждой на промпт: модель
-// рисует гладкую изометрию, мы уменьшаем её в PX раз, сводим к ограниченной
-// палитре и увеличиваем обратно без сглаживания — честные квадратные пиксели
-// и «матовые» приглушённые цвета.
+// Превью 3:2 (см. toWide).
 const W = 1024;
 const H = 684;
-const PX = 4;
-const COLOURS = 48;
 
 /** Квадрат модели → 3:2: сцена целиком, по бокам — цвет фона
  *  (фон однотонный, берём из угла картинки). */
@@ -118,13 +117,8 @@ async function toWide(input: Buffer): Promise<Buffer> {
     .toBuffer();
 }
 
-async function pixelate(input: Buffer): Promise<Buffer> {
-  const base = await toWide(input);
-  const small = await sharp(base)
-    .resize(W / PX, H / PX, { kernel: "lanczos3" })
-    .png({ palette: true, colours: COLOURS, dither: 0.6 })
-    .toBuffer();
-  return sharp(small).resize(W, H, { kernel: "nearest" }).webp({ quality: 90 }).toBuffer();
+async function render(input: Buffer): Promise<Buffer> {
+  return sharp(await toWide(input)).webp({ quality: 90 }).toBuffer();
 }
 
 async function main() {
@@ -136,7 +130,7 @@ async function main() {
     if (only?.length ? !only.includes(r.slug) : r.cover) continue;
 
     console.log(`Рисую превью: ${r.slug}`);
-    const out = await pixelate(await generate(r.coverPrompt));
+    const out = await render(await generate(r.coverPrompt));
     const name = `${r.slug}-${crypto.createHash("sha1").update(out).digest("hex").slice(0, 8)}.webp`;
     fs.writeFileSync(path.join(IMG_DIR, name), out);
     // Старое превью этого исследования больше не нужно.
