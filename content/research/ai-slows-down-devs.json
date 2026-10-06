@@ -113,5 +113,9 @@
   "coverSize": [
     1024,
     684
-  ]
+  ],
+  "telegram": {
+    "messageId": 9,
+    "postedAt": "2026-10-06T17:59:13.200Z"
+  }
 }
