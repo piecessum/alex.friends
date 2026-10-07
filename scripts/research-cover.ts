@@ -1,4 +1,8 @@
 // Превью исследований: npm run research:cover [slug,slug — перерисовать]
+//
+// Главный путь — пиксельный спрайт из JSON (coverSprite), выдавленный в
+// кубики кодом (lib/voxel-cover.ts): бесплатно, без сети и лимитов. Если
+// спрайта нет — запасной путь через нейросеть по coverPrompt (ниже).
 // Для каждого исследования без обложки (или со старым стилем) рисует картинку по его coverPrompt в
 // едином стиле раздела (воксельный пиксель-арт, см. STYLE), кладёт в
 // public/research/<slug>-<хэш>.webp и прописывает cover/coverSize в JSON.
@@ -15,6 +19,7 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import { TOPIC_COLOR_NAMES, TOPIC_COLORS, type Research } from "@/lib/research";
+import { renderVoxelCover } from "@/lib/voxel-cover";
 
 const DIR = path.join(process.cwd(), "content", "research");
 const IMG_DIR = path.join(process.cwd(), "public", "research");
@@ -28,7 +33,7 @@ const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 // цвета. Фон — матовый цвет темы (TOPIC_COLORS, тона с референса-кассет).
 // Меняешь стиль (промпт, фон, обработку) — подними версию: все превью
 // перерисуются сами, а посты в канале обновятся (см. research-publish).
-const COVER_STYLE = "voxel-topic-bg-1";
+const COVER_STYLE = "voxel-sprite-1";
 
 const STYLE =
   "Voxel art render in MagicaVoxel style: a single low-resolution 8-bit pixel-art sprite " +
@@ -226,8 +231,14 @@ async function main() {
     console.log(`Рисую превью: ${r.slug}`);
     let out: Buffer;
     try {
-      const bg = `${TOPIC_COLOR_NAMES[r.topic]} (${TOPIC_COLORS[r.topic]})`;
-      out = await render(await generate(r.coverPrompt, bg), TOPIC_COLORS[r.topic]);
+      if (r.coverSprite) {
+        // Главный путь: спрайт → кубики кодом. Бесплатно и без сети.
+        out = await renderVoxelCover(r.coverSprite, TOPIC_COLORS[r.topic], W, H);
+      } else {
+        if (!r.coverPrompt) throw new Error("нет ни coverSprite, ни coverPrompt");
+        const bg = `${TOPIC_COLOR_NAMES[r.topic]} (${TOPIC_COLORS[r.topic]})`;
+        out = await render(await generate(r.coverPrompt, bg), TOPIC_COLORS[r.topic]);
+      }
     } catch (e) {
       // Одно неудачное превью не должно ронять остальные; без превью пост
       // в канал не уйдёт и будет перерисован при следующем запуске.

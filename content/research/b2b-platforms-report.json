@@ -250,7 +250,7 @@
       "md": "Gartner прогнозирует, что к 2028 году 90% B2B-закупок будут вести AI-агенты, Forrester — что 66% B2B-покупателей ждут полной персонализации. Отсюда главный тренд 2026 года по выводам отчёта: AI-функции, guided selling и персонализация становятся тем, чем платформы будут отличаться друг от друга."
     }
   ],
-  "cover": "/research/b2b-platforms-report-ccf58227.webp",
+  "cover": "/research/b2b-platforms-report-f9436b61.webp",
   "coverSize": [
     1024,
     684
@@ -259,5 +259,28 @@
     "messageId": 3,
     "postedAt": "2026-10-05T19:15:09.565Z",
     "cover": "/research/b2b-platforms-report-ccf58227.webp"
-  }
+  },
+  "coverSprite": {
+    "rows": [
+      "rr..............",
+      ".rr.............",
+      "..rrrrrrrrrrrrr.",
+      "..rwlwlwlwlwlwr.",
+      "..rlwlwlwlwlwlr.",
+      "...rwlwlwlwlwr..",
+      "...rlwlwlwlwlr..",
+      "....rwlwlwlwr...",
+      "....rrrrrrrrr...",
+      "....r.......r...",
+      "...ddd.....ddd..",
+      "...ddd.....ddd.."
+    ],
+    "palette": {
+      "r": "#e34948",
+      "w": "#f4f4f6",
+      "l": "#c3c6cc",
+      "d": "#3a3f47"
+    }
+  },
+  "coverStyle": "voxel-sprite-1"
 }

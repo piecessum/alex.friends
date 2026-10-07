@@ -129,7 +129,7 @@
       "text": "Отсюда скепсис авторов к нейроинтерфейсам вроде Neuralink, которые обещают ускорить общение с компьютером. Если узкое место — сама мысль, а не пальцы, то провод в голове скорость не поднимет: больше 10 бит в секунду думать всё равно не выйдет."
     }
   ],
-  "cover": "/research/brain-10-bits-c2d8ddff.webp",
+  "cover": "/research/brain-10-bits-5fce6ef8.webp",
   "coverSize": [
     1024,
     684
@@ -138,5 +138,27 @@
     "messageId": 10,
     "postedAt": "2026-10-07T05:18:57.065Z",
     "cover": "/research/brain-10-bits-c2d8ddff.webp"
-  }
+  },
+  "coverSprite": {
+    "rows": [
+      ".....pppppp.....",
+      "...ppPpppPppp...",
+      "..pPppPpppPpPp..",
+      ".pppPpppPPpppPp.",
+      ".pPpppPppppPpppp",
+      "pppPPpppPpppPppp",
+      "pPpppPppppPPpppp",
+      "ppPpppPPppppPpp.",
+      ".pppPpppPpppppp.",
+      "..ppppppppppPp..",
+      "....pppppp.MMM..",
+      "...........MM..."
+    ],
+    "palette": {
+      "p": "#f29bb2",
+      "P": "#d96c8a",
+      "M": "#b85570"
+    }
+  },
+  "coverStyle": "voxel-sprite-1"
 }

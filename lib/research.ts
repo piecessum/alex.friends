@@ -6,6 +6,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import type { Sprite } from "@/lib/voxel-cover";
 
 export type ResearchTopic =
   | "interfaces"
@@ -102,8 +103,11 @@ export type Research = {
   /** Версия стиля превью (COVER_STYLE в scripts/research-cover.ts). Другая —
    *  превью перерисуется само при следующей синхронизации. */
   coverStyle?: string;
-  /** Промпт для превью (пиксельная матовая изометрия), см. scripts/research-cover.ts. */
-  coverPrompt: string;
+  /** Пиксельный спрайт предмета для превью — рисуется кубиками кодом
+   *  (lib/voxel-cover.ts), без нейросетей. Главный способ. */
+  coverSprite?: Sprite;
+  /** Промпт для превью нейросетью — запасной путь, если спрайта нет. */
+  coverPrompt?: string;
   blocks: ResearchBlock[];
   /** Не постить в Telegram-канал раньше этого времени (ISO). В канал всё
    *  равно уходит не больше одного поста в день — см. research-publish. */
