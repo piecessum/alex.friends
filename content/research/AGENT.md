@@ -83,7 +83,8 @@ Group, Baymard, отраслевые отчёты, «Честный знак»).
   конкретный узнаваемый предмет** по смыслу статьи, как для предметной
   фотографии — 3–12 слов: `"a glass laboratory funnel"`, `"a single large
   round red push button on a square metal base"`, `"a pile of old broken
-  mobile phones"`. Без людей и лиц, без текста, без сцен и абстракций. Стиль
+  mobile phones"`, `"a human hand pressing a single big round push button with
+  the index finger"`. Руки можно, лица нельзя; без текста, сцен и абстракций. Стиль
   газетного коллажа скрипт добавит сам (`lib/collage-cover.ts`);
 - `coverSprite` — запасное превью на случай, если нейросеть недоступна:
   пиксельный спрайт того же предмета. `rows` — строки **одинаковой длины**

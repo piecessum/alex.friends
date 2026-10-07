@@ -5,8 +5,8 @@
 // растр точками, вырезку, матовый фон цвета темы, плашку и рваную бумагу
 // делает код — поэтому стиль стабилен от картинки к картинке.
 //
-// Нейросеть — Cloudflare Workers AI, FLUX.1 schnell: ~100 «нейронов» за
-// картинку при бесплатных 10 000 в день. Нужны CLOUDFLARE_ACCOUNT_ID и
+// Нейросеть — Cloudflare Workers AI (Lucid Origin, запасная FLUX schnell),
+// бесплатно в пределах 10 000 «нейронов» в день. Нужны CLOUDFLARE_ACCOUNT_ID и
 // CLOUDFLARE_API_TOKEN (запасной вариант — OPENAI_API_KEY).
 //
 // Если нейросеть недоступна (лимит, сбой), исследование без превью вовсе
@@ -31,7 +31,11 @@ const H = 684;
 const COVER_STYLE = "collage-3";
 const FALLBACK_STYLE = "voxel-fallback";
 
-const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/black-forest-labs/flux-1-schnell";
+// Объект рисует Leonardo Lucid Origin — точнее следует промпту (~2 000
+// «нейронов» за картинку 768×768: на пост в день хватает). Кончился лимит —
+// запасная FLUX schnell (~100 нейронов, но путает предметы чаще).
+const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/leonardo/lucid-origin";
+const CF_FALLBACK = "@cf/black-forest-labs/flux-1-schnell";
 const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 
 // Что просим у модели: один объект, ч/б, на белом — дальше всё делает код.
@@ -39,21 +43,21 @@ const SUBJECT =
   "Black and white studio product photograph of one clearly recognizable object, the whole " +
   "object fully in frame and centered, sharp focus, even soft lighting with clear midtones, " +
   "on a seamless pure white background, no shadows on the background, nothing else in the " +
-  "frame, no text, no letters, no logos, no human faces. The object: ";
+  "frame, no text, no letters, no logos, no human faces. Hands are allowed. The object: ";
 
 // Секреты часто вставляют с переносом строки или вместе со словом «Bearer».
 const clean = (v: string | undefined) => (v ?? "").trim().replace(/^Bearer\s+/i, "").trim();
 
-async function generateCloudflare(prompt: string): Promise<Buffer> {
+async function generateCloudflare(prompt: string, model = CF_MODEL): Promise<Buffer> {
   const account = clean(process.env.CLOUDFLARE_ACCOUNT_ID);
   const token = clean(process.env.CLOUDFLARE_API_TOKEN);
   const res = await fetch(
-    `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${CF_MODEL}`,
+    `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${model}`,
     {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
       body: JSON.stringify(
-        CF_MODEL.includes("leonardo") ? { prompt, width: 768, height: 768 } : { prompt, steps: 8 }
+        model.includes("leonardo") ? { prompt, width: 768, height: 768 } : { prompt, steps: 8 }
       ),
     }
   );
@@ -77,7 +81,15 @@ async function generateOpenAI(prompt: string): Promise<Buffer> {
 
 async function generateSubject(scene: string): Promise<Buffer> {
   const prompt = SUBJECT + scene;
-  if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN) return generateCloudflare(prompt);
+  if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN) {
+    try {
+      return await generateCloudflare(prompt);
+    } catch (e) {
+      if (CF_MODEL === CF_FALLBACK) throw e;
+      console.warn(`  ! ${CF_MODEL}: ${String(e).slice(0, 120)} — пробую ${CF_FALLBACK}`);
+      return generateCloudflare(prompt, CF_FALLBACK);
+    }
+  }
   if (process.env.OPENAI_API_KEY) return generateOpenAI(prompt);
   throw new Error("нет ключей нейросети (CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN или OPENAI_API_KEY)");
 }
