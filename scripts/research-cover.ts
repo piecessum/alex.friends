@@ -28,7 +28,7 @@ const H = 684;
 
 // Меняешь стиль (промпт, обработку) — подними версию: все превью
 // перерисуются сами, а посты в канале обновятся (см. research-publish).
-const COVER_STYLE = "collage-2";
+const COVER_STYLE = "collage-3";
 const FALLBACK_STYLE = "voxel-fallback";
 
 const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/black-forest-labs/flux-1-schnell";

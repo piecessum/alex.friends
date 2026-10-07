@@ -32,7 +32,10 @@ function rgb(hex: string): [number, number, number] {
  * темноте. Возвращает RGBA-картинку объекта на прозрачном фоне.
  */
 async function halftoneCutout(input: Buffer, size: number): Promise<Buffer> {
-  const { data, info } = await sharp(input)
+  // Сначала срезаем пустые поля вокруг предмета (модель рисует его с разными
+  // отступами) — иначе на превью он то крупный, то крошечный.
+  const trimmed = await sharp(input).grayscale().trim({ threshold: 30 }).toBuffer();
+  const { data, info } = await sharp(trimmed)
     .resize(size, size, { fit: "inside" })
     .grayscale()
     // Мягкое усиление контраста вместо normalise: детали в полутонах остаются.
@@ -148,12 +151,12 @@ export async function renderCollageCover(
   <rect width="100%" height="100%" fill="${background}"/>${shapes.join("")}</svg>`;
 
   // Объект: растр точек, с лёгкой тенью вырезки, по центру композиции.
-  const cut = await halftoneCutout(subject, Math.round(height * 0.92));
+  const cut = await halftoneCutout(subject, Math.round(height * 0.8));
   const meta = await sharp(cut).metadata();
   const cw = meta.width ?? 0, ch = meta.height ?? 0;
   const left = Math.round(Math.min(Math.max(cx - cw / 2, 0), width - cw));
-  // Объект «стоит» на нижнем крае, как вырезка, уходящая за край кадра.
-  const top = Math.max(0, height - ch);
+  // Объект по центру по вертикали, чуть ниже середины.
+  const top = Math.max(0, Math.min(height - ch, Math.round((height - ch) * 0.6)));
   const shadow = await sharp(cut)
     .ensureAlpha()
     .linear([0, 0, 0, 0.35], [0, 0, 0, 0])
