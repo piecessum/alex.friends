@@ -12,7 +12,7 @@
     "year": 2026
   },
   "readingMinutes": 4,
-  "coverPrompt": "a shopping cart",
+  "coverPrompt": "an old metal supermarket shopping cart",
   "blocks": [
     {
       "type": "text",

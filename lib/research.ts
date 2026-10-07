@@ -20,7 +20,7 @@ export type ResearchTopic =
 export const TOPICS: Record<ResearchTopic, string> = {
   interfaces: "Интерфейсы",
   ai: "Нейросети",
-  brain: "Мозг",
+  brain: "Психология",
   market: "Рынок",
   gadgets: "Гаджеты",
   cars: "Автомобили",
@@ -48,6 +48,17 @@ export const TOPIC_COLORS: Record<ResearchTopic, string> = {
   gadgets: "#937b5d",
   cars: "#c97a4d",
   b2b: "#a98d70",
+};
+
+/** Второй цвет коллажа (плашка за объектом) — из той же палитры, контрастный к фону. */
+export const TOPIC_ACCENTS: Record<ResearchTopic, string> = {
+  interfaces: "#452243",
+  ai: "#e6ba6b",
+  brain: "#df8f48",
+  market: "#c97a4d",
+  gadgets: "#f5d37f",
+  cars: "#f5d37f",
+  b2b: "#452243",
 };
 
 export type ResearchBlock =
@@ -103,10 +114,11 @@ export type Research = {
   /** Версия стиля превью (COVER_STYLE в scripts/research-cover.ts). Другая —
    *  превью перерисуется само при следующей синхронизации. */
   coverStyle?: string;
-  /** Пиксельный спрайт предмета для превью — рисуется кубиками кодом
-   *  (lib/voxel-cover.ts), без нейросетей. Главный способ. */
+  /** Пиксельный спрайт — запасное превью кубиками (lib/voxel-cover.ts),
+   *  если нейросеть недоступна. */
   coverSprite?: Sprite;
-  /** Промпт для превью нейросетью — запасной путь, если спрайта нет. */
+  /** Что изображено на превью-коллаже (по-английски): визуальная метафора
+   *  статьи, без лиц и текста. Главный способ, см. scripts/research-cover.ts. */
   coverPrompt?: string;
   blocks: ResearchBlock[];
   /** Не постить в Telegram-канал раньше этого времени (ISO). В канал всё

@@ -12,7 +12,7 @@
     "year": 2026
   },
   "readingMinutes": 4,
-  "coverPrompt": "a clipboard with a checklist",
+  "coverPrompt": "two hands holding a clipboard with a paper checklist",
   "blocks": [
     {
       "type": "text",

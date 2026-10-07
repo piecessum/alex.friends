@@ -12,7 +12,7 @@
     "year": 2025
   },
   "readingMinutes": 4,
-  "coverPrompt": "a green snail whose shell is a computer microchip",
+  "coverPrompt": "a snail slowly crawling across a vintage computer keyboard",
   "blocks": [
     {
       "type": "text",
