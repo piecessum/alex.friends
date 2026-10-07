@@ -12,7 +12,7 @@
     "year": 2025
   },
   "readingMinutes": 4,
-  "coverPrompt": "a snail slowly crawling across a vintage computer keyboard",
+  "coverPrompt": "a vintage computer keyboard with a garden snail sitting on the keys",
   "blocks": [
     {
       "type": "text",

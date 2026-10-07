@@ -65,7 +65,7 @@ jobs:
           git add content/research public/research
           if ! git diff --cached --quiet; then
             git commit -m "research: превью"
-            git pull --rebase && git push
+            git pull --rebase -X theirs && git push || (sleep 5 && git pull --rebase -X theirs && git push)
           fi
 
       - name: Ждём деплой новых исследований
@@ -102,5 +102,5 @@ jobs:
           git add content/research
           if ! git diff --cached --quiet; then
             git commit -m "research: опубликовано в канал"
-            git pull --rebase && git push
+            git pull --rebase -X theirs && git push || (sleep 5 && git pull --rebase -X theirs && git push)
           fi

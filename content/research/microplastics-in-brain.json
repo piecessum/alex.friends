@@ -11,7 +11,7 @@
     "year": 2025
   },
   "readingMinutes": 4,
-  "coverPrompt": "an anatomical plaster model of a human brain covered with small sharp plastic fragments",
+  "coverPrompt": "an anatomical model of a human brain",
   "blocks": [
     {
       "type": "text",

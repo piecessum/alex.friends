@@ -28,7 +28,7 @@ const H = 684;
 
 // Меняешь стиль (промпт, обработку) — подними версию: все превью
 // перерисуются сами, а посты в канале обновятся (см. research-publish).
-const COVER_STYLE = "collage-1";
+const COVER_STYLE = "collage-2";
 const FALLBACK_STYLE = "voxel-fallback";
 
 const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/black-forest-labs/flux-1-schnell";
@@ -36,9 +36,10 @@ const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 
 // Что просим у модели: один объект, ч/б, на белом — дальше всё делает код.
 const SUBJECT =
-  "Black and white vintage photograph, high contrast, dramatic studio lighting, a single " +
-  "isolated object cut out on a plain pure white background, nothing else in the frame, " +
-  "no text, no letters, no logos, no visible human faces. The object: ";
+  "Black and white studio product photograph of one clearly recognizable object, the whole " +
+  "object fully in frame and centered, sharp focus, even soft lighting with clear midtones, " +
+  "on a seamless pure white background, no shadows on the background, nothing else in the " +
+  "frame, no text, no letters, no logos, no human faces. The object: ";
 
 // Секреты часто вставляют с переносом строки или вместе со словом «Bearer».
 const clean = (v: string | undefined) => (v ?? "").trim().replace(/^Bearer\s+/i, "").trim();

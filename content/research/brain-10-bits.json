@@ -11,7 +11,7 @@
     "year": 2024
   },
   "readingMinutes": 4,
-  "coverPrompt": "a narrow glass funnel with a huge stream of tiny metal balls squeezing through its thin neck",
+  "coverPrompt": "a glass laboratory funnel",
   "blocks": [
     {
       "type": "text",

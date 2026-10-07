@@ -8,7 +8,7 @@ import sharp from "sharp";
 
 const PAPER = "#efe8da"; // цвет газетной бумаги для полосок
 const INK = [28, 27, 31]; // цвет «краски» точек
-const CELL = 7; // шаг растра, px
+const CELL = 5; // шаг растра, px — мельче, чтобы предмет читался
 
 /** Детерминированный ГПСЧ от строки — у каждого исследования своя композиция. */
 function rng(seed: string) {
@@ -35,7 +35,8 @@ async function halftoneCutout(input: Buffer, size: number): Promise<Buffer> {
   const { data, info } = await sharp(input)
     .resize(size, size, { fit: "inside" })
     .grayscale()
-    .normalise()
+    // Мягкое усиление контраста вместо normalise: детали в полутонах остаются.
+    .linear(1.25, -28)
     .raw()
     .toBuffer({ resolveWithObject: true });
   const { width: w, height: h } = info;
@@ -78,7 +79,7 @@ async function halftoneCutout(input: Buffer, size: number): Promise<Buffer> {
       }
       if (!n) continue;
       const dark = sum / n / 255;
-      const r = Math.sqrt(dark) * CELL * 0.72;
+      const r = Math.sqrt(dark) * CELL * 0.7;
       const mx = cx + CELL / 2, my = cy + CELL / 2;
       for (let y = cy; y < Math.min(cy + CELL, h); y++) {
         for (let x = cx; x < Math.min(cx + CELL, w); x++) {
