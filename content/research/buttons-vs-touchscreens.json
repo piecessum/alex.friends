@@ -123,7 +123,7 @@
       "text": "С 2026 года Euro NCAP снимает баллы безопасности, если поворотники, аварийка, дворники, сигнал и кнопка SOS спрятаны в сенсорный экран, — для них нужны физические кнопки. Без этого пять звёзд получить сильно сложнее, а в 2027–2028 требования ужесточат."
     }
   ],
-  "cover": "/research/buttons-vs-touchscreens-ffac2f0c.webp",
+  "cover": "/research/buttons-vs-touchscreens-27f00b4d.webp",
   "coverSize": [
     1024,
     684
@@ -148,5 +148,5 @@
       "G": "#5d646d"
     }
   },
-  "coverStyle": "voxel-sprite-1"
+  "coverStyle": "collage-1"
 }
