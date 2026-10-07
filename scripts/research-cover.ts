@@ -72,7 +72,10 @@ async function generateCloudflare(prompt: string, model = CF_MODEL): Promise<Buf
       // Leonardo умеют сразу в 3:2.
       body: JSON.stringify(
         model.includes("leonardo")
-          ? { prompt, width: 1536, height: 1024 }
+          // 768×512 и увеличение потом: Lucid тарифицируется за плитки 512×512,
+          // в 1536×1024 картинка съедала ~3 800 «нейронов» из 10 000 бесплатных
+          // в день. Воксели при увеличении не портятся.
+          ? { prompt, width: 768, height: 512 }
           : { prompt, steps: 8 }
       ),
     }
@@ -204,13 +207,20 @@ async function render(input: Buffer, topicColor: string): Promise<Buffer> {
   return sharp(await recolorBackground(wide, topicColor)).webp({ quality: 90 }).toBuffer();
 }
 
+const rank = (r: Research) => (!r.cover ? 0 : r.telegram ? 1 : 2);
+
 async function main() {
   const only = process.argv[2]?.split(",").filter(Boolean);
   fs.mkdirSync(IMG_DIR, { recursive: true });
   let failed = 0;
-  for (const file of fs.readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
-    const p = path.join(DIR, file);
-    const r: Research = JSON.parse(fs.readFileSync(p, "utf8"));
+  // Порядок: сначала без превью вовсе, потом уже вышедшие в канал, потом
+  // остальные — если бесплатный лимит кончится на середине, важное успеет.
+  const items = fs
+    .readdirSync(DIR)
+    .filter((f) => f.endsWith(".json"))
+    .map((file) => ({ p: path.join(DIR, file), r: JSON.parse(fs.readFileSync(path.join(DIR, file), "utf8")) as Research }))
+    .sort((a, b) => rank(a.r) - rank(b.r));
+  for (const { p, r } of items) {
     if (only?.length ? !only.includes(r.slug) : r.cover && r.coverStyle === COVER_STYLE) continue;
 
     console.log(`Рисую превью: ${r.slug}`);
@@ -223,6 +233,11 @@ async function main() {
       // в канал не уйдёт и будет перерисован при следующем запуске.
       console.warn(`  ! ${r.slug}: превью не получилось — ${e}`);
       failed++;
+      // Кончился дневной бесплатный лимит — остальные тоже не получатся.
+      if (/429|daily free allocation/.test(String(e))) {
+        console.warn("  ! лимит Cloudflare на сегодня исчерпан — остальное в следующий раз");
+        break;
+      }
       continue;
     }
     const name = `${r.slug}-${crypto.createHash("sha1").update(out).digest("hex").slice(0, 8)}.webp`;
