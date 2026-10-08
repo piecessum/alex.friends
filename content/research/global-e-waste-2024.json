@@ -226,10 +226,11 @@
       "g": "#8a929c"
     }
   },
-  "cover": "/research/global-e-waste-2024-722f661f.webp",
+  "cover": "/research/global-e-waste-2024-09fbaa8f.webp",
   "coverSize": [
     1024,
     684
   ],
-  "coverStyle": "collage-3"
+  "coverStyle": "collage-4",
+  "coverSubjectPrompt": "an old white iPhone with a shattered cracked screen, front view"
 }

@@ -101,7 +101,7 @@
       "md": "Вывод NTSB: цифровые приборы могут сделать полёты безопаснее — они дают пилоту больше информации и функций. Но пилотов нужно готовить к ним отдельно. По итогам исследования NTSB направил авиационным властям США рекомендации по обучению на стеклянных кабинах."
     }
   ],
-  "cover": "/research/glass-cockpit-ntsb-abfc42c3.webp",
+  "cover": "/research/glass-cockpit-ntsb-09a65e7d.webp",
   "coverSize": [
     1024,
     684
@@ -126,10 +126,11 @@
       "r": "#e34948"
     }
   },
-  "coverStyle": "collage-3",
+  "coverStyle": "collage-4",
   "telegram": {
     "messageId": 11,
     "postedAt": "2026-10-08T05:18:57.831Z",
     "cover": "/research/glass-cockpit-ntsb-abfc42c3.webp"
-  }
+  },
+  "coverSubjectPrompt": "a small red and white single-engine propeller airplane, full side view, the whole plane visible"
 }

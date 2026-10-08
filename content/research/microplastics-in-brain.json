@@ -211,10 +211,11 @@
       "g": "#6fd18a"
     }
   },
-  "cover": "/research/microplastics-in-brain-e672cf68.webp",
+  "cover": "/research/microplastics-in-brain-dcf73d4a.webp",
   "coverSize": [
     1024,
     684
   ],
-  "coverStyle": "collage-3"
+  "coverStyle": "collage-4",
+  "coverSubjectPrompt": "a pink anatomical model of a human brain, side view, the whole brain visible"
 }

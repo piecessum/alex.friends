@@ -109,7 +109,7 @@
       "md": "Авторы подчёркивают, что это узкий срез: опытные разработчики, крупные зрелые проекты, инструменты начала 2025 года. На новом проекте, в незнакомом коде или у новичков результат может быть другим, а модели с тех пор обновились."
     }
   ],
-  "cover": "/research/ai-slows-down-devs-5edf2938.webp",
+  "cover": "/research/ai-slows-down-devs-3b6561fd.webp",
   "coverSize": [
     1024,
     684
@@ -144,5 +144,6 @@
       "e": "#1c1b1f"
     }
   },
-  "coverStyle": "collage-3"
+  "coverStyle": "collage-4",
+  "coverSubjectPrompt": "a sleek modern silver laptop, open, the screen showing colorful lines of program code, three-quarter view"
 }
