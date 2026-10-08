@@ -133,6 +133,10 @@ export type Research = {
   };
 };
 
+/** Текущая версия стиля превью. Превью другой версии перерисуются сами,
+ *  а в канал исследование не уйдёт, пока превью не нового стиля. */
+export const COVER_STYLE = "collage-4";
+
 const DIR = path.join(process.cwd(), "content", "research");
 
 export function getAllResearch({ includeFuture = false } = {}): Research[] {

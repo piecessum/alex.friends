@@ -13,7 +13,7 @@ import "./load-env";
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import type { Research } from "@/lib/research";
+import { COVER_STYLE, type Research } from "@/lib/research";
 
 const DIR = path.join(process.cwd(), "content", "research");
 const SITE = process.env.SITE_URL || "https://alex-friends.vercel.app";
@@ -103,7 +103,8 @@ async function main() {
     ({ r }) => r.telegram && mskDay(new Date(r.telegram.postedAt).getTime()) === mskDay(now)
   );
   const queue = all
-    .filter(({ r }) => !r.telegram && r.cover && new Date(r.telegramAt ?? r.date).getTime() <= now)
+    // Превью старого стиля в канал не отправляем — ждём перерисовки.
+    .filter(({ r }) => !r.telegram && r.cover && r.coverStyle === COVER_STYLE && new Date(r.telegramAt ?? r.date).getTime() <= now)
     .sort((a, b) => (a.r.telegramAt ?? a.r.date).localeCompare(b.r.telegramAt ?? b.r.date));
   const due = postedToday || mskHour < POST_FROM_HOUR ? [] : queue.slice(0, 1);
   if (queue.length && !due.length) {

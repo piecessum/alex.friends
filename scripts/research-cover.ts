@@ -19,7 +19,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { renderCollageCover } from "@/lib/collage-cover";
 import { renderVoxelCover } from "@/lib/voxel-cover";
-import { TOPIC_ACCENTS, TOPIC_COLORS, type Research } from "@/lib/research";
+import { COVER_STYLE, TOPIC_ACCENTS, TOPIC_COLORS, type Research } from "@/lib/research";
 
 const DIR = path.join(process.cwd(), "content", "research");
 const IMG_DIR = path.join(process.cwd(), "public", "research");
@@ -28,7 +28,6 @@ const H = 684;
 
 // Меняешь стиль (промпт, обработку) — подними версию: все превью
 // перерисуются сами, а посты в канале обновятся (см. research-publish).
-const COVER_STYLE = "collage-3";
 const FALLBACK_STYLE = "voxel-fallback";
 
 // Объект рисует Leonardo Lucid Origin — точнее следует промпту (~2 000
