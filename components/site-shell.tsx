@@ -25,10 +25,10 @@ type Tab = {
 // Основные разделы — вертикальный рельс слева вверху.
 const tabs: Tab[] = [
   { label: "Пишу", icon: NotebookPen, href: "/notes", match: ["/notes", "/channel"] },
-  { label: "Пластинки", icon: Disc3, href: "/vinyl" },
   { label: "Исследования", icon: FlaskConical, href: "/research" },
   // Пины и фото — две вкладки одного раздела.
   { label: "Сохранёнки", icon: Pin, href: "/pins", match: ["/pins", "/photos"] },
+  { label: "Пластинки", icon: Disc3, href: "/vinyl" },
 ];
 
 // «Домой» живёт отдельно — в углу внизу рельса.
