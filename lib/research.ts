@@ -120,6 +120,8 @@ export type Research = {
   /** Что изображено на превью-коллаже (по-английски): визуальная метафора
    *  статьи, без лиц и текста. Главный способ, см. scripts/research-cover.ts. */
   coverPrompt?: string;
+  /** С каким coverPrompt нарисован закэшированный объект (subjects/<slug>.png). */
+  coverSubjectPrompt?: string;
   blocks: ResearchBlock[];
   /** Не постить в Telegram-канал раньше этого времени (ISO). В канал всё
    *  равно уходит не больше одного поста в день — см. research-publish. */

@@ -11,7 +11,7 @@
     "year": 2025
   },
   "readingMinutes": 4,
-  "coverPrompt": "a pink anatomical human brain model",
+  "coverPrompt": "a pink anatomical model of a human brain, side view, the whole brain visible",
   "blocks": [
     {
       "type": "text",

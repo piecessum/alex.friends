@@ -1,9 +1,13 @@
 // Превью исследований: npm run research:cover [slug,slug — перерисовать]
 //
 // Стиль — газетный коллаж (lib/collage-cover.ts): нейросеть рисует только
-// объект-метафору статьи (coverPrompt) как ч/б фото на белом фоне, а
-// растр точками, вырезку, матовый фон цвета темы, плашку и рваную бумагу
+// предмет по смыслу статьи (coverPrompt) как предметное фото на белом фоне,
+// а вырезку, растр печати, матовый фон цвета темы, плашку и рваную бумагу
 // делает код — поэтому стиль стабилен от картинки к картинке.
+//
+// Сырой объект кэшируется в content/research/subjects/<slug>.png: при смене
+// стиля превью перерисовываются из кэша, без запросов к нейросети. Новый
+// объект рисуется, только если поменялся coverPrompt.
 //
 // Нейросеть — Cloudflare Workers AI (Lucid Origin, запасная FLUX schnell),
 // бесплатно в пределах 10 000 «нейронов» в день. Нужны CLOUDFLARE_ACCOUNT_ID и
@@ -17,12 +21,14 @@ import "./load-env";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import sharp from "sharp";
 import { renderCollageCover } from "@/lib/collage-cover";
 import { renderVoxelCover } from "@/lib/voxel-cover";
 import { COVER_STYLE, TOPIC_ACCENTS, TOPIC_COLORS, type Research } from "@/lib/research";
 
 const DIR = path.join(process.cwd(), "content", "research");
 const IMG_DIR = path.join(process.cwd(), "public", "research");
+const SUBJECT_DIR = path.join(DIR, "subjects");
 const W = 1024;
 const H = 684;
 
@@ -39,10 +45,11 @@ const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 
 // Что просим у модели: один объект, ч/б, на белом — дальше всё делает код.
 const SUBJECT =
-  "Black and white studio product photograph of one clearly recognizable object, the whole " +
-  "object fully in frame and centered, sharp focus, even soft lighting with clear midtones, " +
-  "on a seamless pure white background, no shadows on the background, nothing else in the " +
-  "frame, no text, no letters, no logos, no human faces. Hands are allowed. The object: ";
+  "Beautiful studio product photograph of one clearly recognizable object, the entire object " +
+  "fully visible with a generous white margin on all sides, centered, tack-sharp focus, soft " +
+  "natural lighting, rich but slightly muted vintage colors, on a seamless pure white " +
+  "background, no shadow on the background, nothing else in the frame, no text, no letters, " +
+  "no logos, no human faces. Hands are allowed. The object: ";
 
 // Секреты часто вставляют с переносом строки или вместе со словом «Bearer».
 const clean = (v: string | undefined) => (v ?? "").trim().replace(/^Bearer\s+/i, "").trim();
@@ -122,9 +129,19 @@ async function main() {
     if (only?.length ? !only.includes(r.slug) : r.cover && r.coverStyle === COVER_STYLE) continue;
     console.log(`Рисую превью: ${r.slug}`);
 
-    if (r.coverPrompt && !aiDown) {
+    const cached = path.join(SUBJECT_DIR, `${r.slug}.png`);
+    const haveSubject = r.coverPrompt && r.coverSubjectPrompt === r.coverPrompt && fs.existsSync(cached);
+    if (r.coverPrompt && (haveSubject || !aiDown)) {
       try {
-        const subject = await generateSubject(r.coverPrompt);
+        let subject: Buffer;
+        if (haveSubject) {
+          subject = fs.readFileSync(cached);
+        } else {
+          subject = await generateSubject(r.coverPrompt);
+          fs.mkdirSync(SUBJECT_DIR, { recursive: true });
+          fs.writeFileSync(cached, await sharp(subject).png().toBuffer());
+          r.coverSubjectPrompt = r.coverPrompt;
+        }
         const out = await renderCollageCover(subject, TOPIC_COLORS[r.topic], TOPIC_ACCENTS[r.topic], r.slug, W, H);
         save(p, r, out, COVER_STYLE);
         continue;

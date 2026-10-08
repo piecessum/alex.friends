@@ -79,13 +79,17 @@ Group, Baymard, отраслевые отчёты, «Честный знак»).
 - `title` — цепляющий, без кликбейта и без оценок, до ~70 символов — главный факт исследования;
 - `dek` — одна-две фразы: что исследовали и почему интересно;
 - `source` — оригинал: `title`, `publisher`, `url`, `year`;
-- `coverPrompt` — **по-английски**, что изображено на превью: **один
-  конкретный узнаваемый предмет** по смыслу статьи, как для предметной
-  фотографии — 3–12 слов: `"a glass laboratory funnel"`, `"a single large
-  round red push button on a square metal base"`, `"a pile of old broken
-  mobile phones"`, `"a human hand pressing a single big round push button with
-  the index finger"`. Руки можно, лица нельзя; без текста, сцен и абстракций. Стиль
-  газетного коллажа скрипт добавит сам (`lib/collage-cover.ts`);
+- `coverPrompt` — **по-английски**, что на превью: **один конкретный,
+  красивый, узнаваемый с первого взгляда предмет** прямо по теме статьи —
+  такой, чтобы картинку хотелось разглядывать. Как для предметной
+  фотографии, 6–20 слов, с ракурсом и деталями, «целиком в кадре»:
+  `"a sleek modern silver laptop, open, the screen showing colorful lines of
+  program code, three-quarter view"`, `"a supermarket shopping cart full of
+  colorful groceries, side view"`, `"a small red and white single-engine
+  propeller airplane, full side view, the whole plane visible"`. Статья про
+  машины — покажи приборную панель или консоль, про телефоны — сам телефон.
+  Без абстракций и метафор, которые надо разгадывать; руки можно, лица и
+  текст нельзя. Стиль коллажа (вырезка, растр, фон темы) скрипт добавит сам;
 - `coverSprite` — запасное превью на случай, если нейросеть недоступна:
   пиксельный спрайт того же предмета. `rows` — строки **одинаковой длины**
   (до 20 символов, до 16 строк), `.` — пусто, остальные символы — цвета из
