@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import {
   NotebookPen,
   Disc3,
-  Camera,
   Home,
   Pin,
   FlaskConical,
@@ -27,9 +26,9 @@ type Tab = {
 const tabs: Tab[] = [
   { label: "Пишу", icon: NotebookPen, href: "/notes", match: ["/notes", "/channel"] },
   { label: "Пластинки", icon: Disc3, href: "/vinyl" },
-  { label: "Фоткаю", icon: Camera, href: "/photos" },
   { label: "Исследования", icon: FlaskConical, href: "/research" },
-  { label: "Сохранёнки", icon: Pin, href: "/pins" },
+  // Пины и фото — две вкладки одного раздела.
+  { label: "Сохранёнки", icon: Pin, href: "/pins", match: ["/pins", "/photos"] },
 ];
 
 // «Домой» живёт отдельно — в углу внизу рельса.

@@ -1,54 +1,25 @@
-import fs from "node:fs";
-import path from "node:path";
 import { Camera } from "lucide-react";
 import { PhotoGallery } from "@/components/photo-gallery";
+import { SavesTabs } from "@/components/saves-tabs";
+import { getPhotos, PHOTO_CATEGORIES } from "@/lib/photos";
 
 export const metadata = {
-  title: "Фотографирую — Алексей Масюта",
+  title: "Фоткаю — Сохранёнки — Алексей Масюта",
 };
-
-// Категории-чипсы соответствуют подпапкам в public/photos. Чтобы добавить
-// новое фото, достаточно положить файл в нужную папку — код менять не нужно.
-// Новую категорию заводим, добавив папку сюда.
-const CATEGORIES = [
-  { id: "priroda", label: "Природа" },
-  { id: "arhitektura", label: "Архитектура" },
-  { id: "street-art", label: "Стрит-арт" },
-] as const;
-
-const IMG_RE = /\.(jpe?g|png|webp|avif|gif)$/i;
-
-export type Photo = { src: string; category: string };
-
-function getPhotos(): Photo[] {
-  const root = path.join(process.cwd(), "public", "photos");
-  const photos: Photo[] = [];
-  for (const { id } of CATEGORIES) {
-    let files: string[] = [];
-    try {
-      files = fs.readdirSync(path.join(root, id));
-    } catch {
-      continue;
-    }
-    for (const f of files.filter((f) => IMG_RE.test(f)).sort()) {
-      photos.push({ src: `/photos/${id}/${f}`, category: id });
-    }
-  }
-  return photos;
-}
 
 export default function PhotosPage() {
   const photos = getPhotos();
   // Показываем только те категории, в которых реально есть снимки.
-  const categories = CATEGORIES.filter((c) =>
+  const categories = PHOTO_CATEGORIES.filter((c) =>
     photos.some((p) => p.category === c.id),
   );
 
   return (
     <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          Фотографирую
-        </h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Сохранёнки</h1>
+          <SavesTabs active="photos" />
+        </div>
         <p className="mt-3 max-w-2xl text-neutral-600 dark:text-neutral-400">
           Фотографирую на свой айфончик иногда, где-нибудь в дороге от скуки
           обрабатываю фоточки в Snapseed и в родном редакторе айфона.

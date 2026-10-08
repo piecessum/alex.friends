@@ -1,8 +1,9 @@
 import { PinsGrid } from "@/components/pins-grid";
+import { SavesTabs } from "@/components/saves-tabs";
 import { getPins, PINTEREST_USER } from "@/lib/pinterest";
 
 export const metadata = {
-  title: "Сохранёнки — Алексей Масюта",
+  title: "Пины — Сохранёнки — Алексей Масюта",
 };
 
 export default function PinsPage() {
@@ -11,7 +12,10 @@ export default function PinsPage() {
   return (
     <main className="w-full flex-1">
       <div className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Сохранёнки</h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Сохранёнки</h1>
+          <SavesTabs active="pins" />
+        </div>
         <p className="mt-3 max-w-2xl text-neutral-600 dark:text-neutral-400">
           Мой лоскутный ковёр вдохновения. В{" "}
           <a

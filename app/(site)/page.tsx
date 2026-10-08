@@ -7,11 +7,12 @@ import {
   ArrowRight,
   NotebookPen,
   Disc3,
-  Camera,
+  FlaskConical,
   Pin,
 } from "lucide-react";
 import { AvatarToggle } from "@/components/avatar-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { links } from "@/lib/site";
 
 type Widget = {
   title: string;
@@ -43,15 +44,15 @@ const widgets: Widget[] = [
     accent: "from-purple-500/15 text-purple-500 dark:text-purple-400",
   },
   {
-    title: "Фотографирую",
-    description: "Фиксирую красивые моменты.",
-    icon: Camera,
-    href: "/photos",
-    accent: "from-amber-500/15 text-amber-500 dark:text-amber-400",
+    title: "Исследования",
+    description: "Каждый день — короткий обзор исследования с графиками.",
+    icon: FlaskConical,
+    href: "/research",
+    accent: "from-emerald-500/15 text-emerald-500 dark:text-emerald-400",
   },
   {
     title: "Сохранёнки",
-    description: "Всё, что сохранил в Pinterest.",
+    description: "Пины из Pinterest и мои фотографии.",
     icon: Pin,
     href: "/pins",
     accent: "from-rose-500/15 text-rose-500 dark:text-rose-400",
@@ -91,6 +92,35 @@ export default function Dashboard() {
               Это что блог? — нет это бложик
             </p>
           </div>
+        </motion.div>
+
+        {/* О себе */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className="mt-8 max-w-2xl space-y-3 text-[15px] leading-relaxed text-neutral-700 dark:text-neutral-300"
+        >
+          <p>
+            Я аналитик. Больше пяти лет работаю над B2B-продуктами: разбираюсь,
+            как устроен бизнес клиентов, собираю требования, проектирую
+            сценарии и интерфейсы. Отсюда опыт и компетенции в UX, а за ним и в
+            UI — но по сути я аналитик.
+          </p>
+          <p>
+            Люблю исследования и работу с данными — когда вместо «мне кажется»
+            есть цифры. Пишу, чтобы разобраться в том, что зацепило, и
+            поделиться: отсюда канал про UX и ежедневные обзоры исследований.
+          </p>
+          <a
+            href={links.resume}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+          >
+            Резюме для работодателя
+            <ArrowUpRight className="h-4 w-4" />
+          </a>
         </motion.div>
 
         {/* Bento-сетка виджетов */}
