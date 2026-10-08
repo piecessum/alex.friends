@@ -102,25 +102,23 @@ export default function Dashboard() {
           className="mt-8 max-w-2xl space-y-3 text-[15px] leading-relaxed text-neutral-700 dark:text-neutral-300"
         >
           <p>
-            Я аналитик. Больше пяти лет работаю над B2B-продуктами: разбираюсь,
-            как устроен бизнес клиентов, собираю требования, проектирую
-            сценарии и интерфейсы. Отсюда опыт и компетенции в UX, а за ним и в
-            UI — но по сути я аналитик.
+            Я аналитик с опытом работы над B2B-продуктами: разбираюсь, как
+            устроен бизнес клиентов, собираю требования, проектирую сценарии и
+            интерфейсы. Отсюда опыт и компетенции в UX, а за ним и в UI.
           </p>
           <p>
             Люблю исследования и работу с данными — когда вместо «мне кажется»
             есть цифры. Пишу, чтобы разобраться в том, что зацепило, и
-            поделиться: отсюда канал про UX и ежедневные обзоры исследований.
+            поделиться: отсюда{" "}
+            <a href={links.channel} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline dark:text-indigo-400">
+              канал про UX
+            </a>{" "}
+            и{" "}
+            <a href={links.researchChannel} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline dark:text-indigo-400">
+              ежедневные обзоры исследований
+            </a>
+            .
           </p>
-          <a
-            href={links.resume}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
-          >
-            Резюме для работодателя
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
         </motion.div>
 
         {/* Bento-сетка виджетов */}

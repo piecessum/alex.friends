@@ -13,6 +13,9 @@ export const links = {
   resume: RESUME_URL,
   /** Телеграм-канал про UX */
   channel: "https://t.me/ux_review",
+  /** Телеграм-канал «Чего исследуем?» с ежедневными обзорами исследований
+   *  (приватный — ссылка-приглашение) */
+  researchChannel: "https://t.me/+sUnfx_iUE0gzMjg6",
   /** Вишлист в боте */
   wishlist: "https://t.me/WishesListBot?start=MjU5NTM3OTU0",
   /** Личный телеграм для связи */
