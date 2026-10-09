@@ -232,5 +232,10 @@
     684
   ],
   "coverStyle": "collage-4",
-  "coverSubjectPrompt": "an old white iPhone with a shattered cracked screen, front view"
+  "coverSubjectPrompt": "an old white iPhone with a shattered cracked screen, front view",
+  "telegram": {
+    "messageId": 12,
+    "postedAt": "2026-10-09T05:22:26.149Z",
+    "cover": "/research/global-e-waste-2024-09fbaa8f.webp"
+  }
 }
