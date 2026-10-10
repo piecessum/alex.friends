@@ -168,5 +168,12 @@
       "text": "Даже опытные наблюдатели, работая в своей области, уязвимы для слепоты невнимания",
       "author": "Трафтон Дрю, Мелисса Во, Джереми Вольф"
     }
-  ]
+  ],
+  "coverSubjectPrompt": "a glowing radiology lightbox with a black and white chest x-ray film clipped to it, front view, the whole lightbox visible",
+  "cover": "/research/radiologists-gorilla-94145c85.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-4"
 }
