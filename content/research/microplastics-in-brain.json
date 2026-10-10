@@ -217,5 +217,10 @@
     684
   ],
   "coverStyle": "collage-4",
-  "coverSubjectPrompt": "a pink anatomical model of a human brain, side view, the whole brain visible"
+  "coverSubjectPrompt": "a pink anatomical model of a human brain, side view, the whole brain visible",
+  "telegram": {
+    "messageId": 13,
+    "postedAt": "2026-10-10T05:25:48.646Z",
+    "cover": "/research/microplastics-in-brain-dcf73d4a.webp"
+  }
 }
