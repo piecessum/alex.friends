@@ -199,5 +199,10 @@
     684
   ],
   "coverStyle": "collage-4",
-  "coverSubjectPrompt": "a multiple choice exam answer sheet with a pencil"
+  "coverSubjectPrompt": "a multiple choice exam answer sheet with a pencil",
+  "telegram": {
+    "messageId": 14,
+    "postedAt": "2026-10-11T05:19:03.863Z",
+    "cover": "/research/why-llm-hallucinate-c56bb3a4.webp"
+  }
 }
