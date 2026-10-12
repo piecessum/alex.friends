@@ -34,6 +34,17 @@ const tabs: Tab[] = [
 // «Домой» живёт отдельно — в углу внизу рельса.
 const homeTab: Tab = { label: "Домой", icon: Home, href: "/" };
 
+// Разделы, у которых /раздел/<slug> — отдельная страница (пост, пластинка,
+// исследование). Такие страницы открываются на весь экран, без навигации.
+const detailSections = ["/notes", "/channel", "/research", "/vinyl"];
+// Подстраницы-вкладки внутри разделов — они остаются с навигацией.
+const sectionTabs = ["/notes/work", "/notes/stats"];
+
+function isDetailPage(pathname: string) {
+  if (sectionTabs.includes(pathname)) return false;
+  return detailSections.some((s) => pathname.startsWith(s + "/"));
+}
+
 function isActive(tab: Tab, pathname: string) {
   if (tab.href === "/") return pathname === "/";
   const prefixes = tab.match ?? [tab.href];
@@ -95,6 +106,19 @@ function NavIcon({
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  // Пост / пластинка / исследование — на весь экран, без рельса и подложки.
+  // Назад ведёт ссылка на самой странице, тема — кнопка в углу (уезжает при скролле).
+  if (isDetailPage(pathname)) {
+    return (
+      <div className="relative h-[100dvh] overflow-y-auto overflow-x-hidden bg-white dark:bg-[#181818]">
+        <div className="absolute right-4 top-4 z-10 sm:right-6 sm:top-6">
+          <ThemeToggle />
+        </div>
+        {children}
+      </div>
+    );
+  }
 
   return (
     // Корень залочен на высоту вьюпорта и сам не скроллится — скролл живёт
