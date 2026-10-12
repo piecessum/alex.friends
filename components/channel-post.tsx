@@ -1,4 +1,5 @@
-import { Eye, ArrowUpRight, CornerUpRight } from "lucide-react";
+import Link from "next/link";
+import { Eye, ArrowUpRight, CornerUpRight, Reply } from "lucide-react";
 import { PostMedia } from "@/components/post-media";
 import { RichPostBody } from "@/components/rich-post-body";
 import { SpoilerHtml } from "@/components/spoiler-html";
@@ -97,6 +98,23 @@ export function ChannelPost({ post }: { post: TgPost }) {
           </span>
         )}
       </div>
+
+      {/* Ответ на другой пост канала — как в Telegram: цитата над текстом,
+          клик ведёт на исходный пост. */}
+      {post.reply && (
+        <Link
+          href={`/channel/${post.reply.id}`}
+          className="group mt-4 block rounded-lg border-l-2 border-indigo-400 bg-indigo-500/5 px-3 py-2.5 transition hover:bg-indigo-500/10"
+        >
+          <span className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <Reply className="h-3.5 w-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
+            В ответ на пост
+          </span>
+          <span className="mt-1 line-clamp-2 text-sm leading-snug text-neutral-700 transition group-hover:text-indigo-600 dark:text-neutral-300 dark:group-hover:text-indigo-400">
+            {post.reply.text || "Пост"}
+          </span>
+        </Link>
+      )}
 
       {/* Твой комментарий к пересылке — твоим голосом, над самой цитатой. */}
       {post.forward && comment && (

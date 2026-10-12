@@ -105,7 +105,15 @@ export default async function ChannelItemPage({
   const pos = posts.findIndex((p) => p.id === id || p.aliasIds?.includes(id));
   if (pos === -1) notFound();
 
-  const post = posts[pos];
+  let post = posts[pos];
+  // Ответ на другой пост: если исходный склеен с этим — цитата не нужна;
+  // если Telegram не отдал текст цитаты (пост в новой вёрстке) — берём из ленты.
+  if (post.reply) {
+    const replyId = post.reply.id;
+    const target = posts.find((p) => p.id === replyId || p.aliasIds?.includes(replyId));
+    if (target === post) post = { ...post, reply: undefined };
+    else if (!post.reply.text && target) post = { ...post, reply: { id: replyId, text: preview(target) } };
+  }
   // posts отсортированы по убыванию id (новые сверху):
   // следующий по списку — старее, предыдущий — новее.
   const newer = pos > 0 ? posts[pos - 1] : null;
@@ -142,17 +150,13 @@ export default async function ChannelItemPage({
         </div>
 
         {(older || newer) && (
-          <nav className="mt-12 grid gap-3 sm:grid-cols-2">
+          // Одна кнопка — на всю ширину текста, две — пополам.
+          <nav className={`mt-12 grid gap-3 ${older && newer ? "sm:grid-cols-2" : ""}`}>
             {newer && (
               <NavLink post={newer} label="Следующий пост" side="left" />
             )}
             {older && (
-              <NavLink
-                post={older}
-                label="Предыдущий пост"
-                side="right"
-                className={newer ? "" : "sm:col-start-2"}
-              />
+              <NavLink post={older} label="Предыдущий пост" side="right" />
             )}
           </nav>
         )}

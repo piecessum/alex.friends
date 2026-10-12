@@ -35,6 +35,8 @@ export type TgLinkPreview = {
   site?: string;
 };
 export type TgForward = { name: string; url?: string };
+/** Пост — ответ на другой пост канала: id исходного и кусок его текста. */
+export type TgReply = { id: string; text: string };
 export type TgPollOption = { text: string; percent: number };
 export type TgPoll = {
   question: string;
@@ -60,6 +62,7 @@ export type TgPost = {
   videos: TgVideo[];
   link?: TgLinkPreview;
   forward?: TgForward;
+  reply?: TgReply;
   poll?: TgPoll;
   /** Твой комментарий к пересланному посту (отдельное сообщение-подпись).
    *  html при этом хранит текст самого форварда. */
@@ -230,6 +233,28 @@ function parseForward(block: string): TgForward | undefined {
   return noLink ? { name: stripTags(noLink[1]) } : undefined;
 }
 
+/** Ответ на пост этого же канала: ссылка на исходный и цитата из него. */
+function parseReply(block: string): TgReply | undefined {
+  const m = block.match(
+    new RegExp(
+      `class="tgme_widget_message_reply[^"]*"\\s+href="https://t\\.me/${CHANNEL}/(\\d+)"[\\s\\S]*?</a>`
+    )
+  );
+  if (!m) return undefined;
+  const text = field(m[0], /js-message_reply_text[^>]*>([\s\S]*?)<\/div>/);
+  // Текст рендерится как обычная строка (не html) — сущности раскрываем здесь.
+  const plain = text
+    ? stripTags(text.replace(/<br\s*\/?>/gi, " "))
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#0?39;/g, "'")
+        .replace(/&amp;/g, "&")
+        .replace(/\s+/g, " ")
+    : "";
+  return { id: m[1], text: plain };
+}
+
 /** Опрос/викторина из веб-превью: вопрос, тип и варианты с процентами. */
 function parsePoll(block: string): TgPoll | undefined {
   const question = field(
@@ -335,6 +360,7 @@ function parse(html: string): TgPost[] {
       videos,
       link,
       forward,
+      reply: parseReply(block),
       poll: parsePoll(block),
       views: field(block, /tgme_widget_message_views">([^<]+)</),
       // Хэштеги в тексте пересланного сообщения — чужие (их ставил автор
