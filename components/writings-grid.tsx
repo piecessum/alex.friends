@@ -187,10 +187,27 @@ export function WritingsGrid({
   }, [posts, notes]);
 
   const [filter, setFilter] = React.useState<string>("all");
+  // Чип тега из ?tag может быть далеко справа в горизонтальной ленте — докрутить к нему.
+  const revealChip = React.useRef(false);
+  React.useEffect(() => {
+    if (!revealChip.current) return;
+    revealChip.current = false;
+    document
+      .querySelector('[data-chip-active="true"]')
+      ?.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [filter]);
 
-  // Возврат с детальной страницы: восстановить фильтр и позицию скролла.
+  // Переход по хэштегу из поста (/notes?tag=…) — сразу включаем этот фильтр.
+  // Иначе, если это возврат с детальной страницы, — восстанавливаем фильтр и скролл.
   React.useEffect(() => {
     try {
+      const tag = new URLSearchParams(window.location.search).get("tag");
+      if (tag) {
+        sessionStorage.removeItem(KEY_RESTORE);
+        revealChip.current = true;
+        setFilter(tag.toLowerCase());
+        return;
+      }
       if (sessionStorage.getItem(KEY_RESTORE) !== "1") return;
       sessionStorage.removeItem(KEY_RESTORE);
       const f = sessionStorage.getItem(KEY_FILTER);
@@ -231,6 +248,10 @@ export function WritingsGrid({
 
   const pickFilter = (key: string) => {
     setFilter(key);
+    // Сменили фильтр вручную — убираем ?tag из адреса, чтобы он не «залипал».
+    if (window.location.search) {
+      window.history.replaceState(window.history.state, "", window.location.pathname);
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -258,6 +279,7 @@ export function WritingsGrid({
       <button
         key={key}
         type="button"
+        data-chip-active={active}
         onClick={() => pickFilter(key)}
         className={`shrink-0 rounded-full border px-3 py-1.5 text-sm transition ${
           active

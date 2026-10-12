@@ -5,6 +5,7 @@ import { RichPostBody } from "@/components/rich-post-body";
 import { SpoilerHtml } from "@/components/spoiler-html";
 import type { TgPoll, TgPost } from "@/lib/telegram";
 import { getNotesIndex } from "@/lib/notes";
+import { internalizeHashtagLinks } from "@/lib/post-text";
 import {
   internalizeTelegraphLinks,
   internalizeTelegraphUrl,
@@ -73,17 +74,18 @@ function Poll({ poll }: { poll: TgPoll }) {
 
 export function ChannelPost({ post }: { post: TgPost }) {
   // Ссылки на telegra.ph, у которых есть лонгрид на сайте, ведём внутрь.
+  // Хэштеги — на ленту «Пишу» с фильтром по тегу.
   const slugs = new Set(getNotesIndex().map((n) => n.slug));
-  const html = internalizeTelegraphLinks(post.html, slugs);
-  const comment = post.comment
-    ? internalizeTelegraphLinks(post.comment, slugs)
-    : "";
+  const internalize = (h: string) =>
+    internalizeHashtagLinks(internalizeTelegraphLinks(h, slugs));
+  const html = internalize(post.html);
+  const comment = post.comment ? internalize(post.comment) : "";
   const linkHref = internalizeTelegraphUrl(post.link?.url, slugs) || post.url;
   const linkInternal = linkHref.startsWith("/");
   // Пересланный пост рисуется цитатой (ниже), блочный вид — только для своих.
   const rich = post.rich?.length && !post.forward
     ? post.rich.map((b) =>
-        b.type === "text" ? { ...b, html: internalizeTelegraphLinks(b.html, slugs) } : b
+        b.type === "text" ? { ...b, html: internalize(b.html) } : b
       )
     : null;
 
