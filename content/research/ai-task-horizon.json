@@ -85,19 +85,73 @@
       "subtitle": "Средний успех агента, %, модели примерно в порядке выхода",
       "unit": "%",
       "items": [
-        { "label": "davinci-002 (GPT-3)", "value": 0, "display": "0%" },
-        { "label": "gpt-3.5-turbo-instruct", "value": 1, "display": "1%" },
-        { "label": "GPT-4 0314", "value": 23, "display": "23%", "highlight": true },
-        { "label": "GPT-4 1106", "value": 30, "display": "30%" },
-        { "label": "Claude 3 Opus", "value": 25, "display": "25%" },
-        { "label": "GPT-4o", "value": 30, "display": "30%" },
-        { "label": "Claude 3.5 Sonnet (Old)", "value": 38, "display": "38%" },
-        { "label": "o1-preview", "value": 44, "display": "44%" },
-        { "label": "Claude 3.5 Sonnet (New)", "value": 46, "display": "46%" },
-        { "label": "o1", "value": 54, "display": "54%" },
-        { "label": "Claude 3.7 Sonnet", "value": 58, "display": "58%" },
-        { "label": "o4-mini", "value": 61, "display": "61%" },
-        { "label": "o3", "value": 65, "display": "65%", "highlight": true }
+        {
+          "label": "davinci-002 (GPT-3)",
+          "value": 0,
+          "display": "0%"
+        },
+        {
+          "label": "gpt-3.5-turbo-instruct",
+          "value": 1,
+          "display": "1%"
+        },
+        {
+          "label": "GPT-4 0314",
+          "value": 23,
+          "display": "23%",
+          "highlight": true
+        },
+        {
+          "label": "GPT-4 1106",
+          "value": 30,
+          "display": "30%"
+        },
+        {
+          "label": "Claude 3 Opus",
+          "value": 25,
+          "display": "25%"
+        },
+        {
+          "label": "GPT-4o",
+          "value": 30,
+          "display": "30%"
+        },
+        {
+          "label": "Claude 3.5 Sonnet (Old)",
+          "value": 38,
+          "display": "38%"
+        },
+        {
+          "label": "o1-preview",
+          "value": 44,
+          "display": "44%"
+        },
+        {
+          "label": "Claude 3.5 Sonnet (New)",
+          "value": 46,
+          "display": "46%"
+        },
+        {
+          "label": "o1",
+          "value": 54,
+          "display": "54%"
+        },
+        {
+          "label": "Claude 3.7 Sonnet",
+          "value": 58,
+          "display": "58%"
+        },
+        {
+          "label": "o4-mini",
+          "value": 61,
+          "display": "61%"
+        },
+        {
+          "label": "o3",
+          "value": 65,
+          "display": "65%",
+          "highlight": true
+        }
       ],
       "source": "METR, 2025, таблица 7"
     },
@@ -117,8 +171,16 @@
       "type": "versus",
       "title": "Агент повторяет одно и то же неудачное действие",
       "subtitle": "Число таких случаев среди разобранных провалов (31 у GPT-4 1106, 32 у o1)",
-      "left": { "label": "GPT-4 1106", "value": 12, "display": "12 из 31" },
-      "right": { "label": "o1", "value": 2, "display": "2 из 32" },
+      "left": {
+        "label": "GPT-4 1106",
+        "value": 12,
+        "display": "12 из 31"
+      },
+      "right": {
+        "label": "o1",
+        "value": 2,
+        "display": "2 из 32"
+      },
       "source": "METR, 2025, таблица 2"
     },
     {
@@ -138,8 +200,16 @@
       "type": "versus",
       "title": "Одна и та же задача из репозитория METR",
       "subtitle": "Минуты на исправление, задача eval-analysis-public-1",
-      "left": { "label": "Мейнтейнер", "value": 5, "display": "5 мин" },
-      "right": { "label": "Подрядчик", "value": 81, "display": "81 мин" },
+      "left": {
+        "label": "Мейнтейнер",
+        "value": 5,
+        "display": "5 мин"
+      },
+      "right": {
+        "label": "Подрядчик",
+        "value": 81,
+        "display": "81 мин"
+      },
       "source": "METR, 2025, таблица 5"
     },
     {
@@ -154,5 +224,12 @@
       "type": "text",
       "md": "Если тренд сохранится, ИИ-агенты будут в половине случаев справляться с задачами длиной в месяц человеческой работы — это 167 рабочих часов. Центральная оценка авторов — середина 2029 года, 80-процентный интервал — с середины 2028-го по середину 2030-го. Если ориентироваться только на темп 2024–2025 годов, срок сдвигается на 2027-й или конец 2026-го.\n\nОграничения авторы перечисляют сами. Задачи в основном про софт, у них есть понятная автоматическая проверка, и они «чище» реальной работы. На задачах, которые авторы оценили как более «грязные» — без ясной обратной связи, с поиском информации, — модели решают меньше. При этом скорость роста на грязных и чистых задачах похожая. Ошибка в 10 раз в абсолютных цифрах сдвигает прогноз примерно на 2 года."
     }
-  ]
+  ],
+  "coverSubjectPrompt": "a vintage silver mechanical stopwatch with a white dial and black hands, front view, the whole stopwatch visible",
+  "cover": "/research/ai-task-horizon-144c9e8b.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-4"
 }
