@@ -109,9 +109,11 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
   // Пост / пластинка / исследование — на весь экран, без рельса и подложки.
   // Назад ведёт ссылка на самой странице, тема — кнопка в углу (уезжает при скролле).
+  // Скроллится само окно, а не внутренний блок: тогда Safari на телефоне
+  // сворачивает адресную строку и нижнюю панель.
   if (isDetailPage(pathname)) {
     return (
-      <div className="relative h-[100dvh] overflow-y-auto overflow-x-hidden bg-white dark:bg-[#181818]">
+      <div data-fullpage className="relative min-h-[100dvh] overflow-x-clip bg-white dark:bg-[#181818]">
         <div className="absolute right-4 top-4 z-10 sm:right-6 sm:top-6">
           <ThemeToggle />
         </div>

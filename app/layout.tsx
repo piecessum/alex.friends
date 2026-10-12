@@ -40,7 +40,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="h-[100dvh] overflow-hidden bg-background text-foreground antialiased">
+      {/* body сам по себе не залочен: разделы держат высоту экрана в SiteShell,
+          а полноэкранные страницы скроллят окно — только так Safari на iPhone
+          прячет свои панели при прокрутке. */}
+      <body className="bg-background text-foreground antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
