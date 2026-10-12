@@ -2,7 +2,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ResearchBlocks } from "@/components/research-blocks";
-import { getAllResearch, getResearch, TOPIC_COLORS, TOPICS } from "@/lib/research";
+import { ResearchCard } from "@/components/research-card";
+import {
+  getAllResearch,
+  getRelatedResearch,
+  getResearch,
+  TOPIC_COLORS,
+  TOPICS,
+} from "@/lib/research";
 import { formatRuDate } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -22,6 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function ResearchItemPage({ params }: { params: Promise<{ slug: string }> }) {
   const r = getResearch((await params).slug);
   if (!r) notFound();
+  const related = getRelatedResearch(r);
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
@@ -83,6 +91,28 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
         </div>
         <ArrowUpRight className="h-5 w-5 shrink-0 text-neutral-400 transition group-hover:text-indigo-500" />
       </a>
+
+      {/* Сразу после статьи — назад к списку, ниже — подборка похожих. */}
+      <div className="mt-10">
+        <Link
+          href="/research"
+          className="inline-flex items-center gap-1.5 text-sm text-neutral-600 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Все исследования
+        </Link>
+      </div>
+
+      {related.length > 0 && (
+        <section className="mt-16">
+          <h2 className="text-xl font-bold tracking-tight">Ещё по теме</h2>
+          <div className="mt-6 grid gap-6 md:grid-cols-3">
+            {related.map((x) => (
+              <ResearchCard key={x.slug} r={x} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

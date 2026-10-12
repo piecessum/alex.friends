@@ -155,3 +155,57 @@ export function getAllResearch({ includeFuture = false } = {}): Research[] {
 export function getResearch(slug: string): Research | null {
   return getAllResearch().find((r) => r.slug === slug) ?? null;
 }
+
+/** Смежные темы — для подборки «Ещё по теме», когда своей темы мало. */
+const ADJACENT: Record<ResearchTopic, ResearchTopic[]> = {
+  interfaces: ["cars", "gadgets", "brain", "ai"],
+  ai: ["brain", "interfaces"],
+  brain: ["interfaces", "ai"],
+  market: ["b2b", "gadgets"],
+  gadgets: ["interfaces", "market", "cars"],
+  cars: ["interfaces", "gadgets"],
+  b2b: ["market"],
+};
+
+const STOP = new Set(
+  "это как что чем или при для над под без про все всё его она они мы вы так уже ещё еще был была были быть если когда тоже даже только раз год лет"
+    .split(" ")
+);
+
+/** Грубые «основы» слов (первые 5 букв) из заголовка, лида и подзаголовков. */
+function stems(r: Research): Set<string> {
+  const text = [r.title, r.dek, ...r.blocks.map((b) => (b.type === "heading" ? b.text : ""))]
+    .join(" ")
+    .toLowerCase()
+    .replace(/ё/g, "е");
+  const out = new Set<string>();
+  for (const w of text.match(/[\p{L}\p{N}]+/gu) ?? []) {
+    if (w.length < 4 || STOP.has(w) || /^\d+$/.test(w)) continue;
+    out.add(w.slice(0, 5));
+  }
+  return out;
+}
+
+/**
+ * Похожие исследования: та же тема весит больше всего, смежная — меньше,
+ * плюс общие слова (редкие по всему разделу весят больше частых).
+ * При равенстве — свежие выше.
+ */
+export function getRelatedResearch(r: Research, limit = 3): Research[] {
+  const all = getAllResearch().filter((x) => x.slug !== r.slug);
+  const own = stems(r);
+  const df = new Map<string, number>();
+  const bags = new Map(all.map((x) => [x.slug, stems(x)]));
+  for (const bag of bags.values()) for (const s of bag) df.set(s, (df.get(s) ?? 0) + 1);
+
+  const score = (x: Research) => {
+    let s = x.topic === r.topic ? 3 : ADJACENT[r.topic].includes(x.topic) ? 1 : 0;
+    for (const w of bags.get(x.slug)!) if (own.has(w)) s += 1 / (df.get(w) ?? 1);
+    return s;
+  };
+  return all
+    .map((x) => ({ x, s: score(x) }))
+    .sort((a, b) => b.s - a.s || b.x.date.localeCompare(a.x.date))
+    .slice(0, limit)
+    .map(({ x }) => x);
+}
