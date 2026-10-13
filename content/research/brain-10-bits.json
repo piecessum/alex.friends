@@ -130,7 +130,7 @@
       "text": "Отсюда скепсис авторов к нейроинтерфейсам вроде Neuralink, которые обещают ускорить общение с компьютером. Если узкое место — сама мысль, а не пальцы, то провод в голове скорость не поднимет: больше 10 бит в секунду думать всё равно не выйдет."
     }
   ],
-  "cover": "/research/brain-10-bits-f6373d0e.webp",
+  "cover": "/research/brain-10-bits-50859656.webp",
   "coverSize": [
     1024,
     684
@@ -161,6 +161,6 @@
       "M": "#b85570"
     }
   },
-  "coverStyle": "collage-4",
-  "coverSubjectPrompt": "a polished copper kitchen funnel"
+  "coverStyle": "collage-5",
+  "coverSubjectPrompt": "ai:a polished copper kitchen funnel standing alone on its wide rim, three-quarter view, the whole funnel visible"
 }

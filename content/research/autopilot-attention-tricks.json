@@ -158,13 +158,13 @@
       "md": "«Приемлемо» получила только Lexus Teammate на Lexus LS. «Посредственно» — GM Super Cruise на GMC Sierra и одна из систем Nissan Ariya. Tesla Autopilot и FSD Beta, Volvo Pilot Assist, системы Mercedes-Benz, Ford, Genesis и BMW — «плохо».\n\nМюллер подводит итог так: нарастающие напоминания, которые бьют сразу по нескольким чувствам, действительно меняют поведение водителя. Но нужна защита получше, чтобы это изменение превращалось во внимание к дороге, а не в навык вовремя тронуть руль. Отдельно авторы оговариваются, что эффект для аварийности измерить сложно: известно, что чем дольше водитель не смотрит на дорогу, тем выше риск аварии, но при очень частых коротких отвлечениях промежутки «внимания» между ними мало что значат."
     }
   ],
-  "cover": "/research/autopilot-attention-tricks-2972f6b6.webp",
+  "cover": "/research/autopilot-attention-tricks-ee3cdc2c.webp",
   "coverSize": [
     1024,
     684
   ],
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "a modern car steering wheel with a large touchscreen dashboard behind it, driver's seat view, hands-free",
+  "coverSubjectPrompt": "ai:a modern car steering wheel on its own, with a small dashboard display behind it, three-quarter view, the whole wheel visible",
   "telegram": {
     "messageId": 15,
     "postedAt": "2026-10-12T05:21:07.059Z",
