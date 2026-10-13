@@ -194,13 +194,13 @@
       "md": "При таком подсчёте угадывать без уверенности становится невыгодно, а честный отказ перестаёт проигрывать. Похоже работали некоторые стандартизированные экзамены вроде старого SAT, где за неверный ответ снимали баллы.\n\nОграничения авторы оговаривают сами: точность ни одной модели не дойдёт до 100% — часть вопросов в принципе не имеет ответа. Но простая правка основных бенчмарков, по их выводу, перестанет поощрять выдумки и уберёт барьеры для борьбы с галлюцинациями."
     }
   ],
-  "cover": "/research/why-llm-hallucinate-bd64de7b.webp",
+  "cover": "/research/why-llm-hallucinate-f3d7bac4.webp",
   "coverSize": [
     1024,
     684
   ],
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "ai:a multiple choice exam answer sheet printed on pale green paper with rows of filled-in bubbles, a yellow pencil lying on top, top-down view, the whole sheet visible",
+  "coverSubjectPrompt": "ai:two red translucent casino dice with white pips, three-quarter view, both dice fully visible",
   "telegram": {
     "messageId": 14,
     "postedAt": "2026-10-11T05:19:03.863Z",
