@@ -11,8 +11,8 @@
     "year": 2025
   },
   "readingMinutes": 4,
-  "coverPrompt": "a multiple choice exam answer sheet printed on pale green paper with rows of filled-in bubbles, a yellow pencil lying on top, top-down view, the whole sheet visible",
-  "coverQuery": "exam answer sheet",
+  "coverPrompt": "two red translucent casino dice with white pips, three-quarter view, both dice fully visible",
+  "coverQuery": "red dice",
   "coverSprite": {
     "rows": [
       "..wwwwwwwwwwww......",
