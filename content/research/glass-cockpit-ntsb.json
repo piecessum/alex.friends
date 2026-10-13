@@ -12,6 +12,7 @@
   },
   "readingMinutes": 4,
   "coverPrompt": "a small red and white single-engine propeller airplane, full side view, the whole plane visible",
+  "coverQuery": "small propeller airplane",
   "blocks": [
     {
       "type": "text",
@@ -101,7 +102,7 @@
       "md": "Вывод NTSB: цифровые приборы могут сделать полёты безопаснее — они дают пилоту больше информации и функций. Но пилотов нужно готовить к ним отдельно. По итогам исследования NTSB направил авиационным властям США рекомендации по обучению на стеклянных кабинах."
     }
   ],
-  "cover": "/research/glass-cockpit-ntsb-09a65e7d.webp",
+  "cover": "/research/glass-cockpit-ntsb-c41db1d0.webp",
   "coverSize": [
     1024,
     684
@@ -126,7 +127,7 @@
       "r": "#e34948"
     }
   },
-  "coverStyle": "collage-4",
+  "coverStyle": "collage-5",
   "telegram": {
     "messageId": 11,
     "postedAt": "2026-10-08T05:18:57.831Z",

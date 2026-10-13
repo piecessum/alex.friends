@@ -1,13 +1,20 @@
 // Превью исследований: npm run research:cover [slug,slug — перерисовать]
 //
-// Стиль — газетный коллаж (lib/collage-cover.ts): нейросеть рисует только
-// предмет по смыслу статьи (coverPrompt) как предметное фото на белом фоне,
-// а вырезку, растр печати, матовый фон цвета темы, плашку и рваную бумагу
-// делает код — поэтому стиль стабилен от картинки к картинке.
+// Стиль — газетный коллаж (lib/collage-cover.ts): нужен только предмет по
+// смыслу статьи, а растр печати, матовый фон цвета темы, плашку и рваную
+// бумагу делает код — поэтому стиль стабилен от картинки к картинке.
 //
-// Сырой объект кэшируется в content/research/subjects/<slug>.png: при смене
-// стиля превью перерисовываются из кэша, без запросов к нейросети. Новый
-// объект рисуется, только если поменялся coverPrompt.
+// Откуда предмет:
+// 1. Стоковое фото с Pexels по coverQuery (бесплатно, без указания авторства;
+//    нужен PEXELS_API_KEY). Из выдачи берётся первый снимок, где после вырезки
+//    предмет целиком в кадре и занимает разумную долю кадра.
+// 2. Иначе — нейросеть рисует предмет по coverPrompt (см. ниже).
+// В обоих случаях объект вырезает сегментатор (lib/cutout.ts), а не «по белому
+// цвету» — поэтому белые и блестящие части предмета больше не пропадают.
+//
+// Вырезанный объект кэшируется в content/research/subjects/<slug>.png: при
+// смене стиля превью перерисовываются из кэша. Новый объект ищется, только
+// если поменялся coverQuery/coverPrompt (ключ — coverSubjectPrompt).
 //
 // Нейросеть — Cloudflare Workers AI (Lucid Origin, запасная FLUX schnell),
 // бесплатно в пределах 10 000 «нейронов» в день. Нужны CLOUDFLARE_ACCOUNT_ID и
@@ -23,6 +30,7 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import { renderCollageCover } from "@/lib/collage-cover";
+import { cutout } from "@/lib/cutout";
 import { renderVoxelCover } from "@/lib/voxel-cover";
 import { COVER_STYLE, TOPIC_ACCENTS, TOPIC_COLORS, type Research } from "@/lib/research";
 
@@ -43,13 +51,14 @@ const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/leonardo/lucid-origi
 const CF_FALLBACK = "@cf/black-forest-labs/flux-1-schnell";
 const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 
-// Что просим у модели: один объект, ч/б, на белом — дальше всё делает код.
+// Что просим у модели: один объект на белом — дальше всё делает код. Людей и
+// руки запрещаем: пальцы нейросеть рисует криво.
 const SUBJECT =
   "Beautiful studio product photograph of one clearly recognizable object, the entire object " +
   "fully visible with a generous white margin on all sides, centered, tack-sharp focus, soft " +
   "natural lighting, rich but slightly muted vintage colors, on a seamless pure white " +
   "background, no shadow on the background, nothing else in the frame, no text, no letters, " +
-  "no logos, no human faces. Hands are allowed. The object: ";
+  "no logos, no people, no hands, no fingers, no body parts. The object: ";
 
 // Секреты часто вставляют с переносом строки или вместе со словом «Bearer».
 const clean = (v: string | undefined) => (v ?? "").trim().replace(/^Bearer\s+/i, "").trim();
@@ -100,6 +109,39 @@ async function generateSubject(scene: string): Promise<Buffer> {
   throw new Error("нет ключей нейросети (CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN или OPENAI_API_KEY)");
 }
 
+// ---- сток (Pexels) ----------------------------------------------------------
+
+type Credit = NonNullable<Research["coverCredit"]>;
+
+/** Ищет на Pexels фото предмета и вырезает его. Берёт первый снимок, где
+ *  предмет целиком в кадре и не крошечный/не во весь кадр. */
+async function stockSubject(query: string): Promise<{ png: Buffer; credit: Credit }> {
+  const key = clean(process.env.PEXELS_API_KEY);
+  const tried = new Set<number>();
+  // Сначала ищем «на белом фоне» — такие снимки вырезаются чище всего.
+  for (const q of [`${query} isolated on white background`, query]) {
+    const res = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=15`,
+      { headers: { authorization: key } }
+    );
+    if (!res.ok) throw new Error(`Pexels: ${res.status} ${(await res.text()).slice(0, 200)}`);
+    const data = (await res.json()) as {
+      photos: { id: number; url: string; photographer: string; src: { large2x: string } }[];
+    };
+    for (const p of data.photos.slice(0, 8)) {
+      if (tried.has(p.id)) continue;
+      tried.add(p.id);
+      const img = Buffer.from(await (await fetch(p.src.large2x)).arrayBuffer());
+      const cut = await cutout(img);
+      console.log(`  pexels ${p.id}: объект ${Math.round(cut.coverage * 100)}% кадра, касается краёв: ${cut.edges}`);
+      if (cut.edges === 0 && cut.coverage > 0.06 && cut.coverage < 0.7) {
+        return { png: cut.png, credit: { source: "Pexels", author: p.photographer, url: p.url } };
+      }
+    }
+  }
+  throw new Error(`на Pexels не нашлось подходящего фото: ${query}`);
+}
+
 // Сначала без превью вовсе, потом уже вышедшие в канал, потом остальные.
 const rank = (r: Research) => (!r.cover ? 0 : r.telegram ? 1 : 2);
 
@@ -126,28 +168,47 @@ async function main() {
 
   let aiDown = false; // нейросеть отказала (лимит и т.п.) — больше не дёргаем
   for (const { p, r } of items) {
-    if (only?.length ? !only.includes(r.slug) : r.cover && r.coverStyle === COVER_STYLE) continue;
+    // Ключ кэша: откуда и по какому запросу взят предмет. Старые записи без
+    // префикса — картинки нейросети по coverPrompt.
+    const useStock = !!process.env.PEXELS_API_KEY && !!r.coverQuery;
+    const want = useStock ? `stock:${r.coverQuery}` : `ai:${r.coverPrompt}`;
+    const had = r.coverSubjectPrompt === r.coverPrompt ? `ai:${r.coverPrompt}` : r.coverSubjectPrompt;
+    // Перерисовываем, если сменился стиль или предмет (новый запрос/промпт).
+    const fresh = r.cover && r.coverStyle === COVER_STYLE && had === want;
+    if (only?.length ? !only.includes(r.slug) : fresh) continue;
     console.log(`Рисую превью: ${r.slug}`);
 
     const cached = path.join(SUBJECT_DIR, `${r.slug}.png`);
-    const haveSubject = r.coverPrompt && r.coverSubjectPrompt === r.coverPrompt && fs.existsSync(cached);
-    if (r.coverPrompt && (haveSubject || !aiDown)) {
+    const haveSubject = had === want && fs.existsSync(cached);
+    if ((useStock || r.coverPrompt) && (haveSubject || useStock || !aiDown)) {
       try {
         let subject: Buffer;
         if (haveSubject) {
           subject = fs.readFileSync(cached);
+          // Кэш старого формата — сырое фото на белом: вырезаем сегментатором.
+          if ((await sharp(subject).stats()).isOpaque) {
+            subject = (await cutout(subject)).png;
+            fs.writeFileSync(cached, subject);
+          }
+        } else if (useStock) {
+          const found = await stockSubject(r.coverQuery!);
+          subject = found.png;
+          r.coverCredit = found.credit;
         } else {
-          subject = await generateSubject(r.coverPrompt);
+          subject = (await cutout(await generateSubject(r.coverPrompt!))).png;
+          delete r.coverCredit;
+        }
+        if (!haveSubject) {
           fs.mkdirSync(SUBJECT_DIR, { recursive: true });
-          fs.writeFileSync(cached, await sharp(subject).png().toBuffer());
-          r.coverSubjectPrompt = r.coverPrompt;
+          fs.writeFileSync(cached, subject);
+          r.coverSubjectPrompt = want;
         }
         const out = await renderCollageCover(subject, TOPIC_COLORS[r.topic], TOPIC_ACCENTS[r.topic], r.slug, W, H);
         save(p, r, out, COVER_STYLE);
         continue;
       } catch (e) {
-        console.warn(`  ! ${r.slug}: нейросеть не нарисовала — ${String(e).slice(0, 200)}`);
-        aiDown = true;
+        console.warn(`  ! ${r.slug}: не получилось — ${String(e).slice(0, 200)}`);
+        if (!useStock) aiDown = true;
       }
     }
     // Временное превью — только если картинки нет совсем.

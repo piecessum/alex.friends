@@ -93,6 +93,19 @@ export type ResearchBlock =
       right: { label: string; value: number; display?: string };
       source?: string;
     }
+  /** Линия во времени — как величина менялась по годам. date — "YYYY-MM".
+   *  log — логарифмическая шкала (для роста «в разы»: удвоения, порядки);
+   *  ticks — подписи шкалы Y (по умолчанию — степени десяти);
+   *  highlight — точки с подписью прямо на графике (остальные — по наведению). */
+  | {
+      type: "line";
+      title: string;
+      subtitle?: string;
+      log?: boolean;
+      points: { date: string; label: string; value: number; display?: string; highlight?: boolean }[];
+      ticks?: { value: number; label: string }[];
+      source?: string;
+    }
   /** Врезка «кстати» — интересный факт сбоку от основного повествования. */
   | { type: "fact"; text: string }
   | { type: "quote"; text: string; author?: string };
@@ -120,7 +133,13 @@ export type Research = {
   /** Что изображено на превью-коллаже (по-английски): визуальная метафора
    *  статьи, без лиц и текста. Главный способ, см. scripts/research-cover.ts. */
   coverPrompt?: string;
-  /** С каким coverPrompt нарисован закэшированный объект (subjects/<slug>.png). */
+  /** Что искать на стоке для превью (по-английски, 1–3 слова: «stopwatch»,
+   *  «copper funnel»). Если есть — предмет берётся с фото Pexels, а не у нейросети. */
+  coverQuery?: string;
+  /** Автор стокового фото на превью (заполняет scripts/research-cover.ts). */
+  coverCredit?: { source: string; author: string; url: string };
+  /** Откуда взят закэшированный объект (subjects/<slug>.png): "stock:<запрос>"
+   *  или "ai:<промпт>". Не совпал с текущим — объект ищется заново. */
   coverSubjectPrompt?: string;
   blocks: ResearchBlock[];
   /** Не постить в Telegram-канал раньше этого времени (ISO). В канал всё
@@ -137,7 +156,7 @@ export type Research = {
 
 /** Текущая версия стиля превью. Превью другой версии перерисуются сами,
  *  а в канал исследование не уйдёт, пока превью не нового стиля. */
-export const COVER_STYLE = "collage-4";
+export const COVER_STYLE = "collage-5";
 
 const DIR = path.join(process.cwd(), "content", "research");
 

@@ -69,6 +69,14 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
           className="mt-8 aspect-[3/2] w-full rounded-2xl object-cover"
         />
       )}
+      {r.cover && r.coverCredit && (
+        <div className="mt-2 text-xs text-neutral-400 dark:text-neutral-500">
+          Фото:{" "}
+          <a href={r.coverCredit.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+            {r.coverCredit.author} / {r.coverCredit.source}
+          </a>
+        </div>
+      )}
 
       <div className="mt-10">
         <ResearchBlocks blocks={r.blocks} />

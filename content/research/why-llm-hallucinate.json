@@ -11,7 +11,8 @@
     "year": 2025
   },
   "readingMinutes": 4,
-  "coverPrompt": "a multiple choice exam answer sheet with a pencil",
+  "coverPrompt": "a multiple choice exam answer sheet with filled-in bubbles lying flat, a yellow pencil lying on top, top-down view, the whole sheet visible",
+  "coverQuery": "exam answer sheet",
   "coverSprite": {
     "rows": [
       "..wwwwwwwwwwww......",

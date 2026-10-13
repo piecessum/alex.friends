@@ -12,6 +12,7 @@
   },
   "readingMinutes": 5,
   "coverPrompt": "a hospital bedside patient monitor with a glowing green heartbeat line and red alarm light on top, three-quarter view, the whole device visible",
+  "coverQuery": "patient monitor",
   "coverSprite": {
     "rows": [
       "........rr........",
@@ -191,10 +192,10 @@
     }
   ],
   "coverSubjectPrompt": "a hospital bedside patient monitor with a glowing green heartbeat line and red alarm light on top, three-quarter view, the whole device visible",
-  "cover": "/research/icu-alarm-fatigue-2844ee5d.webp",
+  "cover": "/research/icu-alarm-fatigue-0436cd33.webp",
   "coverSize": [
     1024,
     684
   ],
-  "coverStyle": "collage-4"
+  "coverStyle": "collage-5"
 }

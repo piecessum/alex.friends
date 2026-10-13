@@ -13,6 +13,7 @@
   },
   "readingMinutes": 4,
   "coverPrompt": "a sleek modern silver laptop, open, the screen showing colorful lines of program code, three-quarter view",
+  "coverQuery": "laptop code",
   "blocks": [
     {
       "type": "text",
@@ -109,7 +110,7 @@
       "md": "Авторы подчёркивают, что это узкий срез: опытные разработчики, крупные зрелые проекты, инструменты начала 2025 года. На новом проекте, в незнакомом коде или у новичков результат может быть другим, а модели с тех пор обновились."
     }
   ],
-  "cover": "/research/ai-slows-down-devs-3b6561fd.webp",
+  "cover": "/research/ai-slows-down-devs-5a1e56c5.webp",
   "coverSize": [
     1024,
     684
@@ -144,6 +145,6 @@
       "e": "#1c1b1f"
     }
   },
-  "coverStyle": "collage-4",
+  "coverStyle": "collage-5",
   "coverSubjectPrompt": "a sleek modern silver laptop, open, the screen showing colorful lines of program code, three-quarter view"
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
+import { Maximize2, X } from "lucide-react";
 import type { ResearchBlock } from "@/lib/research";
 
 // Цвета графиков — проверенная палитра (dataviz: первые три слота валидны
@@ -57,6 +59,9 @@ function Markdown({ md }: { md: string }) {
 
 // ---- обвязка графика ------------------------------------------------------
 
+/** График открыт на весь экран — графики могут рисоваться крупнее. */
+const FullscreenContext = React.createContext(false);
+
 function Figure({
   title,
   subtitle,
@@ -68,22 +73,75 @@ function Figure({
   source?: string;
   children: React.ReactNode;
 }) {
+  const [open, setOpen] = React.useState(false);
+
+  // На весь экран: Esc закрывает, страница под графиком не скроллится.
+  React.useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const caption = (big: boolean) =>
+    title && (
+      <figcaption className={big ? "mb-6 pr-12" : "mb-5 pr-10"}>
+        <div
+          className={`font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 ${big ? "text-xl" : ""}`}
+        >
+          {title}
+        </div>
+        {subtitle && (
+          <div className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{subtitle}</div>
+        )}
+      </figcaption>
+    );
+  const footer = source && (
+    <div className="mt-5 text-xs text-neutral-400 dark:text-neutral-500">Источник: {source}</div>
+  );
+  const iconBtn =
+    "absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-400 transition hover:bg-black/5 hover:text-neutral-900 dark:hover:bg-white/5 dark:hover:text-neutral-100";
+
   return (
-    <figure className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 dark:border-neutral-800 dark:bg-[#181818]">
-      {title && (
-        <figcaption className="mb-5">
-          <div className="font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-            {title}
-          </div>
-          {subtitle && (
-            <div className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{subtitle}</div>
-          )}
-        </figcaption>
-      )}
+    <figure className="relative rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6 dark:border-neutral-800 dark:bg-[#181818]">
+      <button type="button" aria-label="Открыть график на весь экран" onClick={() => setOpen(true)} className={iconBtn}>
+        <Maximize2 className="h-4 w-4" />
+      </button>
+      {caption(false)}
       {children}
-      {source && (
-        <div className="mt-5 text-xs text-neutral-400 dark:text-neutral-500">Источник: {source}</div>
-      )}
+      {footer}
+
+      {open &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={title}
+            className="fixed inset-0 z-[100] overflow-y-auto bg-white dark:bg-[#181818]"
+          >
+            <div className="relative mx-auto flex min-h-full max-w-6xl flex-col justify-center px-4 py-14 sm:px-8">
+              <button
+                type="button"
+                aria-label="Закрыть"
+                onClick={() => setOpen(false)}
+                className={`${iconBtn} !fixed right-4 top-4`}
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <FullscreenContext.Provider value={true}>
+                {caption(true)}
+                {children}
+                {footer}
+              </FullscreenContext.Provider>
+            </div>
+          </div>,
+          document.body
+        )}
     </figure>
   );
 }
@@ -213,6 +271,201 @@ function Versus({ block }: { block: Extract<ResearchBlock, { type: "versus" }> }
   );
 }
 
+/** Ширина контейнера — SVG рисуется в реальных пикселях, чтобы текст не масштабировался. */
+function useWidth<T extends HTMLElement>(fallback: number) {
+  const ref = React.useRef<T>(null);
+  const [width, setWidth] = React.useState(fallback);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setWidth(Math.round(e.contentRect.width)));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  return [ref, width] as const;
+}
+
+const MONTHS_SHORT = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
+
+function Line({ block }: { block: Extract<ResearchBlock, { type: "line" }> }) {
+  const big = React.useContext(FullscreenContext);
+  const [ref, width] = useWidth<HTMLDivElement>(640);
+  const [hover, setHover] = React.useState<number | null>(null);
+
+  const pts = block.points.map((p) => {
+    const [y, m] = p.date.split("-").map(Number);
+    return { ...p, t: y + ((m || 1) - 1) / 12, year: y, month: m || 1 };
+  });
+  const fmt = (p: (typeof pts)[number]) => p.display ?? p.value.toLocaleString("ru-RU");
+
+  // Шкалы. Y — линейная от нуля или логарифмическая (рост «в разы»).
+  const H = big ? Math.min(520, Math.max(320, Math.round(width * 0.5))) : width < 480 ? 240 : 280;
+  const pad = { top: 28, right: 20, bottom: 28, left: 52 };
+  const iw = Math.max(width - pad.left - pad.right, 10);
+  const ih = H - pad.top - pad.bottom;
+  const tMin = Math.floor(Math.min(...pts.map((p) => p.t)));
+  // Ось — до последней точки, без пустого «будущего» года.
+  const tMax = Math.max(...pts.map((p) => p.t), tMin + 1);
+  const vals = pts.map((p) => p.value);
+  const f = block.log ? Math.log10 : (v: number) => v;
+  const ticks =
+    block.ticks ??
+    (block.log
+      ? Array.from(
+          { length: Math.floor(Math.log10(Math.max(...vals))) - Math.floor(Math.log10(Math.min(...vals))) + 1 },
+          (_, i) => {
+            const v = 10 ** (Math.floor(Math.log10(Math.min(...vals))) + i);
+            return { value: v, label: v.toLocaleString("ru-RU") };
+          }
+        )
+      : [0, 0.25, 0.5, 0.75, 1].map((k) => {
+          const v = Math.round(Math.max(...vals) * k);
+          return { value: v, label: v.toLocaleString("ru-RU") };
+        }));
+  const yLo = Math.min(f(Math.min(...vals)), ...ticks.map((t) => f(t.value)));
+  const yHi = Math.max(f(Math.max(...vals)), ...ticks.map((t) => f(t.value)));
+  const x = (t: number) => pad.left + ((t - tMin) / (tMax - tMin || 1)) * iw;
+  const y = (v: number) => pad.top + ih - ((f(v) - yLo) / (yHi - yLo || 1)) * ih;
+
+  // Подписи лет: на узком экране — через одну.
+  const years = Array.from({ length: Math.floor(tMax) - tMin + 1 }, (_, i) => tMin + i);
+  const yearStep = iw / years.length < 34 ? 2 : 1;
+
+  // Наведение/тап: ближайшая точка по X (на линию целиться не надо).
+  const pick = (e: React.PointerEvent<SVGSVGElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = e.clientX - r.left;
+    let best = 0;
+    pts.forEach((p, i) => {
+      if (Math.abs(x(p.t) - px) < Math.abs(x(pts[best].t) - px)) best = i;
+    });
+    setHover(best);
+  };
+
+  const path = pts.map((p, i) => `${i ? "L" : "M"}${x(p.t).toFixed(1)},${y(p.value).toFixed(1)}`).join("");
+  const area = `${path}L${x(pts[pts.length - 1].t).toFixed(1)},${pad.top + ih}L${x(pts[0].t).toFixed(1)},${pad.top + ih}Z`;
+  const hp = hover !== null ? pts[hover] : null;
+
+  return (
+    <Figure title={block.title} subtitle={block.subtitle} source={block.source}>
+      <div ref={ref} className="relative">
+        <svg
+          width={width}
+          height={H}
+          className="block touch-pan-y select-none overflow-visible"
+          onPointerMove={pick}
+          onPointerDown={pick}
+          onPointerLeave={(e) => e.pointerType === "mouse" && setHover(null)}
+          role="img"
+          aria-label={block.title}
+        >
+          {/* Сетка и шкала Y — тонкие и тихие. */}
+          {ticks.map((t) => (
+            <g key={t.value}>
+              <line
+                x1={pad.left}
+                x2={pad.left + iw}
+                y1={y(t.value)}
+                y2={y(t.value)}
+                className="stroke-neutral-200 dark:stroke-neutral-800"
+                strokeWidth={1}
+              />
+              <text
+                x={pad.left - 8}
+                y={y(t.value)}
+                dy="0.32em"
+                textAnchor="end"
+                className="fill-neutral-500 text-[11px] tabular-nums dark:fill-neutral-400"
+              >
+                {t.label}
+              </text>
+            </g>
+          ))}
+          {years.map((yr, i) =>
+            i % yearStep ? null : (
+              <text
+                key={yr}
+                x={x(yr)}
+                y={pad.top + ih + 18}
+                textAnchor={i === 0 ? "start" : x(yr) > pad.left + iw - 16 ? "end" : "middle"}
+                className="fill-neutral-500 text-[11px] tabular-nums dark:fill-neutral-400"
+              >
+                {yr}
+              </text>
+            )
+          )}
+
+          <path d={area} className="fill-[#2a78d6]/10 dark:fill-[#3987e5]/10" />
+          <path
+            d={path}
+            fill="none"
+            strokeWidth={2}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            className="stroke-[#2a78d6] dark:stroke-[#3987e5]"
+          />
+
+          {hp && (
+            <line
+              x1={x(hp.t)}
+              x2={x(hp.t)}
+              y1={pad.top}
+              y2={pad.top + ih}
+              className="stroke-neutral-400 dark:stroke-neutral-500"
+              strokeWidth={1}
+            />
+          )}
+
+          {pts.map((p, i) => (
+            <circle
+              key={p.label}
+              cx={x(p.t)}
+              cy={y(p.value)}
+              r={hover === i ? 6 : 4.5}
+              strokeWidth={2}
+              className="fill-[#2a78d6] stroke-white dark:fill-[#3987e5] dark:stroke-[#181818]"
+            />
+          ))}
+
+          {/* Прямые подписи — только у ключевых точек. */}
+          {pts.map((p, i) => {
+            if (!p.highlight || hover === i) return null;
+            const cx = x(p.t);
+            const anchor = cx > pad.left + iw - 60 ? "end" : cx < pad.left + 60 ? "start" : "middle";
+            return (
+              <text
+                key={p.label}
+                x={cx}
+                y={y(p.value) - 12}
+                textAnchor={anchor}
+                className="fill-neutral-800 text-[12px] font-medium dark:fill-neutral-200"
+              >
+                {p.label} · {fmt(p)}
+              </text>
+            );
+          })}
+        </svg>
+
+        {hp && (
+          <div
+            role="tooltip"
+            className="pointer-events-none absolute z-10 -translate-y-full whitespace-nowrap rounded-lg bg-neutral-900 px-2.5 py-1.5 text-xs text-white shadow-lg dark:bg-neutral-100 dark:text-neutral-900"
+            style={{
+              left: Math.min(Math.max(x(hp.t) - 70, 0), width - 140),
+              top: y(hp.value) - 12,
+            }}
+          >
+            <div className="font-medium">{hp.label}</div>
+            <div className="opacity-80">
+              {fmt(hp)} · {MONTHS_SHORT[hp.month - 1]} {hp.year}
+            </div>
+          </div>
+        )}
+      </div>
+    </Figure>
+  );
+}
+
 function Stats({ block }: { block: Extract<ResearchBlock, { type: "stats" }> }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
@@ -255,6 +508,8 @@ export function ResearchBlocks({ blocks }: { blocks: ResearchBlock[] }) {
             return <Split key={i} block={b} />;
           case "versus":
             return <Versus key={i} block={b} />;
+          case "line":
+            return <Line key={i} block={b} />;
           case "fact":
             return (
               <aside

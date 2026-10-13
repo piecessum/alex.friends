@@ -12,6 +12,7 @@
   },
   "readingMinutes": 4,
   "coverPrompt": "a glowing radiology lightbox with a black and white chest x-ray film clipped to it, front view, the whole lightbox visible",
+  "coverQuery": "chest x-ray",
   "coverSprite": {
     "rows": [
       "gggggggggggggggggg",
@@ -170,10 +171,10 @@
     }
   ],
   "coverSubjectPrompt": "a glowing radiology lightbox with a black and white chest x-ray film clipped to it, front view, the whole lightbox visible",
-  "cover": "/research/radiologists-gorilla-94145c85.webp",
+  "cover": "/research/radiologists-gorilla-766220a4.webp",
   "coverSize": [
     1024,
     684
   ],
-  "coverStyle": "collage-4"
+  "coverStyle": "collage-5"
 }

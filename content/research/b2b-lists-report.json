@@ -12,7 +12,8 @@
     "year": 2026
   },
   "readingMinutes": 4,
-  "coverPrompt": "a wooden clipboard with a paper checklist and a pencil",
+  "coverPrompt": "a wooden clipboard holding a printed checklist with rows of checkboxes, several ticked with a red pen, a pencil lying beside it, top-down view",
+  "coverQuery": "clipboard checklist",
   "blocks": [
     {
       "type": "text",
@@ -171,7 +172,7 @@
       "md": "Итого **+20 млн ₽, или +40% к обороту** — без учёта экономии времени менеджеров и снижения оттока. В категориях с регулярными закупками — расходники, электротехника — эффект обычно выше.\n\nЕщё один аргумент из отчёта: когда закупщик увольняется, его списки остаются, и компания не теряет память о том, что и у кого покупала."
     }
   ],
-  "cover": "/research/b2b-lists-report-abeb3aa4.webp",
+  "cover": "/research/b2b-lists-report-516d8e7c.webp",
   "coverSize": [
     1024,
     684
@@ -206,6 +207,6 @@
       "l": "#b9bcc2"
     }
   },
-  "coverStyle": "collage-4",
+  "coverStyle": "collage-5",
   "coverSubjectPrompt": "a wooden clipboard with a paper checklist and a pencil"
 }

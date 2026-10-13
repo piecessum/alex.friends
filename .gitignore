@@ -42,3 +42,6 @@ next-env.d.ts
 
 # бэкап оригиналов аватара (не нужен в деплое)
 /public/avatar/_originals/
+
+# модели для вырезки объектов (lib/cutout.ts)
+/.cache/

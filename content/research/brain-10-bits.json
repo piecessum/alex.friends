@@ -11,7 +11,8 @@
     "year": 2024
   },
   "readingMinutes": 4,
-  "coverPrompt": "a polished copper kitchen funnel",
+  "coverPrompt": "a polished copper kitchen funnel standing alone on its wide rim, three-quarter view, the whole funnel visible",
+  "coverQuery": "funnel",
   "blocks": [
     {
       "type": "text",

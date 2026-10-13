@@ -34,11 +34,18 @@ function rgb(hex: string): [number, number, number] {
  * фактура — печатной. Возвращает RGBA на прозрачном фоне.
  */
 async function printCutout(input: Buffer, maxW: number, maxH: number): Promise<Buffer> {
+  // Уже вырезанный объект (прозрачный фон от lib/cutout.ts) — маска из альфы.
+  // Иначе (старый путь) — фон ищем заливкой от краёв по цвету рамки.
+  const isCutout = !!(await sharp(input).metadata()).hasAlpha && !(await sharp(input).stats()).isOpaque;
   // Срезаем пустые поля (модель рисует предмет с разными отступами).
-  const trimmed = await sharp(input).trim({ threshold: 28 }).toBuffer();
-  const { data, info } = await sharp(trimmed)
-    .resize(maxW, maxH, { fit: "inside" })
-    .removeAlpha()
+  const trimmed = await sharp(input).trim(isCutout ? {} : { threshold: 28 }).toBuffer();
+  const resized = sharp(trimmed).resize(maxW, maxH, { fit: "inside" });
+  const alpha = isCutout
+    ? (await resized.clone().ensureAlpha().extractChannel(3).raw().toBuffer())
+    : null;
+  const { data, info } = await resized
+    .clone()
+    .flatten({ background: "#ffffff" })
     .modulate({ saturation: 0.78 })
     .linear(1.12, -10)
     .raw()
@@ -57,29 +64,33 @@ async function printCutout(input: Buffer, maxW: number, maxH: number): Promise<B
     return Math.abs(r - bgRgb[0]) + Math.abs(g - bgRgb[1]) + Math.abs(b - bgRgb[2]) < 40;
   };
   const bg = new Uint8Array(w * h);
-  const queue = new Int32Array(w * h);
-  let head = 0, tail = 0;
-  const push = (p: number) => {
-    if (!bg[p] && isBg(p)) { bg[p] = 1; queue[tail++] = p; }
-  };
-  for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
-  for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
-  while (head < tail) {
-    const p = queue[head++];
-    const x = p % w, y = (p / w) | 0;
-    if (x > 0) push(p - 1);
-    if (x < w - 1) push(p + 1);
-    if (y > 0) push(p - w);
-    if (y < h - 1) push(p + w);
+  if (alpha) {
+    for (let p = 0; p < w * h; p++) bg[p] = alpha[p] < 128 ? 1 : 0;
+  } else {
+    const queue = new Int32Array(w * h);
+    let head = 0, tail = 0;
+    const push = (p: number) => {
+      if (!bg[p] && isBg(p)) { bg[p] = 1; queue[tail++] = p; }
+    };
+    for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
+    for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
+    while (head < tail) {
+      const p = queue[head++];
+      const x = p % w, y = (p / w) | 0;
+      if (x > 0) push(p - 1);
+      if (x < w - 1) push(p + 1);
+      if (y > 0) push(p - w);
+      if (y < h - 1) push(p + w);
+    }
+    // Убираем светлый ореол по краю вырезки.
+    const halo: number[] = [];
+    for (let p = 0; p < w * h; p++) {
+      if (bg[p] || lum(p) < 225) continue;
+      const x = p % w;
+      if ((x > 0 && bg[p - 1]) || (x < w - 1 && bg[p + 1]) || bg[p - w] || bg[p + w]) halo.push(p);
+    }
+    for (const p of halo) bg[p] = 1;
   }
-  // Убираем светлый ореол по краю вырезки.
-  const halo: number[] = [];
-  for (let p = 0; p < w * h; p++) {
-    if (bg[p] || lum(p) < 225) continue;
-    const x = p % w;
-    if ((x > 0 && bg[p - 1]) || (x < w - 1 && bg[p + 1]) || bg[p - w] || bg[p + w]) halo.push(p);
-  }
-  for (const p of halo) bg[p] = 1;
 
   const out = Buffer.alloc(w * h * 4);
   const paper = rgb(PAPER);
@@ -107,7 +118,8 @@ async function printCutout(input: Buffer, maxW: number, maxH: number): Promise<B
             const inked = base * 0.6 + INK[c] * 0.4; // краска точки
             out[p * 4 + c] = Math.round(base * (1 - ink) + inked * ink);
           }
-          out[p * 4 + 3] = 255;
+          // У вырезки нейросетью края мягкие — сохраняем её альфу.
+          out[p * 4 + 3] = alpha ? alpha[p] : 255;
         }
       }
     }

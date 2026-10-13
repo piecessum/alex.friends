@@ -6,7 +6,8 @@
 #   3) постим в канал и коммитим отметку telegram.messageId.
 # Раз в час — публикация отложенных (поле telegramAt).
 # Нужны секреты CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, TELEGRAM_BOT_TOKEN
-# (бот — админ канала).
+# (бот — админ канала). PEXELS_API_KEY — превью из стоковых фото (без него
+# предмет рисует нейросеть).
 
 name: Research publish
 
@@ -42,6 +43,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       RESEARCH_CHANNEL_ID: ${{ secrets.RESEARCH_CHANNEL_ID }}
       SITE_URL: https://alex-friends.vercel.app
@@ -56,6 +58,12 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      # Модель вырезки объектов (lib/cutout.ts, ~160 МБ) — не качать каждый раз.
+      - uses: actions/cache@v4
+        with:
+          path: .cache/models
+          key: cutout-models-v1
 
       - run: git config user.name "Алексей Масюта" && git config user.email "alexmas1998kot@gmail.com"
 

@@ -12,6 +12,7 @@
   },
   "readingMinutes": 3,
   "coverPrompt": "the center console of an old 2000s car with many physical buttons, round knobs and a small radio, front view",
+  "coverQuery": "car dashboard buttons",
   "blocks": [
     {
       "type": "text",
@@ -123,7 +124,7 @@
       "text": "С 2026 года Euro NCAP снимает баллы безопасности, если поворотники, аварийка, дворники, сигнал и кнопка SOS спрятаны в сенсорный экран, — для них нужны физические кнопки. Без этого пять звёзд получить сильно сложнее, а в 2027–2028 требования ужесточат."
     }
   ],
-  "cover": "/research/buttons-vs-touchscreens-a6f2d484.webp",
+  "cover": "/research/buttons-vs-touchscreens-c65f5aa3.webp",
   "coverSize": [
     1024,
     684
@@ -148,7 +149,7 @@
       "G": "#5d646d"
     }
   },
-  "coverStyle": "collage-4",
+  "coverStyle": "collage-5",
   "telegramAt": "2026-10-10T08:00:00+03:00",
   "coverSubjectPrompt": "the center console of an old 2000s car with many physical buttons, round knobs and a small radio, front view"
 }
