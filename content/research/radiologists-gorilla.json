@@ -176,5 +176,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 17,
+    "postedAt": "2026-10-14T05:23:51.665Z",
+    "cover": "/research/radiologists-gorilla-766220a4.webp"
+  }
 }
