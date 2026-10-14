@@ -54,12 +54,37 @@
       "subtitle": "оценки разных исследований, % меньше ударов сзади",
       "unit": "%",
       "items": [
-        { "label": "Тестовые парки, 1976–79", "value": 35, "display": "≈35%" },
-        { "label": "Прогноз NHTSA, 1983", "value": 33, "display": "33%" },
-        { "label": "NHTSA, лето 1986", "value": 15, "display": "15%" },
-        { "label": "NHTSA, данные 1987", "value": 11.3, "display": "11,3%" },
-        { "label": "IIHS, 1986–91", "value": 5, "display": "5%" },
-        { "label": "Этот отчёт, 1989–95", "value": 4.3, "display": "4,3%", "highlight": true }
+        {
+          "label": "Тестовые парки, 1976–79",
+          "value": 35,
+          "display": "≈35%"
+        },
+        {
+          "label": "Прогноз NHTSA, 1983",
+          "value": 33,
+          "display": "33%"
+        },
+        {
+          "label": "NHTSA, лето 1986",
+          "value": 15,
+          "display": "15%"
+        },
+        {
+          "label": "NHTSA, данные 1987",
+          "value": 11.3,
+          "display": "11,3%"
+        },
+        {
+          "label": "IIHS, 1986–91",
+          "value": 5,
+          "display": "5%"
+        },
+        {
+          "label": "Этот отчёт, 1989–95",
+          "value": 4.3,
+          "display": "4,3%",
+          "highlight": true
+        }
       ],
       "source": "NHTSA, DOT HS 808 696, 1998"
     },
@@ -80,16 +105,69 @@
       "title": "Эффект третьего стоп-сигнала по годам",
       "subtitle": "насколько реже машины с фонарём получали удар сзади, %",
       "points": [
-        { "date": "1986-01", "label": "1986", "value": 5.06, "display": "5,06%" },
-        { "date": "1987-01", "label": "1987", "value": 8.53, "display": "8,53%", "highlight": true },
-        { "date": "1988-01", "label": "1988", "value": 7.16, "display": "7,16%" },
-        { "date": "1989-01", "label": "1989", "value": 4.30, "display": "4,30%" },
-        { "date": "1990-01", "label": "1990", "value": 5.34, "display": "5,34%" },
-        { "date": "1991-01", "label": "1991", "value": 5.05, "display": "5,05%" },
-        { "date": "1992-01", "label": "1992", "value": 5.02, "display": "5,02%" },
-        { "date": "1993-01", "label": "1993", "value": 3.18, "display": "3,18%", "highlight": true },
-        { "date": "1994-01", "label": "1994", "value": 3.44, "display": "3,44%" },
-        { "date": "1995-01", "label": "1995", "value": 3.97, "display": "3,97%", "highlight": true }
+        {
+          "date": "1986-01",
+          "label": "1986",
+          "value": 5.06,
+          "display": "5,06%"
+        },
+        {
+          "date": "1987-01",
+          "label": "1987",
+          "value": 8.53,
+          "display": "8,53%",
+          "highlight": true
+        },
+        {
+          "date": "1988-01",
+          "label": "1988",
+          "value": 7.16,
+          "display": "7,16%"
+        },
+        {
+          "date": "1989-01",
+          "label": "1989",
+          "value": 4.3,
+          "display": "4,30%"
+        },
+        {
+          "date": "1990-01",
+          "label": "1990",
+          "value": 5.34,
+          "display": "5,34%"
+        },
+        {
+          "date": "1991-01",
+          "label": "1991",
+          "value": 5.05,
+          "display": "5,05%"
+        },
+        {
+          "date": "1992-01",
+          "label": "1992",
+          "value": 5.02,
+          "display": "5,02%"
+        },
+        {
+          "date": "1993-01",
+          "label": "1993",
+          "value": 3.18,
+          "display": "3,18%",
+          "highlight": true
+        },
+        {
+          "date": "1994-01",
+          "label": "1994",
+          "value": 3.44,
+          "display": "3,44%"
+        },
+        {
+          "date": "1995-01",
+          "label": "1995",
+          "value": 3.97,
+          "display": "3,97%",
+          "highlight": true
+        }
       ],
       "source": "NHTSA, 1998, таблица 2-6 (среднее по 8 штатам, взвешенное по населению)"
     },
@@ -111,14 +189,48 @@
       "subtitle": "насколько реже удар сзади, %, среднее по 5 штатам",
       "unit": "%",
       "items": [
-        { "label": "Вдали от светофоров и знаков", "value": 6.07, "display": "6,07%", "highlight": true },
-        { "label": "Мокрая дорога", "value": 5.79, "display": "5,79%" },
-        { "label": "Авария из двух машин", "value": 5.54, "display": "5,54%" },
-        { "label": "Днём", "value": 4.73, "display": "4,73%" },
-        { "label": "Сухая дорога", "value": 3.73, "display": "3,73%" },
-        { "label": "Цепочка из 3+ машин", "value": 2.45, "display": "2,45%" },
-        { "label": "В темноте и сумерках", "value": 2.34, "display": "2,34%" },
-        { "label": "У светофора или знака", "value": 1.75, "display": "1,75%", "highlight": true }
+        {
+          "label": "Вдали от светофоров и знаков",
+          "value": 6.07,
+          "display": "6,07%",
+          "highlight": true
+        },
+        {
+          "label": "Мокрая дорога",
+          "value": 5.79,
+          "display": "5,79%"
+        },
+        {
+          "label": "Авария из двух машин",
+          "value": 5.54,
+          "display": "5,54%"
+        },
+        {
+          "label": "Днём",
+          "value": 4.73,
+          "display": "4,73%"
+        },
+        {
+          "label": "Сухая дорога",
+          "value": 3.73,
+          "display": "3,73%"
+        },
+        {
+          "label": "Цепочка из 3+ машин",
+          "value": 2.45,
+          "display": "2,45%"
+        },
+        {
+          "label": "В темноте и сумерках",
+          "value": 2.34,
+          "display": "2,34%"
+        },
+        {
+          "label": "У светофора или знака",
+          "value": 1.75,
+          "display": "1,75%",
+          "highlight": true
+        }
       ],
       "source": "NHTSA, 1998, глава 3"
     },
@@ -142,13 +254,28 @@
       "type": "versus",
       "title": "Сколько стоит фонарь и сколько экономит",
       "subtitle": "млн долларов в год, цены 1994 года",
-      "left": { "label": "Стоимость фонарей на всех новых машинах", "value": 206, "display": "$206 млн" },
-      "right": { "label": "Сэкономленный ремонт", "value": 655, "display": "$655 млн" },
+      "left": {
+        "label": "Стоимость фонарей на всех новых машинах",
+        "value": 206,
+        "display": "$206 млн"
+      },
+      "right": {
+        "label": "Сэкономленный ремонт",
+        "value": 655,
+        "display": "$655 млн"
+      },
       "source": "NHTSA, 1998"
     },
     {
       "type": "text",
       "md": "Вывод отчёта: эффект упал по сравнению с первыми оценками, но одна только экономия на ремонте ($655 млн) намного больше стоимости фонарей ($206 млн), поэтому третий стоп-сигнал остаётся очень выгодным средством безопасности."
     }
-  ]
+  ],
+  "coverSubjectPrompt": "ai:the rear of a dark red 1980s sedan with glowing red tail lights and a lit high center brake light under the rear window, straight rear view, the whole car visible",
+  "cover": "/research/third-brake-light-1ff0c9d1.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
