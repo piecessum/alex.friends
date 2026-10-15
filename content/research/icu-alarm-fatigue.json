@@ -197,5 +197,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 19,
+    "postedAt": "2026-10-15T05:23:10.980Z",
+    "cover": "/research/icu-alarm-fatigue-0436cd33.webp"
+  }
 }
