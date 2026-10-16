@@ -100,13 +100,42 @@
       "subtitle": "доля точных ответов на 62 изображения аналоговых часов, %",
       "unit": "%",
       "items": [
-        { "label": "Gemini-2.0", "value": 22.58, "display": "22,6%", "highlight": true },
-        { "label": "GPT-4o", "value": 8.06, "display": "8,1%" },
-        { "label": "Claude-3.5-sonnet", "value": 6.45, "display": "6,5%" },
-        { "label": "GPT-o1", "value": 4.84, "display": "4,8%" },
-        { "label": "MiniCPM-V-2.6", "value": 3.23, "display": "3,2%" },
-        { "label": "Llama 3.2-Vision", "value": 3.23, "display": "3,2%" },
-        { "label": "Qwen2-VL-7B", "value": 0, "display": "0%" }
+        {
+          "label": "Gemini-2.0",
+          "value": 22.58,
+          "display": "22,6%",
+          "highlight": true
+        },
+        {
+          "label": "GPT-4o",
+          "value": 8.06,
+          "display": "8,1%"
+        },
+        {
+          "label": "Claude-3.5-sonnet",
+          "value": 6.45,
+          "display": "6,5%"
+        },
+        {
+          "label": "GPT-o1",
+          "value": 4.84,
+          "display": "4,8%"
+        },
+        {
+          "label": "MiniCPM-V-2.6",
+          "value": 3.23,
+          "display": "3,2%"
+        },
+        {
+          "label": "Llama 3.2-Vision",
+          "value": 3.23,
+          "display": "3,2%"
+        },
+        {
+          "label": "Qwen2-VL-7B",
+          "value": 0,
+          "display": "0%"
+        }
       ],
       "source": "Saxena et al., 2025, по AI Index 2026"
     },
@@ -152,12 +181,38 @@
       "subtitle": "лучший результат модели в тесте, % успешно выполненных заданий",
       "unit": "%",
       "items": [
-        { "label": "RLBench — робот в простой симуляции", "value": 89.4, "display": "89,4%" },
-        { "label": "WebArena — задания на сайтах", "value": 74.3, "display": "74,3%" },
-        { "label": "OSWorld — задания на компьютере", "value": 66.3, "display": "66,3%" },
-        { "label": "ClockBench — аналоговые часы", "value": 50.6, "display": "50,6%", "highlight": true },
-        { "label": "«Последний экзамен человечества»", "value": 38.3, "display": "38,3%" },
-        { "label": "BEHAVIOR — робот и домашние дела", "value": 12.4, "display": "12,4%", "highlight": true }
+        {
+          "label": "RLBench — робот в простой симуляции",
+          "value": 89.4,
+          "display": "89,4%"
+        },
+        {
+          "label": "WebArena — задания на сайтах",
+          "value": 74.3,
+          "display": "74,3%"
+        },
+        {
+          "label": "OSWorld — задания на компьютере",
+          "value": 66.3,
+          "display": "66,3%"
+        },
+        {
+          "label": "ClockBench — аналоговые часы",
+          "value": 50.6,
+          "display": "50,6%",
+          "highlight": true
+        },
+        {
+          "label": "«Последний экзамен человечества»",
+          "value": 38.3,
+          "display": "38,3%"
+        },
+        {
+          "label": "BEHAVIOR — робот и домашние дела",
+          "value": 12.4,
+          "display": "12,4%",
+          "highlight": true
+        }
       ],
       "source": "AI Index 2026, главы 2.4, 2.6, 2.7"
     },
@@ -165,5 +220,12 @@
       "type": "text",
       "md": "Сами тесты авторы тоже ставят под вопрос. Обзор исследователей из Стэнфорда нашёл некорректные вопросы в девяти популярных бенчмарках — от 2% в математической части MMLU до 42% в наборе школьных задач GSM8K. По разбору IMO-Bench, часть высоких оценок на олимпиадных задачах может объясняться тем, что модели уже видели похожие задачи.\n\nВывод главы: модели закрывают разрыв с экспертами в задачах на знания, а визуальное рассуждение и действия в реальном мире остаются слабым местом. Роботы хорошо работают в контролируемых условиях, но разница между предсказуемой лабораторией и непредсказуемым домом, по оценке авторов, всё ещё большая."
     }
-  ]
+  ],
+  "coverSubjectPrompt": "ai:a classic round analog wall clock with a red rim, black hands and numbers, front view, the whole clock visible",
+  "cover": "/research/ai-jagged-clocks-9328da5e.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
