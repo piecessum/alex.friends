@@ -313,5 +313,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 20,
+    "postedAt": "2026-10-16T05:25:35.769Z",
+    "cover": "/research/ai-task-horizon-40b844f3.webp"
+  }
 }
