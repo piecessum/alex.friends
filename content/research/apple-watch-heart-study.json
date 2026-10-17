@@ -249,5 +249,10 @@
     684
   ],
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "ai:a modern smartwatch with a red sport band, the screen showing a red heart and pulse line, three-quarter view, the whole watch visible"
+  "coverSubjectPrompt": "ai:a modern smartwatch with a red sport band, the screen showing a red heart and pulse line, three-quarter view, the whole watch visible",
+  "telegram": {
+    "messageId": 21,
+    "postedAt": "2026-10-17T05:22:02.663Z",
+    "cover": "/research/apple-watch-heart-study-08955a4e.webp"
+  }
 }
