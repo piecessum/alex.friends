@@ -319,5 +319,12 @@
       "type": "text",
       "md": "Есть и таблица за всю историю наблюдений — в неё входят модели, у которых больше 500 дисков и больше 100 000 диско-дней. В ней 557,7 млн диско-дней и 19 890 поломок, доля поломок — 1,30%. По словам авторов, эта цифра уже давно почти не меняется.\n\nВсе данные, по которым построен отчёт, лежат на странице Hard Drive Test Data. Их можно скачать и использовать бесплатно, Backblaze просит только ссылаться на источник и не продавать сами данные."
     }
-  ]
+  ],
+  "coverSubjectPrompt": "ai:an opened 3.5-inch hard disk drive without its lid, shiny silver platter and read arm visible, three-quarter view, the whole drive in frame",
+  "cover": "/research/backblaze-drive-stats-2025-d6607c04.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
