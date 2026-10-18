@@ -277,5 +277,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 22,
+    "postedAt": "2026-10-18T05:08:52.110Z",
+    "cover": "/research/third-brake-light-1ff0c9d1.webp"
+  }
 }
