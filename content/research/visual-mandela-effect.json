@@ -226,5 +226,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 23,
+    "postedAt": "2026-10-19T05:18:34.191Z",
+    "cover": "/research/visual-mandela-effect-fb7f1dc1.webp"
+  }
 }
