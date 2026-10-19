@@ -96,7 +96,7 @@
         },
         {
           "label": "hit — «ударились»",
-          "value": 34.0,
+          "value": 34,
           "display": "34,0"
         },
         {
@@ -165,7 +165,7 @@
       },
       "right": {
         "label": "hit — «ударились»",
-        "value": 8.0,
+        "value": 8,
         "display": "8,00"
       },
       "source": "Loftus, Palmer, 1974, эксперимент 2"
@@ -224,5 +224,12 @@
       "type": "text",
       "md": "Авторы связывают это с классическим опытом 1932 года: люди перерисовывали простую фигуру по памяти, и рисунок смещался к предмету, название которого им сказали вместе с фигурой."
     }
-  ]
+  ],
+  "coverSubjectPrompt": "ai:a vintage red sedan car with a crumpled front bumper and a cracked headlight, three-quarter view, the whole car in frame",
+  "cover": "/research/smashed-or-hit-4d248f91.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
