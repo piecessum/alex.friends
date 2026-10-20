@@ -227,5 +227,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 24,
+    "postedAt": "2026-10-20T05:18:42.358Z",
+    "cover": "/research/ai-jagged-clocks-9328da5e.webp"
+  }
 }
