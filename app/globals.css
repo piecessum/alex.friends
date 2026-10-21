@@ -33,7 +33,7 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 
-  /* Размеры шрифтов — шкала сайта Ильи Бирмана (переменные --fs-* ниже). */
+  /* Размеры шрифтов — переменные --fs-* ниже, растут с шириной экрана. */
   --text-smallest: var(--fs-smallest);
   --text-smallest--line-height: var(--lh-smallest);
   --text-small: var(--fs-small);
@@ -52,67 +52,56 @@
   --text-h1--line-height: var(--lh-h1);
 }
 
-/* Типографика и поля — как на ilyabirman.ru: размеры растут вместе с шириной
-   экрана, на телефоне поле по бокам — 3% ширины. Значения взяты из его CSS:
-   основной текст 0.8×24 → 0.8×28 → 0.8×32, лид 0.85×30 → … → 0.85×48,
-   заголовок 0.8×60 → … → 0.8×105 с межстрочным 0.76. */
+/* Типографика и поля. Поля — как на ilyabirman.ru (на телефоне 3% ширины
+   экрана, от 800px — 24px); шрифты — чуть крупнее прежних (текст был 17px,
+   заголовок 30–36px), тоже растут с шириной экрана. */
 :root {
   --page-x: 3vw;
   --fs-smallest: 11px;
   --lh-smallest: 14px;
-  --fs-small: 13.5px;
+  --fs-small: 13px;
   --lh-small: 18px;
   --fs-ui: 14px;
-  --lh-ui: 18px;
-  --fs-caption: 16px;
+  --lh-ui: 20px;
+  --fs-caption: 15px;
   --lh-caption: 20px;
-  --fs-body: 19.2px;
-  --lh-body: 24px;
-  --fs-lead: 25.5px;
-  --lh-lead: 30px;
-  --fs-focal: 48px;
-  --lh-focal: 48px;
-  --fs-h1: 48px;
-  --lh-h1: 45.6px;
+  --fs-body: 18px;
+  --lh-body: 28px;
+  --fs-lead: 20px;
+  --lh-lead: 28px;
+  --fs-focal: 36px;
+  --lh-focal: 40px;
+  --fs-h1: 34px;
+  --lh-h1: 38px;
 }
 @media (min-width: 400px) {
   :root {
-    --fs-ui: 16px;
-    --lh-ui: 20px;
+    --fs-ui: 15px;
+    --lh-ui: 21px;
   }
 }
 @media (min-width: 640px) {
   :root {
-    --fs-lead: 30.6px;
-    --lh-lead: 36px;
-    --fs-h1: 60px;
-    --lh-h1: 57px;
+    --fs-lead: 21px;
+    --lh-lead: 30px;
+    --fs-h1: 40px;
+    --lh-h1: 44px;
   }
 }
 @media (min-width: 800px) {
   :root {
     --page-x: 24px;
-    --fs-h1: 72px;
-    --lh-h1: 68.4px;
   }
 }
 @media (min-width: 1200px) {
   :root {
     --page-x: 2vw;
-    --fs-body: 22.4px;
-    --lh-body: 28px;
-    --fs-lead: 35.7px;
-    --lh-lead: 42px;
-    --fs-h1: 84px;
-    --lh-h1: 79.8px;
-  }
-}
-@media (min-width: 1440px) {
-  :root {
-    --fs-body: 25.6px;
-    --lh-body: 32px;
-    --fs-lead: 40.8px;
-    --lh-lead: 48px;
+    --fs-body: 19px;
+    --lh-body: 30px;
+    --fs-lead: 22px;
+    --lh-lead: 32px;
+    --fs-h1: 44px;
+    --lh-h1: 48px;
   }
 }
 

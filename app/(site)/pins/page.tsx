@@ -13,7 +13,7 @@ export default function PinsPage() {
     <main className="w-full flex-1">
       <div className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-h1 font-bold tracking-tight hyphens-auto">Сохранёнки</h1>
+          <h1 className="text-h1 font-bold tracking-tight">Сохранёнки</h1>
           <SavesTabs active="pins" />
         </div>
         <p className="mt-3 max-w-[40em] text-body text-neutral-600 dark:text-neutral-400">

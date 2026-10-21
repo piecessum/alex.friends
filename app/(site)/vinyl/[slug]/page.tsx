@@ -56,7 +56,7 @@ export default async function VinylItemPage({
 
         {/* Правая колонка */}
         <div>
-          <h1 className="text-h1 font-bold tracking-tight hyphens-auto">
+          <h1 className="text-h1 font-bold tracking-tight">
             {item.title}
           </h1>
 

@@ -43,7 +43,7 @@ export default async function DigestPage({ params }: { params: Promise<{ slug: s
       <div className="mt-6 text-small text-neutral-500">
         {formatRuDate(d.date)} · дайджест недели
       </div>
-      <h1 className="mt-3 text-h1 font-bold tracking-tight hyphens-auto">{d.title}</h1>
+      <h1 className="mt-3 text-h1 font-bold tracking-tight">{d.title}</h1>
 
       {d.cover && (
         // eslint-disable-next-line @next/next/no-img-element

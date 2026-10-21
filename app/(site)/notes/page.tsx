@@ -19,7 +19,7 @@ export default async function NotesPage() {
   return (
     <main className="w-full flex-1 px-page py-12 sm:py-16">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-h1 font-bold tracking-tight hyphens-auto">
+          <h1 className="text-h1 font-bold tracking-tight">
             Пишу
           </h1>
           <NotesTabs

@@ -29,7 +29,7 @@ export default async function WritingsStatsPage() {
           Назад
         </Link>
 
-        <h1 className="mt-6 text-h1 font-bold tracking-tight hyphens-auto">
+        <h1 className="mt-6 text-h1 font-bold tracking-tight">
           Статистика
         </h1>
         <p className="mt-3 max-w-[40em] text-body text-neutral-600 dark:text-neutral-400">

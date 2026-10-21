@@ -74,7 +74,7 @@ export default async function NotePage({
           />
         </div>
 
-        <h1 className="mt-6 text-h1 font-bold tracking-tight hyphens-auto">
+        <h1 className="mt-6 text-h1 font-bold tracking-tight">
           {note.title}
         </h1>
 

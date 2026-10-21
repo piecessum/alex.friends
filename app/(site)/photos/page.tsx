@@ -17,7 +17,7 @@ export default function PhotosPage() {
   return (
     <main className="w-full flex-1 px-page py-12 sm:py-16">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-h1 font-bold tracking-tight hyphens-auto">Сохранёнки</h1>
+          <h1 className="text-h1 font-bold tracking-tight">Сохранёнки</h1>
           <SavesTabs active="photos" />
         </div>
         <p className="mt-3 max-w-[40em] text-body text-neutral-600 dark:text-neutral-400">

@@ -54,7 +54,7 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
         )}
       </div>
 
-      <h1 className="mt-3 text-h1 font-bold tracking-tight hyphens-auto">{r.title}</h1>
+      <h1 className="mt-3 text-h1 font-bold tracking-tight">{r.title}</h1>
       <p className="mt-4 text-lead text-neutral-600 dark:text-neutral-400">{r.dek}</p>
 
       {r.cover && (

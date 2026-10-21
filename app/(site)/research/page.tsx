@@ -13,7 +13,7 @@ export default function ResearchPage() {
 
   return (
     <main className="w-full flex-1 px-page py-12 sm:py-16">
-      <h1 className="text-h1 font-bold tracking-tight hyphens-auto">Исследования</h1>
+      <h1 className="text-h1 font-bold tracking-tight">Исследования</h1>
       <p className="mt-3 max-w-[40em] text-body text-neutral-600 dark:text-neutral-400">
         По будням — небольшой обзор интересного исследования, по субботам —
         дайджест недели. Чтобы читать
