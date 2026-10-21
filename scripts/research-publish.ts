@@ -1,9 +1,9 @@
 // Публикация исследований в Telegram-канал: npm run research:publish
-// Не больше одного поста в сутки, с 08:00 МСК — самое старое из ожидающих
-// исследований, чьё время уже наступило (telegramAt, иначе date) и
-// которое ещё не постилось
-// (нет поля telegram), уходит в канал: превью + заголовок + лид + ссылка на
-// сайт. После отправки в JSON пишется telegram.messageId — повторно не уйдёт.
+// Ритм канала (по Москве): пн–пт — исследование с 08:00, одно в день (пока
+// копится очередь — ещё одно вечером, с 19:00); суббота — дайджест недели;
+// воскресенье — выходной. Уходит самое старое из ожидающих исследований, чьё
+// время уже наступило (telegramAt, иначе date) и которое ещё не постилось
+// (нет поля telegram): превью + заголовок + лид + ссылка на сайт. После отправки в JSON пишется telegram.messageId — повторно не уйдёт.
 // Запускать ПОСЛЕ деплоя, чтобы ссылка на сайт уже открывалась.
 // --refresh=slug,slug — у уже опубликованных заменить картинку и подпись в
 // посте канала (после перерисовки превью), без повторной публикации.
@@ -13,7 +13,7 @@ import "./load-env";
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import { COVER_STYLE, type Research } from "@/lib/research";
+import { COVER_STYLE, DIGEST_DIR, type Research, type ResearchDigest } from "@/lib/research";
 
 const DIR = path.join(process.cwd(), "content", "research");
 const SITE = process.env.SITE_URL || "https://alex-friends.vercel.app";
@@ -21,6 +21,8 @@ const CHANNEL = process.env.RESEARCH_CHANNEL_ID || "-1004400783573";
 
 /** Раньше этого часа (МСК) в канал не постим. */
 const POST_FROM_HOUR = 8;
+/** С этого часа (МСК) по будням — второй пост, если очередь накопилась. */
+const CATCH_UP_HOUR = 19;
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -61,6 +63,14 @@ const caption = (r: Research) =>
   `<b>${esc(r.title)}</b>\n\n${esc(r.dek)}\n\n` +
   `<a href="${SITE}/research/${r.slug}">Читать на сайте →</a>`;
 
+const digestCaption = (d: ResearchDigest, titles: Map<string, string>) =>
+  `<b>${esc(d.title)}</b>\n\n` +
+  d.items
+    .filter((i) => titles.has(i.slug))
+    .map((i, n) => `${n + 1}. <a href="${SITE}/research/${i.slug}">${esc(titles.get(i.slug)!)}</a>`)
+    .join("\n") +
+  `\n\n<a href="${SITE}/research/week/${d.slug}">Коротко о каждом — на сайте →</a>`;
+
 // Telegram сжимает фото сам; webp как photo он принимает не всегда — шлём jpg.
 const coverJpeg = (r: Research) =>
   sharp(path.join(process.cwd(), "public", r.cover!)).jpeg({ quality: 88 }).toBuffer();
@@ -97,21 +107,33 @@ async function main() {
   // Правило канала: не больше одного поста в сутки (по Москве) и не раньше
   // 08:00. На сайте исследования появляются сразу, а в канал уходят по
   // очереди — самое старое из ожидающих (telegramAt — «не раньше»).
+  const msk = new Date(now + 3 * 3600_000);
   const mskDay = (t: number) => new Date(t + 3 * 3600_000).toISOString().slice(0, 10);
-  const mskHour = new Date(now + 3 * 3600_000).getUTCHours();
-  const postedToday = all.some(
+  const mskHour = msk.getUTCHours();
+  const weekday = msk.getUTCDay(); // 0 — воскресенье, 6 — суббота
+  const postedToday = all.filter(
     ({ r }) => r.telegram && mskDay(new Date(r.telegram.postedAt).getTime()) === mskDay(now)
-  );
+  ).length;
   const queue = all
     // Превью старого стиля в канал не отправляем — ждём перерисовки.
     .filter(({ r }) => !r.telegram && r.cover && r.coverStyle === COVER_STYLE && new Date(r.telegramAt ?? r.date).getTime() <= now)
     .sort((a, b) => (a.r.telegramAt ?? a.r.date).localeCompare(b.r.telegramAt ?? b.r.date));
-  const due = postedToday || mskHour < POST_FROM_HOUR ? [] : queue.slice(0, 1);
+  // Сколько исследований можно запостить сейчас: по будням одно с утра и ещё
+  // одно вечером, если очередь не разобрана; в выходные — ни одного.
+  const allowed =
+    weekday === 0 || weekday === 6 || mskHour < POST_FROM_HOUR
+      ? 0
+      : mskHour >= CATCH_UP_HOUR && queue.length > 0
+        ? 2
+        : 1;
+  const due = queue.slice(0, Math.max(0, allowed - postedToday));
   if (queue.length && !due.length) {
     console.log(
-      postedToday
-        ? `Сегодня в канале уже был пост — в очереди ждут: ${queue.length}`
-        : `До ${POST_FROM_HOUR}:00 МСК в канал не постим — в очереди: ${queue.length}`
+      weekday === 0 || weekday === 6
+        ? `Выходные — исследования в канал не постим, в очереди: ${queue.length}`
+        : mskHour < POST_FROM_HOUR
+          ? `До ${POST_FROM_HOUR}:00 МСК в канал не постим — в очереди: ${queue.length}`
+          : `Сегодня в канале уже было ${postedToday} — в очереди ждут: ${queue.length}`
     );
   }
 
@@ -125,6 +147,22 @@ async function main() {
     fs.writeFileSync(p, JSON.stringify(r, null, 2) + "\n");
     console.log(`Опубликовано: ${r.slug} → сообщение ${messageId}`);
   }
+  // Суббота — дайджест недели (с 08:00), если он готов и ещё не постился.
+  if (weekday === 6 && mskHour >= POST_FROM_HOUR && fs.existsSync(DIGEST_DIR)) {
+    const titles = new Map(all.map(({ r }) => [r.slug, r.title]));
+    for (const f of fs.readdirSync(DIGEST_DIR).filter((f) => f.endsWith(".json"))) {
+      const p = path.join(DIGEST_DIR, f);
+      const d: ResearchDigest = JSON.parse(fs.readFileSync(p, "utf8"));
+      if (d.telegram || !d.cover || new Date(d.date).getTime() > now) continue;
+      if (mskDay(new Date(d.date).getTime()) !== mskDay(now)) continue; // старые не догоняем
+      const photo = await sharp(path.join(process.cwd(), "public", d.cover)).jpeg({ quality: 88 }).toBuffer();
+      const messageId = await sendPhoto(photo, digestCaption(d, titles));
+      d.telegram = { messageId, postedAt: new Date().toISOString(), cover: d.cover };
+      fs.writeFileSync(p, JSON.stringify(d, null, 2) + "\n");
+      console.log(`Опубликован дайджест: ${d.slug} → сообщение ${messageId}`);
+    }
+  }
+
   if (queue.length === 0 && refresh.length === 0) console.log("Нечего публиковать.");
 }
 

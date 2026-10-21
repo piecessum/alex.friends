@@ -14,7 +14,7 @@ name: Research publish
 on:
   push:
     branches: [main]
-    paths: ["content/research/*.json"]
+    paths: ["content/research/*.json", "content/research/digests/*.json"]
   # Раз в час — запас исследований уходит в канал по своему telegramAt.
   schedule:
     - cron: "40 * * * *"
@@ -86,6 +86,12 @@ jobs:
               const r = JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8"));
               const refresh = (process.env.REFRESH || "").split(",").includes(r.slug);
               if ((!r.telegram || refresh) && r.cover && new Date(r.telegramAt ?? r.date) <= new Date()) console.log(`${r.slug} ${r.cover}`);
+            }
+            // Дайджесты недели — страница /research/week/<slug>.
+            const dd = `${dir}/digests`;
+            if (fs.existsSync(dd)) for (const f of fs.readdirSync(dd).filter((f) => f.endsWith(".json"))) {
+              const d = JSON.parse(fs.readFileSync(`${dd}/${f}`, "utf8"));
+              if (!d.telegram && d.cover && new Date(d.date) <= new Date()) console.log(`week/${d.slug} ${d.cover}`);
             }')
           echo "$slugs"
           [ -z "$slugs" ] && exit 0

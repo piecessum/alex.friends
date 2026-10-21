@@ -29,10 +29,17 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import { renderCollageCover } from "@/lib/collage-cover";
+import { renderCollageCover, renderDigestCover } from "@/lib/collage-cover";
 import { cutout } from "@/lib/cutout";
 import { renderVoxelCover } from "@/lib/voxel-cover";
-import { COVER_STYLE, TOPIC_ACCENTS, TOPIC_COLORS, type Research } from "@/lib/research";
+import {
+  COVER_STYLE,
+  DIGEST_DIR,
+  TOPIC_ACCENTS,
+  TOPIC_COLORS,
+  type Research,
+  type ResearchDigest,
+} from "@/lib/research";
 
 const DIR = path.join(process.cwd(), "content", "research");
 const IMG_DIR = path.join(process.cwd(), "public", "research");
@@ -142,6 +149,32 @@ async function stockSubject(query: string): Promise<{ png: Buffer; credit: Credi
   throw new Error(`на Pexels не нашлось подходящего фото: ${query}`);
 }
 
+// ---- фото, которое нашёл агент ------------------------------------------------
+
+/** Скачивает фото из coverImage. Режим cutout — вырезает предмет; если вырезка
+ *  неудачная (предмет обрезан краем кадра, крошечный или во весь кадр) —
+ *  фото идёт целиком, как вклеенный снимок. */
+async function imageSubject(img: NonNullable<Research["coverImage"]>): Promise<{ png: Buffer; mode: "cutout" | "full" }> {
+  // Wikimedia и часть стоков отдают файлы только с внятным User-Agent.
+  const res = await fetch(img.url, {
+    headers: { "user-agent": "alex-friends-research-cover/1.0 (https://alex-friends.vercel.app)" },
+  });
+  if (!res.ok) throw new Error(`фото не скачалось: ${res.status} ${img.url}`);
+  const raw = Buffer.from(await res.arrayBuffer());
+  const meta = await sharp(raw).metadata();
+  if ((meta.width ?? 0) < 600 || (meta.height ?? 0) < 400) {
+    throw new Error(`фото слишком маленькое: ${meta.width}×${meta.height}`);
+  }
+  if (img.mode !== "full") {
+    const cut = await cutout(raw);
+    console.log(`  вырезка: объект ${Math.round(cut.coverage * 100)}% кадра, касается краёв: ${cut.edges}`);
+    if (cut.edges === 0 && cut.coverage > 0.06 && cut.coverage < 0.7) return { png: cut.png, mode: "cutout" };
+    console.log("  предмет не вырезается чисто — беру фото целиком");
+  }
+  const png = await sharp(raw).rotate().resize(1600, 1600, { fit: "inside", withoutEnlargement: true }).png().toBuffer();
+  return { png, mode: "full" };
+}
+
 // Сначала без превью вовсе, потом уже вышедшие в канал, потом остальные.
 const rank = (r: Research) => (!r.cover ? 0 : r.telegram ? 1 : 2);
 
@@ -168,47 +201,66 @@ async function main() {
 
   let aiDown = false; // нейросеть отказала (лимит и т.п.) — больше не дёргаем
   for (const { p, r } of items) {
-    // Ключ кэша: откуда и по какому запросу взят предмет. Старые записи без
-    // префикса — картинки нейросети по coverPrompt.
-    const useStock = !!process.env.PEXELS_API_KEY && !!r.coverQuery;
-    const want = useStock ? `stock:${r.coverQuery}` : `ai:${r.coverPrompt}`;
-    const had = r.coverSubjectPrompt === r.coverPrompt ? `ai:${r.coverPrompt}` : r.coverSubjectPrompt;
-    // Перерисовываем, если сменился стиль или предмет (новый запрос/промпт).
-    const fresh = r.cover && r.coverStyle === COVER_STYLE && had === want;
+    // Ключ кэша: откуда взят предмет. "image:<url>#<режим>" — фото, которое нашёл
+    // агент; "stock:<запрос>" — Pexels; "ai:<промпт>" — нейросеть. Старые записи
+    // без префикса — картинки нейросети по coverPrompt.
+    const useImage = !!r.coverImage?.url;
+    const useStock = !useImage && !!process.env.PEXELS_API_KEY && !!r.coverQuery;
+    const had = r.coverSubjectPrompt === r.coverPrompt ? `ai:${r.coverPrompt}` : r.coverSubjectPrompt ?? "";
+    const matches = useImage
+      ? had.startsWith(`image:${r.coverImage!.url}#`)
+      : had === (useStock ? `stock:${r.coverQuery}` : `ai:${r.coverPrompt}`);
+    // Перерисовываем, если сменился стиль или предмет (новое фото/запрос/промпт).
+    const fresh = r.cover && r.coverStyle === COVER_STYLE && matches;
     if (only?.length ? !only.includes(r.slug) : fresh) continue;
     console.log(`Рисую превью: ${r.slug}`);
 
     const cached = path.join(SUBJECT_DIR, `${r.slug}.png`);
-    const haveSubject = had === want && fs.existsSync(cached);
-    if ((useStock || r.coverPrompt) && (haveSubject || useStock || !aiDown)) {
+    const haveSubject = matches && fs.existsSync(cached);
+    if ((useImage || useStock || r.coverPrompt) && (haveSubject || useImage || useStock || !aiDown)) {
       try {
         let subject: Buffer;
+        let key = had;
         if (haveSubject) {
           subject = fs.readFileSync(cached);
-          // Кэш старого формата — сырое фото на белом: вырезаем сегментатором.
-          if ((await sharp(subject).stats()).isOpaque) {
+          // Кэш старого формата — сырое фото нейросети на белом: вырезаем.
+          if (had.startsWith("ai:") && (await sharp(subject).stats()).isOpaque) {
             subject = (await cutout(subject)).png;
             fs.writeFileSync(cached, subject);
           }
+        } else if (useImage) {
+          const found = await imageSubject(r.coverImage!);
+          subject = found.png;
+          key = `image:${r.coverImage!.url}#${found.mode}`;
+          r.coverCredit = {
+            source: r.coverImage!.source,
+            author: r.coverImage!.author,
+            url: r.coverImage!.page,
+            license: r.coverImage!.license,
+          };
         } else if (useStock) {
           const found = await stockSubject(r.coverQuery!);
           subject = found.png;
+          key = `stock:${r.coverQuery}`;
           r.coverCredit = found.credit;
         } else {
           subject = (await cutout(await generateSubject(r.coverPrompt!))).png;
+          key = `ai:${r.coverPrompt}`;
           delete r.coverCredit;
         }
         if (!haveSubject) {
           fs.mkdirSync(SUBJECT_DIR, { recursive: true });
           fs.writeFileSync(cached, subject);
-          r.coverSubjectPrompt = want;
+          r.coverSubjectPrompt = key;
         }
-        const out = await renderCollageCover(subject, TOPIC_COLORS[r.topic], TOPIC_ACCENTS[r.topic], r.slug, W, H);
+        const out = await renderCollageCover(subject, TOPIC_COLORS[r.topic], TOPIC_ACCENTS[r.topic], r.slug, W, H, {
+          full: key.endsWith("#full"),
+        });
         save(p, r, out, COVER_STYLE);
         continue;
       } catch (e) {
         console.warn(`  ! ${r.slug}: не получилось — ${String(e).slice(0, 200)}`);
-        if (!useStock) aiDown = true;
+        if (!useImage && !useStock) aiDown = true;
       }
     }
     // Временное превью — только если картинки нет совсем.
@@ -216,6 +268,41 @@ async function main() {
       save(p, r, await renderVoxelCover(r.coverSprite, TOPIC_COLORS[r.topic], W, H), FALLBACK_STYLE);
       console.log(`  временное превью кубиками: ${r.slug}`);
     }
+  }
+
+  await digestCovers();
+}
+
+/** Обложки дайджестов: коллаж из обложек исследований недели. Пересобирается,
+ *  если обложки исследований сменились. */
+async function digestCovers() {
+  if (!fs.existsSync(DIGEST_DIR)) return;
+  const covers = new Map(
+    fs
+      .readdirSync(DIR)
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => JSON.parse(fs.readFileSync(path.join(DIR, f), "utf8")) as Research)
+      .map((r) => [r.slug, r.cover] as const)
+  );
+  for (const f of fs.readdirSync(DIGEST_DIR).filter((f) => f.endsWith(".json"))) {
+    const p = path.join(DIGEST_DIR, f);
+    const d: ResearchDigest = JSON.parse(fs.readFileSync(p, "utf8"));
+    const from = d.items.map((i) => covers.get(i.slug)).filter((c): c is string => !!c);
+    if (!from.length || (d.cover && JSON.stringify(d.coverFrom) === JSON.stringify(from))) continue;
+    console.log(`Собираю обложку дайджеста: ${d.slug}`);
+    const out = await renderDigestCover(
+      from.map((c) => fs.readFileSync(path.join(process.cwd(), "public", c))),
+      d.slug,
+      W,
+      H
+    );
+    const name = `week-${d.slug}-${crypto.createHash("sha1").update(out).digest("hex").slice(0, 8)}.webp`;
+    fs.writeFileSync(path.join(IMG_DIR, name), out);
+    if (d.cover && d.cover !== `/research/${name}`) fs.rmSync(path.join(process.cwd(), "public", d.cover), { force: true });
+    d.cover = `/research/${name}`;
+    d.coverSize = [W, H];
+    d.coverFrom = from;
+    fs.writeFileSync(p, JSON.stringify(d, null, 2) + "\n");
   }
 }
 

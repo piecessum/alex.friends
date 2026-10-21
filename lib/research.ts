@@ -136,10 +136,23 @@ export type Research = {
   /** Что искать на стоке для превью (по-английски, 1–3 слова: «stopwatch»,
    *  «copper funnel»). Если есть — предмет берётся с фото Pexels, а не у нейросети. */
   coverQuery?: string;
-  /** Автор стокового фото на превью (заполняет scripts/research-cover.ts). */
-  coverCredit?: { source: string; author: string; url: string };
-  /** Откуда взят закэшированный объект (subjects/<slug>.png): "stock:<запрос>"
-   *  или "ai:<промпт>". Не совпал с текущим — объект ищется заново. */
+  /** Настоящее фото для превью, которое нашёл агент: со стока (Pexels,
+   *  Unsplash, Pixabay, Wikimedia Commons) или из самого исследования, если
+   *  его картинки в общественном достоянии / CC0 / CC BY. Главный способ.
+   *  mode: "cutout" — вырезать предмет (предметное фото), "full" — фото целиком
+   *  как вклеенный снимок (сцена, иллюстрация из исследования). */
+  coverImage?: {
+    url: string;
+    page: string;
+    author: string;
+    license: string;
+    source: string;
+    mode?: "cutout" | "full";
+  };
+  /** Автор фото на превью (заполняет scripts/research-cover.ts). */
+  coverCredit?: { source: string; author: string; url: string; license?: string };
+  /** Откуда взят закэшированный объект (subjects/<slug>.png): "image:<url>",
+   *  "stock:<запрос>" или "ai:<промпт>". Не совпал с текущим — объект ищется заново. */
   coverSubjectPrompt?: string;
   blocks: ResearchBlock[];
   /** Не постить в Telegram-канал раньше этого времени (ISO). В канал всё
@@ -173,6 +186,45 @@ export function getAllResearch({ includeFuture = false } = {}): Research[] {
 
 export function getResearch(slug: string): Research | null {
   return getAllResearch().find((r) => r.slug === slug) ?? null;
+}
+
+// ---- дайджест недели -------------------------------------------------------
+// Исследования выходят по будням, в субботу — дайджест: что было за неделю.
+// Файл content/research/digests/<slug>.json пишет субботний агент (см.
+// AGENT.md), превью-коллаж из обложек недели и пост в канал — GitHub Action.
+
+export type ResearchDigest = {
+  /** Дата субботы: "2026-10-24". */
+  slug: string;
+  /** ISO, суббота 08:00 МСК. */
+  date: string;
+  title: string;
+  /** Вступление — пара фраз о неделе (мини-markdown, как в блоке text). */
+  intro: string;
+  /** Исследования недели по порядку и короткий вывод по каждому. */
+  items: { slug: string; takeaway: string }[];
+  cover?: string;
+  coverSize?: [number, number];
+  /** Из каких обложек собран коллаж — сменились обложки, коллаж пересоберётся. */
+  coverFrom?: string[];
+  telegram?: { messageId: number; postedAt: string; cover?: string };
+};
+
+export const DIGEST_DIR = path.join(DIR, "digests");
+
+export function getAllDigests({ includeFuture = false } = {}): ResearchDigest[] {
+  if (!fs.existsSync(DIGEST_DIR)) return [];
+  const now = Date.now();
+  return fs
+    .readdirSync(DIGEST_DIR)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(fs.readFileSync(path.join(DIGEST_DIR, f), "utf8")) as ResearchDigest)
+    .filter((d) => includeFuture || new Date(d.date).getTime() <= now)
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+export function getDigest(slug: string): ResearchDigest | null {
+  return getAllDigests().find((d) => d.slug === slug) ?? null;
 }
 
 /** Смежные темы — для подборки «Ещё по теме», когда своей темы мало. */
