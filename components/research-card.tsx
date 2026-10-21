@@ -27,27 +27,27 @@ export function ResearchCard({ r, eager = false }: { r: Research; eager?: boolea
         // Превью ещё не нарисовано — плашка цвета темы с её названием.
         <div
           style={{ background: TOPIC_COLORS[r.topic] }}
-          className="flex aspect-[3/2] w-full items-end p-5 text-sm font-medium text-white/90"
+          className="flex aspect-[3/2] w-full items-end p-5 text-ui font-medium text-white/90"
         >
           {TOPICS[r.topic]}
         </div>
       )}
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-center justify-between gap-3 text-xs text-neutral-500">
+        <div className="flex items-center justify-between gap-3 text-small text-neutral-500">
           <span>
             {formatRuDate(r.date)} · {r.readingMinutes} мин
           </span>
-          <span className="shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] uppercase tracking-wider dark:bg-neutral-900">
+          <span className="shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-smallest uppercase tracking-wider dark:bg-neutral-900">
             {r.own ? "моё" : TOPICS[r.topic]}
           </span>
         </div>
         <h2 className="mt-1.5 font-semibold leading-snug tracking-tight transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
           {r.title}
         </h2>
-        <p className="mt-2 line-clamp-3 text-sm text-neutral-600 dark:text-neutral-400">
+        <p className="mt-2 line-clamp-3 text-ui text-neutral-600 dark:text-neutral-400">
           {r.dek}
         </p>
-        <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-medium text-indigo-600 dark:text-indigo-400">
+        <span className="mt-auto inline-flex items-center gap-1 pt-4 text-ui font-medium text-indigo-600 dark:text-indigo-400">
           Читать
           <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
         </span>

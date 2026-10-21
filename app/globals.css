@@ -32,6 +32,97 @@
   --color-accent: var(--accent);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+
+  /* Размеры шрифтов — шкала сайта Ильи Бирмана (переменные --fs-* ниже). */
+  --text-smallest: var(--fs-smallest);
+  --text-smallest--line-height: var(--lh-smallest);
+  --text-small: var(--fs-small);
+  --text-small--line-height: var(--lh-small);
+  --text-ui: var(--fs-ui);
+  --text-ui--line-height: var(--lh-ui);
+  --text-caption: var(--fs-caption);
+  --text-caption--line-height: var(--lh-caption);
+  --text-body: var(--fs-body);
+  --text-body--line-height: var(--lh-body);
+  --text-lead: var(--fs-lead);
+  --text-lead--line-height: var(--lh-lead);
+  --text-focal: var(--fs-focal);
+  --text-focal--line-height: var(--lh-focal);
+  --text-h1: var(--fs-h1);
+  --text-h1--line-height: var(--lh-h1);
+}
+
+/* Типографика и поля — как на ilyabirman.ru: размеры растут вместе с шириной
+   экрана, на телефоне поле по бокам — 3% ширины. Значения взяты из его CSS:
+   основной текст 0.8×24 → 0.8×28 → 0.8×32, лид 0.85×30 → … → 0.85×48,
+   заголовок 0.8×60 → … → 0.8×105 с межстрочным 0.76. */
+:root {
+  --page-x: 3vw;
+  --fs-smallest: 11px;
+  --lh-smallest: 14px;
+  --fs-small: 13.5px;
+  --lh-small: 18px;
+  --fs-ui: 14px;
+  --lh-ui: 18px;
+  --fs-caption: 16px;
+  --lh-caption: 20px;
+  --fs-body: 19.2px;
+  --lh-body: 24px;
+  --fs-lead: 25.5px;
+  --lh-lead: 30px;
+  --fs-focal: 48px;
+  --lh-focal: 48px;
+  --fs-h1: 48px;
+  --lh-h1: 45.6px;
+}
+@media (min-width: 400px) {
+  :root {
+    --fs-ui: 16px;
+    --lh-ui: 20px;
+  }
+}
+@media (min-width: 640px) {
+  :root {
+    --fs-lead: 30.6px;
+    --lh-lead: 36px;
+    --fs-h1: 60px;
+    --lh-h1: 57px;
+  }
+}
+@media (min-width: 800px) {
+  :root {
+    --page-x: 24px;
+    --fs-h1: 72px;
+    --lh-h1: 68.4px;
+  }
+}
+@media (min-width: 1200px) {
+  :root {
+    --page-x: 2vw;
+    --fs-body: 22.4px;
+    --lh-body: 28px;
+    --fs-lead: 35.7px;
+    --lh-lead: 42px;
+    --fs-h1: 84px;
+    --lh-h1: 79.8px;
+  }
+}
+@media (min-width: 1440px) {
+  :root {
+    --fs-body: 25.6px;
+    --lh-body: 32px;
+    --fs-lead: 40.8px;
+    --lh-lead: 48px;
+  }
+}
+
+/* Поле страницы по бокам и «вылет» на него (горизонтальные ленты чипов). */
+@utility px-page {
+  padding-inline: var(--page-x);
+}
+@utility bleed-page {
+  margin-inline: calc(-1 * var(--page-x));
+  padding-inline: var(--page-x);
 }
 
 * {

@@ -20,7 +20,7 @@ function formatDate(iso?: string): string {
 export function WorkGrid({ posts }: { posts: WorkPost[] }) {
   if (posts.length === 0) {
     return (
-      <p className="mt-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
+      <p className="mt-12 text-center text-ui text-neutral-500 dark:text-neutral-400">
         Здесь пока пусто.
       </p>
     );
@@ -50,9 +50,9 @@ export function WorkGrid({ posts }: { posts: WorkPost[] }) {
           )}
 
           <div className="flex flex-1 flex-col p-5">
-            <div className="flex items-center justify-between gap-3 text-xs text-neutral-500">
+            <div className="flex items-center justify-between gap-3 text-small text-neutral-500">
               <span>{formatDate(p.date) || p.tag}</span>
-              <span className="shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] uppercase tracking-wider dark:bg-neutral-900">
+              <span className="shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-smallest uppercase tracking-wider dark:bg-neutral-900">
                 {WORK_SOURCES[p.source]}
               </span>
             </div>
@@ -61,15 +61,15 @@ export function WorkGrid({ posts }: { posts: WorkPost[] }) {
               {p.title}
             </h2>
             {p.excerpt && (
-              <p className="mt-2 line-clamp-4 text-sm text-neutral-600 dark:text-neutral-400">
+              <p className="mt-2 line-clamp-4 text-ui text-neutral-600 dark:text-neutral-400">
                 {p.excerpt}
               </p>
             )}
             {p.date && p.tag && (
-              <div className="mt-3 text-xs text-indigo-600 dark:text-indigo-400">{p.tag}</div>
+              <div className="mt-3 text-small text-indigo-600 dark:text-indigo-400">{p.tag}</div>
             )}
 
-            <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-medium text-indigo-600 dark:text-indigo-400">
+            <span className="mt-auto inline-flex items-center gap-1 pt-4 text-ui font-medium text-indigo-600 dark:text-indigo-400">
               Читать
               <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </span>

@@ -59,16 +59,16 @@ function Node({ node }: { node: NoteNode }) {
   switch (tag) {
     case "p":
       return (
-        <p className="my-5 leading-relaxed text-neutral-700 dark:text-neutral-300">
+        <p className="my-[0.6lh] text-neutral-700 dark:text-neutral-300">
           {kids}
         </p>
       );
     case "h3":
       return (
-        <h2 className="mt-10 mb-4 text-2xl font-bold tracking-tight">{kids}</h2>
+        <h2 className="mt-10 mb-4 text-lead font-bold tracking-tight">{kids}</h2>
       );
     case "h4":
-      return <h3 className="mt-8 mb-3 text-xl font-semibold">{kids}</h3>;
+      return <h3 className="mt-8 mb-3 text-body font-bold">{kids}</h3>;
     case "strong":
     case "b":
       return <strong className="font-semibold">{kids}</strong>;
@@ -107,7 +107,7 @@ function Node({ node }: { node: NoteNode }) {
       );
     case "pre":
       return (
-        <pre className="my-6 overflow-x-auto rounded-xl bg-neutral-900 p-4 text-sm text-neutral-100">
+        <pre className="my-6 overflow-x-auto rounded-xl bg-neutral-900 p-4 text-ui text-neutral-100">
           {kids}
         </pre>
       );
@@ -131,7 +131,7 @@ function Node({ node }: { node: NoteNode }) {
       const caption = textOf(children);
       if (!caption) return null;
       return (
-        <figcaption className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
+        <figcaption className="mt-2 text-center text-caption text-neutral-500 dark:text-neutral-400">
           {kids}
         </figcaption>
       );

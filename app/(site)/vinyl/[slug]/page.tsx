@@ -28,7 +28,7 @@ export default async function VinylItemPage({
   if (!item) notFound();
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12 sm:py-16">
+    <main className="mx-auto w-full max-w-5xl flex-1 px-page py-12 sm:py-16">
       {/* Десктоп: слева назад + 3D-коробка, справа заголовок и описание.
           Мобилка: то же стопкой (назад → коробка → заголовок → описание). */}
       <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-12">
@@ -36,7 +36,7 @@ export default async function VinylItemPage({
         <div>
           <Link
             href="/vinyl"
-            className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+            className="inline-flex items-center gap-1.5 text-ui text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
           >
             <ArrowLeft className="h-4 w-4" />
             Все пластинки
@@ -56,7 +56,7 @@ export default async function VinylItemPage({
 
         {/* Правая колонка */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          <h1 className="text-h1 font-bold tracking-tight hyphens-auto">
             {item.title}
           </h1>
 
@@ -64,7 +64,7 @@ export default async function VinylItemPage({
             {/* Интересное об издании/пластинке — показываем, если есть */}
             {item.description?.length ? (
               <section>
-                <h2 className="text-lg font-bold tracking-tight">Об издании</h2>
+                <h2 className="text-lead font-bold tracking-tight">Об издании</h2>
                 <div className="mt-4 space-y-3 text-neutral-700 dark:text-neutral-300">
                   {item.description.map((p, i) => (
                     <p key={i}>{p}</p>
@@ -75,7 +75,7 @@ export default async function VinylItemPage({
                     href={item.source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 transition hover:text-indigo-700 hover:underline dark:text-indigo-400 dark:hover:text-indigo-300"
+                    className="mt-4 inline-flex items-center gap-1 text-ui font-medium text-indigo-600 transition hover:text-indigo-700 hover:underline dark:text-indigo-400 dark:hover:text-indigo-300"
                   >
                     {item.source.label}
                     <ArrowUpRight className="h-3.5 w-3.5" />
@@ -87,14 +87,14 @@ export default async function VinylItemPage({
             {/* Список треков — отдельной секцией, если есть */}
             {item.tracks.length ? (
               <section>
-                <h2 className="text-lg font-bold tracking-tight">Список треков</h2>
+                <h2 className="text-lead font-bold tracking-tight">Список треков</h2>
                 <ol className="mt-4">
                   {item.tracks.map((track, i) => (
                     <li
                       key={i}
                       className="flex items-baseline gap-3 py-2.5 text-neutral-700 dark:text-neutral-300"
                     >
-                      <span className="w-6 shrink-0 text-right text-sm tabular-nums text-neutral-400 dark:text-neutral-600">
+                      <span className="w-6 shrink-0 text-right text-ui tabular-nums text-neutral-400 dark:text-neutral-600">
                         {i + 1}
                       </span>
                       <span>{track}</span>
@@ -106,7 +106,7 @@ export default async function VinylItemPage({
 
             {/* Ни описания, ни треков */}
             {!item.description?.length && !item.tracks.length ? (
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              <p className="text-ui text-neutral-600 dark:text-neutral-400">
                 {item.want
                   ? "Этой пластинки пока нет в коллекции — она в вишлисте."
                   : "Список треков не указан."}

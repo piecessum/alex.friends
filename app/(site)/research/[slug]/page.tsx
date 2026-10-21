@@ -32,30 +32,30 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
   const related = getRelatedResearch(r);
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
+    <main className="mx-auto w-full max-w-[calc(40em+2*var(--page-x))] flex-1 px-page py-12 text-body sm:py-16">
       <Link
         href="/research"
-        className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+        className="inline-flex items-center gap-1.5 text-ui text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
       >
         <ArrowLeft className="h-4 w-4" />
         Все исследования
       </Link>
 
-      <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-500">
+      <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-neutral-500">
         <span>{formatRuDate(r.date)}</span>
         <span>·</span>
         <span>{r.readingMinutes} мин</span>
         <span>·</span>
         <span>{TOPICS[r.topic]}</span>
         {r.own && (
-          <span className="rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+          <span className="rounded-full bg-indigo-500/10 px-2 py-0.5 text-smallest font-medium uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
             моё исследование
           </span>
         )}
       </div>
 
-      <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{r.title}</h1>
-      <p className="mt-4 text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">{r.dek}</p>
+      <h1 className="mt-3 text-h1 font-bold tracking-tight hyphens-auto">{r.title}</h1>
+      <p className="mt-4 text-lead text-neutral-600 dark:text-neutral-400">{r.dek}</p>
 
       {r.cover && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -70,7 +70,7 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
         />
       )}
       {r.cover && r.coverCredit && (
-        <div className="mt-2 text-xs text-neutral-400 dark:text-neutral-500">
+        <div className="mt-2 text-small text-neutral-400 dark:text-neutral-500">
           Фото:{" "}
           <a href={r.coverCredit.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
             {r.coverCredit.author} / {r.coverCredit.source}
@@ -90,13 +90,13 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
         className="group mt-12 flex items-center justify-between gap-4 rounded-2xl border border-neutral-200 p-5 transition hover:border-indigo-400 dark:border-neutral-700 dark:hover:border-indigo-500"
       >
         <div>
-          <div className="text-xs uppercase tracking-wider text-neutral-500">
+          <div className="text-small uppercase tracking-wider text-neutral-500">
             Оригинал{r.source.year ? ` · ${r.source.year}` : ""}
           </div>
           <div className="mt-1 font-semibold leading-snug transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
             {r.source.title}
           </div>
-          <div className="mt-0.5 text-sm text-neutral-500">{r.source.publisher}</div>
+          <div className="mt-0.5 text-ui text-neutral-500">{r.source.publisher}</div>
         </div>
         <ArrowUpRight className="h-5 w-5 shrink-0 text-neutral-400 transition group-hover:text-indigo-500" />
       </a>
@@ -105,7 +105,7 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
       <div className="mt-10">
         <Link
           href="/research"
-          className="inline-flex items-center gap-1.5 text-sm text-neutral-600 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+          className="inline-flex items-center gap-1.5 text-ui text-neutral-600 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
         >
           <ArrowLeft className="h-4 w-4" />
           Все исследования
@@ -114,7 +114,7 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
 
       {related.length > 0 && (
         <section className="mt-16">
-          <h2 className="text-xl font-bold tracking-tight">Ещё по теме</h2>
+          <h2 className="text-lead font-bold tracking-tight">Ещё по теме</h2>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
             {related.map((x) => (
               <ResearchCard key={x.slug} r={x} />

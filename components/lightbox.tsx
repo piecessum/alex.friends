@@ -191,7 +191,7 @@ export function Lightbox({
 
       {/* Счётчик */}
       {n > 1 && (
-        <span className="absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white/90 sm:top-5">
+        <span className="absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-ui font-medium text-white/90 sm:top-5">
           {index + 1} / {n}
         </span>
       )}

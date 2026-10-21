@@ -27,7 +27,7 @@ export function PostGraph({
       <button
         type="button"
         onClick={() => setFull(true)}
-        className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400 lg:hidden"
+        className="inline-flex items-center gap-1.5 text-ui text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400 lg:hidden"
       >
         <Share2 className="h-4 w-4" />
         Граф

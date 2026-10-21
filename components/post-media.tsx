@@ -105,7 +105,7 @@ export function PostMedia({
                 <Play className="h-6 w-6 translate-x-0.5 fill-current" />
               </span>
               {v.duration && (
-                <span className="absolute bottom-2 right-2 rounded bg-black/65 px-1.5 py-0.5 text-[11px] font-medium text-white">
+                <span className="absolute bottom-2 right-2 rounded bg-black/65 px-1.5 py-0.5 text-smallest font-medium text-white">
                   {v.duration}
                 </span>
               )}

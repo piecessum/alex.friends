@@ -67,7 +67,7 @@ export default function Dashboard() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,rgba(99,102,241,0.16),transparent_70%)]"
       />
 
-      <div className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
+      <div className="mx-auto max-w-5xl px-page py-12 sm:py-16">
         {/* Шапка дашборда: аватар + приветствие + переключатель темы */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -85,10 +85,10 @@ export default function Dashboard() {
             </div>
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
+            <h1 className="text-lead font-bold tracking-tight">
               Привет, я Алексей
             </h1>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            <p className="text-ui text-neutral-500 dark:text-neutral-400">
               Это что блог? — нет это бложик
             </p>
           </div>
@@ -99,7 +99,7 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className="mt-8 max-w-2xl space-y-3 text-[15px] leading-relaxed text-neutral-700 dark:text-neutral-300"
+          className="mt-8 max-w-[40em] space-y-3 text-body text-neutral-700 dark:text-neutral-300"
         >
           <p>
             Я аналитик с опытом работы над B2B-продуктами: разбираюсь, как
@@ -134,7 +134,7 @@ export default function Dashboard() {
                     <Icon className="h-5 w-5" />
                   </div>
                   {w.soon ? (
-                    <span className="rounded-full border border-neutral-200 px-2.5 py-0.5 text-[11px] uppercase tracking-wider text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
+                    <span className="rounded-full border border-neutral-200 px-2.5 py-0.5 text-smallest uppercase tracking-wider text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
                       скоро
                     </span>
                   ) : w.external ? (
@@ -143,10 +143,10 @@ export default function Dashboard() {
                     <ArrowRight className="h-4 w-4 text-neutral-400 transition group-hover:translate-x-0.5 group-hover:text-indigo-500" />
                   )}
                 </div>
-                <h3 className="mt-5 text-lg font-semibold tracking-tight">
+                <h3 className="mt-5 text-body font-semibold tracking-tight">
                   {w.title}
                 </h3>
-                <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+                <p className="mt-2 text-ui text-neutral-600 dark:text-neutral-400">
                   {w.description}
                 </p>
               </>

@@ -15,12 +15,12 @@ export default function PhotosPage() {
   );
 
   return (
-    <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    <main className="w-full flex-1 px-page py-12 sm:py-16">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Сохранёнки</h1>
+          <h1 className="text-h1 font-bold tracking-tight hyphens-auto">Сохранёнки</h1>
           <SavesTabs active="photos" />
         </div>
-        <p className="mt-3 max-w-2xl text-neutral-600 dark:text-neutral-400">
+        <p className="mt-3 max-w-[40em] text-body text-neutral-600 dark:text-neutral-400">
           Фотографирую на свой айфончик иногда, где-нибудь в дороге от скуки
           обрабатываю фоточки в Snapseed и в родном редакторе айфона.
         </p>
@@ -30,10 +30,10 @@ export default function PhotosPage() {
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/15 to-transparent text-amber-500 dark:text-amber-400">
               <Camera className="h-7 w-7" />
             </div>
-            <h2 className="mt-6 text-xl font-semibold tracking-tight">
+            <h2 className="mt-6 text-lead font-semibold tracking-tight">
               Страница в разработке
             </h2>
-            <p className="mt-2 max-w-md text-sm text-neutral-500 dark:text-neutral-400">
+            <p className="mt-2 max-w-md text-ui text-neutral-500 dark:text-neutral-400">
               Коплю фоточки — скоро здесь появится галерея с самыми красивыми
               моментами. Загляните чуть позже.
             </p>

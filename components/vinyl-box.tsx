@@ -108,7 +108,7 @@ export function VinylBox({
             ) : (
               <>
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_-10%_-10%,rgba(255,255,255,0.18),transparent_55%)]" />
-                <span className="relative text-xs font-semibold uppercase tracking-widest text-white/55">
+                <span className="relative text-small font-semibold uppercase tracking-widest text-white/55">
                   {want ? "хочу" : "винил"}
                 </span>
                 <div className="relative text-2xl font-bold leading-tight text-white drop-shadow-sm sm:text-3xl">
@@ -140,12 +140,12 @@ export function VinylBox({
               />
             ) : (
               <>
-                <div className="flex items-start justify-between text-[10px] uppercase tracking-widest text-white/40">
+                <div className="flex items-start justify-between text-smallest uppercase tracking-widest text-white/40">
                   <span>{want ? "wishlist" : "side A / B"}</span>
                   <span>33⅓ rpm</span>
                 </div>
-                <div className="text-sm font-semibold text-white/90">{title}</div>
-                <div className="min-h-0 flex-1 overflow-hidden py-2 text-[10px] leading-relaxed text-white/55">
+                <div className="text-ui font-semibold text-white/90">{title}</div>
+                <div className="min-h-0 flex-1 overflow-hidden py-2 text-smallest leading-relaxed text-white/55">
                   {description?.length
                     ? description.map((p, i) => <div key={i}>{p}</div>)
                     : tracks.slice(0, 12).map((t, i) => (
@@ -223,7 +223,7 @@ export function VinylBox({
         </div>
       </div>
 
-      <p className="mt-5 text-center text-xs text-neutral-400 dark:text-neutral-500">
+      <p className="mt-5 text-center text-small text-neutral-400 dark:text-neutral-500">
         Покрути коробку — потяни мышкой или пальцем
       </p>
     </div>

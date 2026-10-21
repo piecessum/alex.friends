@@ -24,18 +24,18 @@ function formatDate(iso: string): string {
 
 // Общий стиль текста поста — используем и для комментария, и для текста форварда.
 const bodyClass =
-  "whitespace-pre-line leading-relaxed break-words text-neutral-800 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:text-neutral-200 dark:[&_a]:text-indigo-400";
+  "whitespace-pre-line break-words text-neutral-800 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:text-neutral-200 dark:[&_a]:text-indigo-400";
 
 /** Опрос из Telegram — показываем результаты (голосовать можно в самом канале). */
 function Poll({ poll }: { poll: TgPoll }) {
   const leader = Math.max(...poll.options.map((o) => o.percent), 0);
   return (
     <div className="mt-5 rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
-      <div className="text-[17px] font-semibold text-neutral-800 dark:text-neutral-100">
+      <div className="text-body font-semibold text-neutral-800 dark:text-neutral-100">
         {poll.question}
       </div>
       {poll.type && (
-        <div className="mt-0.5 text-xs uppercase tracking-wide text-neutral-400">
+        <div className="mt-0.5 text-small uppercase tracking-wide text-neutral-400">
           {poll.type}
         </div>
       )}
@@ -44,7 +44,7 @@ function Poll({ poll }: { poll: TgPoll }) {
           const winning = o.percent === leader && leader > 0;
           return (
             <li key={i}>
-              <div className="flex items-baseline justify-between gap-3 text-sm">
+              <div className="flex items-baseline justify-between gap-3 text-ui">
                 <span className="text-neutral-700 dark:text-neutral-300">{o.text}</span>
                 <span
                   className={`shrink-0 tabular-nums ${
@@ -91,7 +91,7 @@ export function ChannelPost({ post }: { post: TgPost }) {
 
   return (
     <article>
-      <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-500">
+      <div className="flex items-center justify-between text-small text-neutral-500 dark:text-neutral-500">
         <span>{formatDate(post.date)}</span>
         {post.views && (
           <span className="inline-flex items-center gap-1">
@@ -108,11 +108,11 @@ export function ChannelPost({ post }: { post: TgPost }) {
           href={`/channel/${post.reply.id}`}
           className="group mt-4 block rounded-lg border-l-2 border-indigo-400 bg-indigo-500/5 px-3 py-2.5 transition hover:bg-indigo-500/10"
         >
-          <span className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+          <span className="flex items-center gap-1.5 text-small text-neutral-500 dark:text-neutral-400">
             <Reply className="h-3.5 w-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
             В ответ на пост
           </span>
-          <span className="mt-1 line-clamp-2 text-sm leading-snug text-neutral-700 transition group-hover:text-indigo-600 dark:text-neutral-300 dark:group-hover:text-indigo-400">
+          <span className="mt-1 line-clamp-2 text-ui leading-snug text-neutral-700 transition group-hover:text-indigo-600 dark:text-neutral-300 dark:group-hover:text-indigo-400">
             {post.reply.text || "Пост"}
           </span>
         </Link>
@@ -120,14 +120,14 @@ export function ChannelPost({ post }: { post: TgPost }) {
 
       {/* Твой комментарий к пересылке — твоим голосом, над самой цитатой. */}
       {post.forward && comment && (
-        <SpoilerHtml className={`mt-5 text-[17px] ${bodyClass}`} html={comment} />
+        <SpoilerHtml className={`mt-5 text-body ${bodyClass}`} html={comment} />
       )}
 
       {post.forward ? (
         // Пересланный пост оформляем как цитату: шапка «Переслано из…» и,
         // если у форварда был свой текст, — сам текст под ней.
         <div className="mt-4 rounded-lg border-l-2 border-indigo-400 bg-indigo-500/5 px-3 py-2.5">
-          <div className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+          <div className="flex items-center gap-1.5 text-small text-neutral-500 dark:text-neutral-400">
             <CornerUpRight className="h-3.5 w-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
             <span>
               Переслано из{" "}
@@ -148,15 +148,15 @@ export function ChannelPost({ post }: { post: TgPost }) {
             </span>
           </div>
           {post.html && (
-            <SpoilerHtml className={`mt-2 text-[16px] ${bodyClass}`} html={html} />
+            <SpoilerHtml className={`mt-2 text-body ${bodyClass}`} html={html} />
           )}
         </div>
       ) : rich ? (
         // Новая вёрстка Telegram: картинки посреди текста, с подписями.
-        <RichPostBody blocks={rich} textClassName={`text-[17px] ${bodyClass}`} />
+        <RichPostBody blocks={rich} textClassName={`text-body ${bodyClass}`} />
       ) : (
         post.html && (
-          <SpoilerHtml className={`mt-5 text-[17px] ${bodyClass}`} html={html} />
+          <SpoilerHtml className={`mt-5 text-body ${bodyClass}`} html={html} />
         )
       )}
 
@@ -189,13 +189,13 @@ export function ChannelPost({ post }: { post: TgPost }) {
           )}
           <div className="min-w-0">
             {post.link.site && (
-              <div className="text-xs text-neutral-400">{post.link.site}</div>
+              <div className="text-small text-neutral-400">{post.link.site}</div>
             )}
             {post.link.title && (
-              <div className="line-clamp-1 text-sm font-semibold">{post.link.title}</div>
+              <div className="line-clamp-1 text-ui font-semibold">{post.link.title}</div>
             )}
             {post.link.description && (
-              <div className="line-clamp-2 text-xs text-neutral-500 dark:text-neutral-400">
+              <div className="line-clamp-2 text-small text-neutral-500 dark:text-neutral-400">
                 {post.link.description}
               </div>
             )}
@@ -207,7 +207,7 @@ export function ChannelPost({ post }: { post: TgPost }) {
         href={post.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-4 inline-flex items-center gap-1 text-xs text-neutral-400 transition hover:text-indigo-600 dark:hover:text-indigo-400"
+        className="mt-4 inline-flex items-center gap-1 text-small text-neutral-400 transition hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         в Telegram
         <ArrowUpRight className="h-3 w-3" />

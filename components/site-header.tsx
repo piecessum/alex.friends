@@ -32,7 +32,7 @@ export function SiteHeader() {
             href={links.resume}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white/60 px-3 py-1.5 text-sm text-neutral-700 backdrop-blur transition hover:border-neutral-300 hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950/60 dark:text-neutral-300 dark:hover:text-neutral-100"
+            className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white/60 px-3 py-1.5 text-ui text-neutral-700 backdrop-blur transition hover:border-neutral-300 hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950/60 dark:text-neutral-300 dark:hover:text-neutral-100"
           >
             Резюме
             <ArrowUpRight className="h-3.5 w-3.5" />

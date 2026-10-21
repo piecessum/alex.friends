@@ -69,7 +69,7 @@ function VinylCard({
             className="h-full w-full object-cover"
           />
           {want && (
-            <span className="absolute left-2 top-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur">
+            <span className="absolute left-2 top-2 rounded-full bg-black/55 px-2 py-0.5 text-smallest font-semibold uppercase tracking-widest text-white backdrop-blur">
               хочу
             </span>
           )}
@@ -82,7 +82,7 @@ function VinylCard({
           }}
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_-10%_-10%,rgba(255,255,255,0.18),transparent_55%)]" />
-          <span className="relative text-[11px] font-semibold uppercase tracking-widest text-white/55">
+          <span className="relative text-smallest font-semibold uppercase tracking-widest text-white/55">
             {want ? "хочу" : "винил"}
           </span>
           <div className="relative">
@@ -90,7 +90,7 @@ function VinylCard({
               {title}
             </div>
             {subtitle && (
-              <div className="mt-1 text-xs text-white/70">{subtitle}</div>
+              <div className="mt-1 text-small text-white/70">{subtitle}</div>
             )}
           </div>
         </div>
@@ -198,7 +198,7 @@ export function VinylGallery({
               type="button"
               onClick={() => setTab(t.key)}
               className={cn(
-                "rounded-xl px-4 py-2 text-sm font-medium whitespace-nowrap transition",
+                "rounded-xl px-4 py-2 text-ui font-medium whitespace-nowrap transition",
                 tab === t.key
                   ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-700 dark:text-neutral-100"
                   : "text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
@@ -219,14 +219,14 @@ export function VinylGallery({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Поиск по названию или треку"
-            className="w-full rounded-xl border border-neutral-200 bg-white/60 py-2 pr-3 pl-9 text-sm text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-indigo-400 dark:border-neutral-700 dark:bg-[#181818]/60 dark:text-neutral-200"
+            className="w-full rounded-xl border border-neutral-200 bg-white/60 py-2 pr-3 pl-9 text-ui text-neutral-800 outline-none transition placeholder:text-neutral-400 focus:border-indigo-400 dark:border-neutral-700 dark:bg-[#181818]/60 dark:text-neutral-200"
           />
         </div>
       </div>
 
       {/* Лотки по жанрам — как в магазине пластинок. Только на вкладке «есть». */}
       {tab === "have" && genres.length > 0 && (
-        <div className="-mx-4 mt-6 flex gap-2 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 [&::-webkit-scrollbar]:hidden">
+        <div className="bleed-page mt-6 flex gap-2 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {[{ name: null as string | null, count: have.length }, ...genres].map(
             (g) => {
               const active = genre === g.name;
@@ -236,7 +236,7 @@ export function VinylGallery({
                   type="button"
                   onClick={() => setGenre(g.name)}
                   className={cn(
-                    "shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition",
+                    "shrink-0 rounded-full border px-3.5 py-1.5 text-ui font-medium transition",
                     active
                       ? "border-indigo-600 bg-indigo-600 text-white"
                       : "border-neutral-200 bg-white/60 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900 dark:border-neutral-700 dark:bg-[#181818]/40 dark:text-neutral-400 dark:hover:border-neutral-700 dark:hover:text-neutral-200"
@@ -255,7 +255,7 @@ export function VinylGallery({
 
       {/* Сетка пластинок */}
       {list.length === 0 ? (
-        <p className="mt-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="mt-12 text-center text-ui text-neutral-500 dark:text-neutral-400">
           {q
             ? `Ничего не нашлось по запросу «${query.trim()}».`
             : "В этом жанре пока пусто."}

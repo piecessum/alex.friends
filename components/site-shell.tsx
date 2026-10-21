@@ -79,7 +79,7 @@ function NavIcon({
     <>
       <Icon className="h-5 w-5" />
       {tip && (
-        <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded-md bg-neutral-900 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-md transition group-hover:translate-x-0 group-hover:opacity-100 dark:bg-neutral-100 dark:text-neutral-900">
+        <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 translate-x-1 whitespace-nowrap rounded-md bg-neutral-900 px-2 py-1 text-small font-medium text-white opacity-0 shadow-md transition group-hover:translate-x-0 group-hover:opacity-100 dark:bg-neutral-100 dark:text-neutral-900">
           {tab.label}
         </span>
       )}

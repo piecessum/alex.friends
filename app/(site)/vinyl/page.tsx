@@ -11,11 +11,11 @@ export default function VinylPage() {
   const want = items.filter((i) => i.want);
 
   return (
-    <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+    <main className="w-full flex-1 px-page py-12 sm:py-16">
+        <h1 className="text-h1 font-bold tracking-tight hyphens-auto">
           Коллекция пластинок
         </h1>
-        <p className="mt-3 max-w-2xl text-neutral-600 dark:text-neutral-400">
+        <p className="mt-3 max-w-[40em] text-body text-neutral-600 dark:text-neutral-400">
           Винил, который у меня есть, и то, что хочу заполучить.
         </p>
 

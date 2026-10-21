@@ -37,7 +37,7 @@ export function PhotoGallery({
   }, []);
 
   const chip =
-    "shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500";
+    "shrink-0 rounded-full px-4 py-1.5 text-ui font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500";
   const chipOn = "bg-amber-500 text-white";
   const chipOff =
     "bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700";
@@ -46,7 +46,7 @@ export function PhotoGallery({
     <>
       {/* Чипсы-категории */}
       {categories.length > 0 && (
-        <div className="-mx-4 mb-5 flex gap-2 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 [&::-webkit-scrollbar]:hidden">
+        <div className="bleed-page mb-5 flex gap-2 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <button
             type="button"
             onClick={() => selectCategory(null)}

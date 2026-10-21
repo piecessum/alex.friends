@@ -20,19 +20,19 @@ export default async function WritingsStatsPage() {
   const graph = buildTagGraph(posts, notes);
 
   return (
-    <main className="w-full flex-1 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    <main className="w-full flex-1 px-page py-12 sm:py-16">
         <Link
           href="/notes"
-          className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+          className="inline-flex items-center gap-1.5 text-ui text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
         >
           <ArrowLeft className="h-4 w-4" />
           Назад
         </Link>
 
-        <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
+        <h1 className="mt-6 text-h1 font-bold tracking-tight hyphens-auto">
           Статистика
         </h1>
-        <p className="mt-3 max-w-2xl text-neutral-600 dark:text-neutral-400">
+        <p className="mt-3 max-w-[40em] text-body text-neutral-600 dark:text-neutral-400">
           Что и сколько я тут написал.
         </p>
 

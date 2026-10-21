@@ -42,7 +42,7 @@ export function RichPostBody({
             />
             {b.caption && (
               <figcaption
-                className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 [&_a]:text-indigo-600 [&_a]:underline dark:[&_a]:text-indigo-400"
+                className="mt-2 text-ui text-neutral-500 dark:text-neutral-400 [&_a]:text-indigo-600 [&_a]:underline dark:[&_a]:text-indigo-400"
                 dangerouslySetInnerHTML={{ __html: b.caption }}
               />
             )}

@@ -51,7 +51,7 @@ function Markdown({ md }: { md: string }) {
     .join("");
   return (
     <div
-      className="space-y-4 text-[17px] leading-relaxed text-neutral-800 dark:text-neutral-200 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:[&_a]:text-indigo-400 [&_li]:ml-5 [&_li]:list-disc [&_li]:pl-1 [&_strong]:font-semibold [&_ul]:space-y-1.5"
+      className="space-y-[0.6lh] text-body text-neutral-800 dark:text-neutral-200 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 dark:[&_a]:text-indigo-400 [&_li]:ml-5 [&_li]:list-disc [&_li]:pl-1 [&_strong]:font-semibold [&_ul]:space-y-1.5"
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
@@ -92,17 +92,17 @@ function Figure({
     title && (
       <figcaption className={big ? "mb-6 pr-12" : "mb-5 pr-10"}>
         <div
-          className={`font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 ${big ? "text-xl" : ""}`}
+          className={`font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 ${big ? "text-lead" : "text-caption"}`}
         >
           {title}
         </div>
         {subtitle && (
-          <div className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{subtitle}</div>
+          <div className="mt-1 text-ui text-neutral-500 dark:text-neutral-400">{subtitle}</div>
         )}
       </figcaption>
     );
   const footer = source && (
-    <div className="mt-5 text-xs text-neutral-400 dark:text-neutral-500">Источник: {source}</div>
+    <div className="mt-5 text-small text-neutral-400 dark:text-neutral-500">Источник: {source}</div>
   );
   const iconBtn =
     "absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-400 transition hover:bg-black/5 hover:text-neutral-900 dark:hover:bg-white/5 dark:hover:text-neutral-100";
@@ -152,7 +152,7 @@ function Tip({ show, children }: { show: boolean; children: React.ReactNode }) {
   return (
     <span
       role="tooltip"
-      className="pointer-events-none absolute -top-9 left-0 z-10 whitespace-nowrap rounded-lg bg-neutral-900 px-2.5 py-1.5 text-xs font-medium text-white shadow-lg dark:bg-neutral-100 dark:text-neutral-900"
+      className="pointer-events-none absolute -top-9 left-0 z-10 whitespace-nowrap rounded-lg bg-neutral-900 px-2.5 py-1.5 text-small font-medium text-white shadow-lg dark:bg-neutral-100 dark:text-neutral-900"
     >
       {children}
     </span>
@@ -179,7 +179,7 @@ function Bars({ block }: { block: Extract<ResearchBlock, { type: "bars" }> }) {
             onMouseLeave={() => setHover(null)}
           >
             {/* Подпись переносится, а не обрезается многоточием. */}
-            <span className="text-sm leading-snug text-neutral-600 dark:text-neutral-400">
+            <span className="text-ui leading-snug text-neutral-600 dark:text-neutral-400">
               {item.label}
             </span>
             <span className="relative flex h-6 items-center gap-2">
@@ -192,7 +192,7 @@ function Bars({ block }: { block: Extract<ResearchBlock, { type: "bars" }> }) {
                 } ${hover !== null && hover !== i ? "opacity-60" : ""}`}
                 style={{ width: `${Math.max((item.value / max) * 85, 1.5)}%` }}
               />
-              <span className="shrink-0 text-sm font-medium tabular-nums text-neutral-800 dark:text-neutral-200">
+              <span className="shrink-0 text-ui font-medium tabular-nums text-neutral-800 dark:text-neutral-200">
                 {fmt(item)}
               </span>
             </span>
@@ -217,7 +217,7 @@ function Split({ block }: { block: Extract<ResearchBlock, { type: "split" }> }) 
             key={item.label}
             onMouseEnter={() => setHover(i)}
             onMouseLeave={() => setHover(null)}
-            className={`relative flex items-center justify-center text-sm font-semibold text-white first:rounded-l-[4px] last:rounded-r-[4px] ${
+            className={`relative flex items-center justify-center text-ui font-semibold text-white first:rounded-l-[4px] last:rounded-r-[4px] ${
               SERIES[i % SERIES.length]
             } ${hover !== null && hover !== i ? "opacity-60" : ""}`}
             style={{ width: `${(item.value / total) * 100}%` }}
@@ -232,7 +232,7 @@ function Split({ block }: { block: Extract<ResearchBlock, { type: "split" }> }) 
       </div>
       <ul className="mt-4 space-y-1.5">
         {block.items.map((item, i) => (
-          <li key={item.label} className="flex items-start gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+          <li key={item.label} className="flex items-start gap-2 text-ui text-neutral-700 dark:text-neutral-300">
             <span className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-sm ${SERIES[i % SERIES.length]}`} />
             <span>
               <span className="font-semibold tabular-nums">{pct(item.value)}%</span> — {item.label}
@@ -253,8 +253,8 @@ function Versus({ block }: { block: Extract<ResearchBlock, { type: "versus" }> }
         {rows.map((r, i) => (
           <div key={r.label}>
             <div className="flex items-baseline justify-between gap-3">
-              <span className="text-sm text-neutral-600 dark:text-neutral-400">{r.label}</span>
-              <span className="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+              <span className="text-ui text-neutral-600 dark:text-neutral-400">{r.label}</span>
+              <span className="text-lead font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
                 {r.display ?? r.value.toLocaleString("ru-RU")}
               </span>
             </div>
@@ -329,7 +329,7 @@ function Line({ block }: { block: Extract<ResearchBlock, { type: "line" }> }) {
 
   // Подписи лет: на узком экране — через одну.
   const years = Array.from({ length: Math.floor(tMax) - tMin + 1 }, (_, i) => tMin + i);
-  const yearStep = iw / years.length < 34 ? 2 : 1;
+  const yearStep = iw / years.length < 46 ? 2 : 1;
 
   // Наведение/тап: ближайшая точка по X (на линию целиться не надо).
   const pick = (e: React.PointerEvent<SVGSVGElement>) => {
@@ -375,7 +375,7 @@ function Line({ block }: { block: Extract<ResearchBlock, { type: "line" }> }) {
                 y={y(t.value)}
                 dy="0.32em"
                 textAnchor="end"
-                className="fill-neutral-500 text-[11px] tabular-nums dark:fill-neutral-400"
+                className="fill-neutral-500 text-smallest tabular-nums dark:fill-neutral-400"
               >
                 {t.label}
               </text>
@@ -388,7 +388,7 @@ function Line({ block }: { block: Extract<ResearchBlock, { type: "line" }> }) {
                 x={x(yr)}
                 y={pad.top + ih + 18}
                 textAnchor={i === 0 ? "start" : x(yr) > pad.left + iw - 16 ? "end" : "middle"}
-                className="fill-neutral-500 text-[11px] tabular-nums dark:fill-neutral-400"
+                className="fill-neutral-500 text-smallest tabular-nums dark:fill-neutral-400"
               >
                 {yr}
               </text>
@@ -449,7 +449,7 @@ function Line({ block }: { block: Extract<ResearchBlock, { type: "line" }> }) {
         {hp && (
           <div
             role="tooltip"
-            className="pointer-events-none absolute z-10 -translate-y-full whitespace-nowrap rounded-lg bg-neutral-900 px-2.5 py-1.5 text-xs text-white shadow-lg dark:bg-neutral-100 dark:text-neutral-900"
+            className="pointer-events-none absolute z-10 -translate-y-full whitespace-nowrap rounded-lg bg-neutral-900 px-2.5 py-1.5 text-small text-white shadow-lg dark:bg-neutral-100 dark:text-neutral-900"
             style={{
               left: Math.min(Math.max(x(hp.t) - 70, 0), width - 140),
               top: y(hp.value) - 12,
@@ -474,11 +474,11 @@ function Stats({ block }: { block: Extract<ResearchBlock, { type: "stats" }> }) 
           key={s.label}
           className="rounded-2xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-[#181818]"
         >
-          <div className="text-4xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+          <div className="text-focal font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
             {s.value}
           </div>
-          <div className="mt-2 text-sm leading-snug text-neutral-600 dark:text-neutral-400">{s.label}</div>
-          {s.source && <div className="mt-2 text-xs text-neutral-400 dark:text-neutral-500">{s.source}</div>}
+          <div className="mt-2 text-ui leading-snug text-neutral-600 dark:text-neutral-400">{s.label}</div>
+          {s.source && <div className="mt-2 text-small text-neutral-400 dark:text-neutral-500">{s.source}</div>}
         </div>
       ))}
     </div>
@@ -496,7 +496,7 @@ export function ResearchBlocks({ blocks }: { blocks: ResearchBlock[] }) {
             return <Markdown key={i} md={b.md} />;
           case "heading":
             return (
-              <h2 key={i} className="pt-4 text-2xl font-bold tracking-tight">
+              <h2 key={i} className="pt-4 text-lead font-bold tracking-tight">
                 {b.text}
               </h2>
             );
@@ -514,9 +514,9 @@ export function ResearchBlocks({ blocks }: { blocks: ResearchBlock[] }) {
             return (
               <aside
                 key={i}
-                className="rounded-2xl border-l-4 border-indigo-500 bg-indigo-500/5 px-5 py-4 text-[16px] leading-relaxed text-neutral-800 dark:text-neutral-200"
+                className="rounded-2xl border-l-4 border-indigo-500 bg-indigo-500/5 px-5 py-4 text-body text-neutral-800 dark:text-neutral-200"
               >
-                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                <div className="mb-1 text-small font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                   Кстати
                 </div>
                 {b.text}
@@ -524,9 +524,9 @@ export function ResearchBlocks({ blocks }: { blocks: ResearchBlock[] }) {
             );
           case "quote":
             return (
-              <blockquote key={i} className="border-l-2 border-neutral-300 pl-5 text-lg italic text-neutral-700 dark:border-neutral-600 dark:text-neutral-300">
+              <blockquote key={i} className="border-l-2 border-neutral-300 pl-5 text-lead italic text-neutral-700 dark:border-neutral-600 dark:text-neutral-300">
                 «{b.text}»
-                {b.author && <footer className="mt-2 text-sm not-italic text-neutral-500">— {b.author}</footer>}
+                {b.author && <footer className="mt-2 text-ui not-italic text-neutral-500">— {b.author}</footer>}
               </blockquote>
             );
         }

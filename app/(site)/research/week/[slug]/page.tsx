@@ -29,7 +29,7 @@ export default async function DigestPage({ params }: { params: Promise<{ slug: s
   const back = (
     <Link
       href="/research"
-      className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+      className="inline-flex items-center gap-1.5 text-ui text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
     >
       <ArrowLeft className="h-4 w-4" />
       Все исследования
@@ -37,13 +37,13 @@ export default async function DigestPage({ params }: { params: Promise<{ slug: s
   );
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
+    <main className="mx-auto w-full max-w-[calc(40em+2*var(--page-x))] flex-1 px-page py-12 text-body sm:py-16">
       {back}
 
-      <div className="mt-6 text-xs text-neutral-500">
+      <div className="mt-6 text-small text-neutral-500">
         {formatRuDate(d.date)} · дайджест недели
       </div>
-      <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{d.title}</h1>
+      <h1 className="mt-3 text-h1 font-bold tracking-tight hyphens-auto">{d.title}</h1>
 
       {d.cover && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -79,16 +79,16 @@ export default async function DigestPage({ params }: { params: Promise<{ slug: s
                 />
               )}
               <div className="min-w-0">
-                <div className="text-xs text-neutral-500">
+                <div className="text-small text-neutral-500">
                   {n + 1} · {TOPICS[r!.topic]} · {r!.readingMinutes} мин
                 </div>
                 <div className="mt-1 font-semibold leading-snug tracking-tight transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
                   {r!.title}
                 </div>
-                <p className="mt-1.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                <p className="mt-1.5 text-ui leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {takeaway}
                 </p>
-                <span className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                <span className="mt-2 inline-flex items-center gap-1 text-ui font-medium text-indigo-600 dark:text-indigo-400">
                   Читать
                   <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
                 </span>

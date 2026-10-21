@@ -77,14 +77,14 @@ function NavLink({
       className={`group flex flex-col rounded-xl border border-neutral-200 bg-white/50 p-4 backdrop-blur transition hover:border-neutral-300 hover:shadow-md hover:shadow-black/5 dark:border-neutral-700 dark:bg-[#181818]/50 dark:hover:border-neutral-700 ${className}`}
     >
       <span
-        className={`flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 ${
+        className={`flex items-center gap-1.5 text-small font-medium text-neutral-500 dark:text-neutral-400 ${
           side === "right" ? "flex-row-reverse" : ""
         }`}
       >
         <Arrow className="h-4 w-4 shrink-0 transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
         {label}
       </span>
-      <span className="mt-1.5 line-clamp-2 text-sm leading-snug text-neutral-700 transition group-hover:text-indigo-600 dark:text-neutral-300 dark:group-hover:text-indigo-400">
+      <span className="mt-1.5 line-clamp-2 text-ui leading-snug text-neutral-700 transition group-hover:text-indigo-600 dark:text-neutral-300 dark:group-hover:text-indigo-400">
         {preview(post)}
       </span>
     </Link>
@@ -128,12 +128,12 @@ export default async function ChannelItemPage({
   const fullGraph = buildTagGraph(feed, notesIndex);
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
+    <main className="mx-auto w-full max-w-[calc(40em+2*var(--page-x))] flex-1 px-page py-12 text-body sm:py-16">
         <div className="flex items-center justify-between gap-3">
           <Link
             href="/notes"
             scroll={false}
-            className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+            className="inline-flex items-center gap-1.5 text-ui text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
           >
             <ArrowLeft className="h-4 w-4" />
             Назад
@@ -165,7 +165,7 @@ export default async function ChannelItemPage({
           <Link
             href="/notes"
             scroll={false}
-            className="inline-flex items-center gap-1.5 text-sm text-neutral-600 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+            className="inline-flex items-center gap-1.5 text-ui text-neutral-600 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
           >
             <ArrowLeft className="h-4 w-4" />
             Назад

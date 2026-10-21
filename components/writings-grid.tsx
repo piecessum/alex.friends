@@ -281,7 +281,7 @@ export function WritingsGrid({
         type="button"
         data-chip-active={active}
         onClick={() => pickFilter(key)}
-        className={`shrink-0 rounded-full border px-3 py-1.5 text-sm transition ${
+        className={`shrink-0 rounded-full border px-3 py-1.5 text-ui transition ${
           active
             ? "border-indigo-500 bg-indigo-500 text-white"
             : "border-neutral-200 bg-white/60 text-neutral-700 hover:border-neutral-300 dark:border-neutral-700 dark:bg-[#181818]/60 dark:text-neutral-300"
@@ -294,14 +294,14 @@ export function WritingsGrid({
 
   return (
     <div>
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 [&::-webkit-scrollbar]:hidden">
+      <div className="bleed-page flex gap-2 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {renderChip("all", "Всё", tiles.length)}
         {renderChip("longreads", "Лонгриды", notes.length)}
         {tagChips.map(({ tag, count }) => renderChip(tag, `#${tag}`, count))}
       </div>
 
       {visible.length === 0 ? (
-        <p className="mt-12 text-center text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="mt-12 text-center text-ui text-neutral-500 dark:text-neutral-400">
           Здесь пока пусто.
         </p>
       ) : (
@@ -328,9 +328,9 @@ export function WritingsGrid({
               {t.cover && <TileCover src={t.cover} eager={firstRow} />}
 
               <div className="flex flex-col p-5">
-                <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-500">
+                <div className="flex items-center justify-between text-small text-neutral-500 dark:text-neutral-500">
                   <span>{t.date}</span>
-                  <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] uppercase tracking-wider dark:bg-neutral-900">
+                  <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-smallest uppercase tracking-wider dark:bg-neutral-900">
                     {t.kind === "note" ? "лонгрид" : "пост"}
                   </span>
                 </div>
@@ -342,7 +342,7 @@ export function WritingsGrid({
                     </h2>
                     {t.excerpt && (
                       <p
-                        className={`mt-2 text-sm text-neutral-600 dark:text-neutral-400 ${
+                        className={`mt-2 text-ui text-neutral-600 dark:text-neutral-400 ${
                           hasCover ? "line-clamp-3" : "line-clamp-[8]"
                         }`}
                       >
@@ -354,7 +354,7 @@ export function WritingsGrid({
                         {t.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="text-xs text-indigo-600 dark:text-indigo-400"
+                            className="text-small text-indigo-600 dark:text-indigo-400"
                           >
                             #{tag}
                           </span>
@@ -367,7 +367,7 @@ export function WritingsGrid({
                     {/* Картинка с одним хэштегом в подписи — текст не нужен. */}
                     {(t.text || !hasCover) && (
                       <p
-                        className={`mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 ${
+                        className={`mt-1.5 text-ui leading-relaxed text-neutral-700 dark:text-neutral-300 ${
                           hasCover ? "line-clamp-4" : "line-clamp-[14]"
                         }`}
                       >
@@ -379,7 +379,7 @@ export function WritingsGrid({
                         {t.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="text-xs text-indigo-600 dark:text-indigo-400"
+                            className="text-small text-indigo-600 dark:text-indigo-400"
                           >
                             #{tag}
                           </span>
@@ -389,7 +389,7 @@ export function WritingsGrid({
                   </>
                 )}
 
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                <span className="mt-4 inline-flex items-center gap-1 text-ui font-medium text-indigo-600 dark:text-indigo-400">
                   {t.kind === "note" ? "Читать" : "Открыть"}
                   <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
                 </span>

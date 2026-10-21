@@ -47,7 +47,7 @@ export function GraphFullscreen({
   // Подпись локального таба — из caption («Этот пост в графе» → «Этот пост»).
   const localLabel = caption.replace(/\s*в графе$/i, "");
 
-  const seg = "px-3.5 py-1 text-sm font-medium transition";
+  const seg = "px-3.5 py-1 text-ui font-medium transition";
   const segOn = "bg-indigo-500 text-white";
   const segOff =
     "text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200";
@@ -74,7 +74,7 @@ export function GraphFullscreen({
             </button>
           </div>
         ) : (
-          <span className="truncate text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          <span className="truncate text-ui font-medium text-neutral-700 dark:text-neutral-300">
             {caption}
           </span>
         )}

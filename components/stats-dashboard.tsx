@@ -34,12 +34,12 @@ function StatCard({
 }) {
   return (
     <div className="flex h-full flex-col justify-center rounded-2xl border border-neutral-200 bg-white/50 p-5 backdrop-blur dark:border-neutral-700 dark:bg-[#181818]/50">
-      <div className={`text-[11px] font-semibold uppercase tracking-widest ${accent}`}>
+      <div className={`text-smallest font-semibold uppercase tracking-widest ${accent}`}>
         {label}
       </div>
-      <div className="mt-2 text-3xl font-bold tracking-tight">{value}</div>
+      <div className="mt-2 text-lead font-bold tracking-tight">{value}</div>
       {hint && (
-        <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-500">
+        <div className="mt-1 text-small text-neutral-500 dark:text-neutral-500">
           {hint}
         </div>
       )}
@@ -128,14 +128,14 @@ function TagsPie({
           ))}
         </svg>
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-          <div className="text-3xl font-bold tracking-tight">{totalValue}</div>
-          <div className="text-xs text-neutral-500 dark:text-neutral-400">{totalLabel}</div>
+          <div className="text-lead font-bold tracking-tight">{totalValue}</div>
+          <div className="text-small text-neutral-500 dark:text-neutral-400">{totalLabel}</div>
         </div>
       </div>
 
       <ul className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 lg:flex-1">
         {paths.map((p, i) => (
-          <li key={i} className="flex items-center gap-2 text-sm">
+          <li key={i} className="flex items-center gap-2 text-ui">
             <span
               aria-hidden
               className="h-3 w-3 shrink-0 rounded-sm"
@@ -147,7 +147,7 @@ function TagsPie({
             <span className="tabular-nums text-neutral-500 dark:text-neutral-400">
               {p.count}
             </span>
-            <span className="w-12 text-right tabular-nums text-xs text-neutral-400">
+            <span className="w-12 text-right tabular-nums text-small text-neutral-400">
               {(p.frac * 100).toFixed(1)}%
             </span>
           </li>
@@ -164,7 +164,7 @@ function YearBars({
 }) {
   if (data.length === 0) {
     return (
-      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+      <p className="text-ui text-neutral-500 dark:text-neutral-400">
         Данных пока нет.
       </p>
     );
@@ -259,7 +259,7 @@ function YearBars({
         })}
       </svg>
       </div>
-      <div className="mt-3 flex flex-wrap gap-4 text-xs text-neutral-500 dark:text-neutral-400">
+      <div className="mt-3 flex flex-wrap gap-4 text-small text-neutral-500 dark:text-neutral-400">
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-3 w-3 rounded-sm" style={{ background: "hsl(238 70% 60%)" }} />
           посты канала
@@ -367,7 +367,7 @@ function ScatterViews({ data }: { data: WritingsStats["lengthViews"] }) {
   const { points, r, slope, intercept } = data;
   if (points.length < 4) {
     return (
-      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+      <p className="text-ui text-neutral-500 dark:text-neutral-400">
         Пока мало постов с просмотрами для оценки.
       </p>
     );
@@ -430,7 +430,7 @@ function ScatterViews({ data }: { data: WritingsStats["lengthViews"] }) {
           </text>
         </svg>
       </div>
-      <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
+      <p className="mt-3 text-ui text-neutral-600 dark:text-neutral-400">
         Коэффициент корреляции{" "}
         <span className="font-semibold tabular-nums text-neutral-800 dark:text-neutral-200">
           r&nbsp;=&nbsp;{r.toFixed(2)}
@@ -454,9 +454,9 @@ function Section({
   return (
     <section className="rounded-2xl border border-neutral-200 bg-white/50 p-6 backdrop-blur dark:border-neutral-700 dark:bg-[#181818]/50">
       <div className="mb-6 flex items-baseline justify-between gap-3">
-        <h2 className="text-lg font-bold tracking-tight">{title}</h2>
+        <h2 className="text-lead font-bold tracking-tight">{title}</h2>
         {hint && (
-          <span className="text-xs text-neutral-500 dark:text-neutral-500">{hint}</span>
+          <span className="text-small text-neutral-500 dark:text-neutral-500">{hint}</span>
         )}
       </div>
       {children}
@@ -506,50 +506,50 @@ export function StatsDashboard({ stats }: { stats: WritingsStats }) {
         <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {facts.firstDate && (
             <div>
-              <dt className="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+              <dt className="text-small uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                 Период активности
               </dt>
-              <dd className="mt-1 text-sm text-neutral-800 dark:text-neutral-200">
+              <dd className="mt-1 text-ui text-neutral-800 dark:text-neutral-200">
                 {facts.firstDate} — {facts.lastDate}
               </dd>
             </div>
           )}
           {facts.avgPostsPerMonth > 0 && (
             <div>
-              <dt className="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+              <dt className="text-small uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                 В среднем
               </dt>
-              <dd className="mt-1 text-sm text-neutral-800 dark:text-neutral-200">
+              <dd className="mt-1 text-ui text-neutral-800 dark:text-neutral-200">
                 {facts.avgPostsPerMonth.toFixed(1)} постов в месяц
               </dd>
             </div>
           )}
           {facts.busiestMonth && (
             <div>
-              <dt className="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+              <dt className="text-small uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                 Самый продуктивный месяц
               </dt>
-              <dd className="mt-1 text-sm text-neutral-800 dark:text-neutral-200">
+              <dd className="mt-1 text-ui text-neutral-800 dark:text-neutral-200">
                 {facts.busiestMonth.label} — {facts.busiestMonth.count} постов
               </dd>
             </div>
           )}
           {facts.avgPostLength > 0 && (
             <div>
-              <dt className="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+              <dt className="text-small uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                 Длина поста
               </dt>
-              <dd className="mt-1 text-sm text-neutral-800 dark:text-neutral-200">
+              <dd className="mt-1 text-ui text-neutral-800 dark:text-neutral-200">
                 ~{facts.avgPostLength} символов в среднем
               </dd>
             </div>
           )}
           {facts.longestPost && facts.longestPost.length > 0 && (
             <div className="sm:col-span-2">
-              <dt className="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+              <dt className="text-small uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                 Самый длинный пост
               </dt>
-              <dd className="mt-1 text-sm text-neutral-800 dark:text-neutral-200">
+              <dd className="mt-1 text-ui text-neutral-800 dark:text-neutral-200">
                 <a
                   href={`/channel/${facts.longestPost.id}`}
                   className="text-indigo-600 hover:underline dark:text-indigo-400"

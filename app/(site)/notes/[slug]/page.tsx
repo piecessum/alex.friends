@@ -57,12 +57,12 @@ export default async function NotePage({
   const fullGraph = buildTagGraph(feed, notesIndex);
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12 sm:py-16">
+    <main className="mx-auto w-full max-w-[calc(40em+2*var(--page-x))] flex-1 px-page py-12 text-body sm:py-16">
         <div className="flex items-center justify-between gap-3">
           <Link
             href="/notes"
             scroll={false}
-            className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+            className="inline-flex items-center gap-1.5 text-ui text-neutral-500 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
           >
             <ArrowLeft className="h-4 w-4" />
             Назад
@@ -74,11 +74,11 @@ export default async function NotePage({
           />
         </div>
 
-        <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
+        <h1 className="mt-6 text-h1 font-bold tracking-tight hyphens-auto">
           {note.title}
         </h1>
 
-        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-neutral-500 dark:text-neutral-400">
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-ui text-neutral-500 dark:text-neutral-400">
           {date && <span>{date}</span>}
           {note.views > 0 && (
             <span className="inline-flex items-center gap-1">
@@ -88,7 +88,7 @@ export default async function NotePage({
           )}
         </div>
 
-        <article className="mt-8 text-[17px]">
+        <article className="mt-8 text-body">
           <TelegraphContent
             content={note.content}
             noteSlugs={getNotesIndex().map((n) => n.slug)}
@@ -97,7 +97,7 @@ export default async function NotePage({
 
         {related.length > 0 && (
           <section className="mt-14 border-t border-neutral-200 pt-8 dark:border-neutral-700">
-            <h2 className="text-xl font-bold tracking-tight">Читать ещё</h2>
+            <h2 className="text-lead font-bold tracking-tight">Читать ещё</h2>
             <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
               {related.map((r) => {
                 const rdate = formatDate(r.month, r.day, r.year);
@@ -120,11 +120,11 @@ export default async function NotePage({
                     )}
                     <div className="flex flex-1 flex-col p-4">
                       {rdate && (
-                        <div className="text-xs text-neutral-500 dark:text-neutral-500">
+                        <div className="text-small text-neutral-500 dark:text-neutral-500">
                           {rdate}
                         </div>
                       )}
-                      <h3 className="mt-1 line-clamp-2 text-sm font-semibold leading-snug tracking-tight transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                      <h3 className="mt-1 line-clamp-2 text-ui font-semibold leading-snug tracking-tight transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
                         {r.title}
                       </h3>
                     </div>
@@ -139,7 +139,7 @@ export default async function NotePage({
           <Link
             href="/notes"
             scroll={false}
-            className="inline-flex items-center gap-1.5 text-sm text-neutral-600 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
+            className="inline-flex items-center gap-1.5 text-ui text-neutral-600 transition hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-indigo-400"
           >
             <ArrowLeft className="h-4 w-4" />
             Назад
