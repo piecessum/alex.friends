@@ -86,11 +86,32 @@
       "subtitle": "доля ответов с серьёзной проблемой по каждому пункту проверки, %",
       "unit": "%",
       "items": [
-        { "label": "Источники", "value": 31, "display": "31%", "highlight": true },
-        { "label": "Точность фактов и цитат", "value": 20, "display": "20%" },
-        { "label": "Нехватка контекста", "value": 14, "display": "14%" },
-        { "label": "Мнение выдано за факт", "value": 6, "display": "6%" },
-        { "label": "Оценки, приписанные редакции", "value": 6, "display": "6%" }
+        {
+          "label": "Источники",
+          "value": 31,
+          "display": "31%",
+          "highlight": true
+        },
+        {
+          "label": "Точность фактов и цитат",
+          "value": 20,
+          "display": "20%"
+        },
+        {
+          "label": "Нехватка контекста",
+          "value": 14,
+          "display": "14%"
+        },
+        {
+          "label": "Мнение выдано за факт",
+          "value": 6,
+          "display": "6%"
+        },
+        {
+          "label": "Оценки, приписанные редакции",
+          "value": 6,
+          "display": "6%"
+        }
       ],
       "source": "EBU / BBC, News Integrity in AI Assistants, 2025"
     },
@@ -108,10 +129,27 @@
       "subtitle": "доля ответов хотя бы с одной серьёзной проблемой, %",
       "unit": "%",
       "items": [
-        { "label": "Gemini", "value": 76, "display": "76%", "highlight": true },
-        { "label": "Copilot", "value": 37, "display": "37%" },
-        { "label": "ChatGPT", "value": 36, "display": "36%" },
-        { "label": "Perplexity", "value": 30, "display": "30%" }
+        {
+          "label": "Gemini",
+          "value": 76,
+          "display": "76%",
+          "highlight": true
+        },
+        {
+          "label": "Copilot",
+          "value": 37,
+          "display": "37%"
+        },
+        {
+          "label": "ChatGPT",
+          "value": 36,
+          "display": "36%"
+        },
+        {
+          "label": "Perplexity",
+          "value": 30,
+          "display": "30%"
+        }
       ],
       "source": "EBU / BBC, 2025; бесплатные версии, около 675–681 ответа на каждого ассистента"
     },
@@ -121,10 +159,27 @@
       "subtitle": "доля ответов, где ссылки не подтверждают ответ или их нет совсем, %",
       "unit": "%",
       "items": [
-        { "label": "Gemini", "value": 72, "display": "72%", "highlight": true },
-        { "label": "ChatGPT", "value": 24, "display": "24%" },
-        { "label": "Perplexity", "value": 15, "display": "15%" },
-        { "label": "Copilot", "value": 15, "display": "15%" }
+        {
+          "label": "Gemini",
+          "value": 72,
+          "display": "72%",
+          "highlight": true
+        },
+        {
+          "label": "ChatGPT",
+          "value": 24,
+          "display": "24%"
+        },
+        {
+          "label": "Perplexity",
+          "value": 15,
+          "display": "15%"
+        },
+        {
+          "label": "Copilot",
+          "value": 15,
+          "display": "15%"
+        }
       ],
       "source": "EBU / BBC, 2025"
     },
@@ -150,18 +205,72 @@
       "subtitle": "доля ответов с серьёзной проблемой, без учёта проблем с источниками, %",
       "unit": "%",
       "items": [
-        { "label": "Начинает ли Трамп торговую войну?", "value": 48, "display": "48%", "highlight": true },
-        { "label": "Сколько людей погибло при землетрясении в Мьянме?", "value": 47, "display": "47%", "highlight": true },
-        { "label": "Почему США нанесли удар по Йемену?", "value": 46, "display": "46%", "highlight": true },
-        { "label": "Как Трамп рассчитал пошлины?", "value": 46, "display": "46%", "highlight": true },
-        { "label": "Диктатор ли Виктор Орбан?", "value": 40, "display": "40%", "highlight": true },
-        { "label": "Становится ли лучше с изменением климата?", "value": 38, "display": "38%", "highlight": true },
-        { "label": "Входит ли Турция в ЕС?", "value": 18, "display": "18%" },
-        { "label": "Зачем Трамп хочет купить Гренландию?", "value": 16, "display": "16%" },
-        { "label": "Почему Зеленский не носит костюмы?", "value": 16, "display": "16%" },
-        { "label": "Почему астронавты NASA застряли в космосе?", "value": 16, "display": "16%" },
-        { "label": "Откуда родом Илон Маск?", "value": 14, "display": "14%" },
-        { "label": "В скольких странах пройдёт ЧМ по футболу 2026?", "value": 9, "display": "9%" }
+        {
+          "label": "Начинает ли Трамп торговую войну?",
+          "value": 48,
+          "display": "48%",
+          "highlight": true
+        },
+        {
+          "label": "Сколько людей погибло при землетрясении в Мьянме?",
+          "value": 47,
+          "display": "47%",
+          "highlight": true
+        },
+        {
+          "label": "Почему США нанесли удар по Йемену?",
+          "value": 46,
+          "display": "46%",
+          "highlight": true
+        },
+        {
+          "label": "Как Трамп рассчитал пошлины?",
+          "value": 46,
+          "display": "46%",
+          "highlight": true
+        },
+        {
+          "label": "Диктатор ли Виктор Орбан?",
+          "value": 40,
+          "display": "40%",
+          "highlight": true
+        },
+        {
+          "label": "Становится ли лучше с изменением климата?",
+          "value": 38,
+          "display": "38%",
+          "highlight": true
+        },
+        {
+          "label": "Входит ли Турция в ЕС?",
+          "value": 18,
+          "display": "18%"
+        },
+        {
+          "label": "Зачем Трамп хочет купить Гренландию?",
+          "value": 16,
+          "display": "16%"
+        },
+        {
+          "label": "Почему Зеленский не носит костюмы?",
+          "value": 16,
+          "display": "16%"
+        },
+        {
+          "label": "Почему астронавты NASA застряли в космосе?",
+          "value": 16,
+          "display": "16%"
+        },
+        {
+          "label": "Откуда родом Илон Маск?",
+          "value": 14,
+          "display": "14%"
+        },
+        {
+          "label": "В скольких странах пройдёт ЧМ по футболу 2026?",
+          "value": 9,
+          "display": "9%"
+        }
       ],
       "source": "EBU / BBC, 2025; шесть вопросов с самой высокой и шесть с самой низкой долей"
     },
@@ -177,13 +286,34 @@
       "type": "versus",
       "title": "Ответы с опорой на BBC: два раунда",
       "subtitle": "доля ответов хотя бы с одной серьёзной проблемой, %",
-      "left": { "label": "Декабрь 2024, 362 ответа", "value": 51, "display": "51%" },
-      "right": { "label": "Май–июнь 2025, 237 ответов", "value": 37, "display": "37%" },
+      "left": {
+        "label": "Декабрь 2024, 362 ответа",
+        "value": 51,
+        "display": "51%"
+      },
+      "right": {
+        "label": "Май–июнь 2025, 237 ответов",
+        "value": 37,
+        "display": "37%"
+      },
       "source": "EBU / BBC, 2025, сравнение только по данным BBC"
     },
     {
       "type": "text",
       "md": "Для контекста авторы приводят данные Reuters Institute: ИИ-ассистентами как источником новостей раз в неделю пользуются 7% людей, среди младше 25 лет — 15%. Параллельный опрос BBC показал, что чуть больше трети взрослых британцев полностью доверяют ИИ делать точные пересказы, а 42% стали бы меньше доверять самому изданию, если бы в ИИ-пересказе его новости нашлась ошибка.\n\nВывод отчёта: прогресс есть, но ошибки остаются системными — на всех языках, у всех ассистентов и во всех редакциях, и ИИ-ассистенты пока не надёжный способ узнавать новости."
     }
-  ]
+  ],
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Bernerlover",
+    "url": "https://commons.wikimedia.org/wiki/File:Vecteezy_stack-of-newspaper_1961329.jpg",
+    "license": "CC BY 4.0"
+  },
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Vecteezy_stack-of-newspaper_1961329.jpg/1920px-Vecteezy_stack-of-newspaper_1961329.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail#full",
+  "cover": "/research/ai-news-assistants-d5ee8dc7.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
