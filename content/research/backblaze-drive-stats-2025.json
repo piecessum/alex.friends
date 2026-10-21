@@ -340,5 +340,10 @@
     "author": "Mk2010",
     "url": "https://commons.wikimedia.org/wiki/File:Hard_disk_drive_platter,_Western_Digital_Caviar_250Gb_WD2500AAKS.jpg",
     "license": "CC BY 4.0"
+  },
+  "telegram": {
+    "messageId": 26,
+    "postedAt": "2026-10-21T19:39:12.683Z",
+    "cover": "/research/backblaze-drive-stats-2025-a982fb54.webp"
   }
 }
