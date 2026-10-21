@@ -11,6 +11,14 @@
     "year": 2014
   },
   "readingMinutes": 5,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Hospital_Patient_Monitor_%2817239884329%29.jpg/1920px-Hospital_Patient_Monitor_%2817239884329%29.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Hospital_Patient_Monitor_(17239884329).jpg",
+    "author": "Tony Webster from San Francisco, California",
+    "license": "CC BY 2.0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "a hospital bedside patient monitor with a glowing green heartbeat line and red alarm light on top, three-quarter view, the whole device visible",
   "coverQuery": "patient monitor",
   "coverSprite": {
@@ -191,8 +199,8 @@
       "md": "Основные претензии — к устройствам, а не к медсёстрам. Монитор должен анализировать все доступные отведения и сам находить то, где нет помех. Тревогу о фибрилляции предсердий нужно давать при её начале и окончании, а не непрерывно. Задержку для тревог по ST и сатурации нужно сделать настраиваемой. А если пульс пациента часами держится выше порога, монитор может сам предложить: «Средний пульс 135. Поднять верхнюю границу?»\n\nПо итогам исследования в UCSF сделали тревоги об ускоренном желудочковом ритме беззвучными — по оценке авторов, это больше 4 000 звуковых сигналов в месяц.\n\nОграничения: это одна больница, один производитель мониторов и один месяц. Исследование финансировала GE Healthcare; по условиям договора данные принадлежат руководителю исследования, и, как пишут авторы, спонсор не участвовал в сборе и анализе данных."
     }
   ],
-  "coverSubjectPrompt": "a hospital bedside patient monitor with a glowing green heartbeat line and red alarm light on top, three-quarter view, the whole device visible",
-  "cover": "/research/icu-alarm-fatigue-0436cd33.webp",
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Hospital_Patient_Monitor_%2817239884329%29.jpg/1920px-Hospital_Patient_Monitor_%2817239884329%29.jpg#full",
+  "cover": "/research/icu-alarm-fatigue-64e39a79.webp",
   "coverSize": [
     1024,
     684
@@ -202,5 +210,11 @@
     "messageId": 19,
     "postedAt": "2026-10-15T05:23:10.980Z",
     "cover": "/research/icu-alarm-fatigue-0436cd33.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Tony Webster from San Francisco, California",
+    "url": "https://commons.wikimedia.org/wiki/File:Hospital_Patient_Monitor_(17239884329).jpg",
+    "license": "CC BY 2.0"
   }
 }

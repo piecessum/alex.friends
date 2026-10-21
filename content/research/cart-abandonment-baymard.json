@@ -11,6 +11,14 @@
     "year": 2025
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Abandoned_shopping_trolley_on_riverbed_at_low_tide%2C_Manning_River.jpg/1920px-Abandoned_shopping_trolley_on_riverbed_at_low_tide%2C_Manning_River.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Abandoned_shopping_trolley_on_riverbed_at_low_tide,_Manning_River.jpg",
+    "author": "JaredMcKenzie",
+    "license": "CC0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "a small red metal supermarket shopping cart, empty, three-quarter side view, the whole cart visible",
   "coverQuery": "shopping cart",
   "coverSprite": {
@@ -305,11 +313,17 @@
       "md": "Свою оценку Baymard приводит в деньгах. Если исправить только те проблемы оформления, которые за десять лет тестов признаны решаемыми, средний крупный магазин может поднять конверсию на 35,26%. При совокупных онлайн-продажах в США и ЕС в $738 млрд это $260 млрд заказов, которые теряются и которые можно вернуть одним только оформлением.\n\nСами 70,22% — среднее по 50 замерам разных компаний за разные годы. Методики, клиенты и страны у этих замеров не совпадают, поэтому в таблице рядом стоят 56,82% у Fresh Relevance и 75,6% у SaleCycle за один и тот же 2018 год."
     }
   ],
-  "coverSubjectPrompt": "ai:a small red metal supermarket shopping cart, empty, three-quarter side view, the whole cart visible",
-  "cover": "/research/cart-abandonment-baymard-1a0d0db3.webp",
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Abandoned_shopping_trolley_on_riverbed_at_low_tide%2C_Manning_River.jpg/1920px-Abandoned_shopping_trolley_on_riverbed_at_low_tide%2C_Manning_River.jpg#full",
+  "cover": "/research/cart-abandonment-baymard-d832b45a.webp",
   "coverSize": [
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "JaredMcKenzie",
+    "url": "https://commons.wikimedia.org/wiki/File:Abandoned_shopping_trolley_on_riverbed_at_low_tide,_Manning_River.jpg",
+    "license": "CC0"
+  }
 }

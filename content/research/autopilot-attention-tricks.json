@@ -11,6 +11,14 @@
     "year": 2024
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Steering_wheel_of_Changan_Nevo_Q05_during_GIIAS_2026_in_Bandung_20260913_165328.jpg/1920px-Steering_wheel_of_Changan_Nevo_Q05_during_GIIAS_2026_in_Bandung_20260913_165328.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Steering_wheel_of_Changan_Nevo_Q05_during_GIIAS_2026_in_Bandung_20260913_165328.jpg",
+    "author": "M Raisfath",
+    "license": "CC BY 4.0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "a modern car steering wheel on its own, with a small dashboard display behind it, three-quarter view, the whole wheel visible",
   "coverQuery": "car steering wheel",
   "coverSprite": {
@@ -158,16 +166,22 @@
       "md": "«Приемлемо» получила только Lexus Teammate на Lexus LS. «Посредственно» — GM Super Cruise на GMC Sierra и одна из систем Nissan Ariya. Tesla Autopilot и FSD Beta, Volvo Pilot Assist, системы Mercedes-Benz, Ford, Genesis и BMW — «плохо».\n\nМюллер подводит итог так: нарастающие напоминания, которые бьют сразу по нескольким чувствам, действительно меняют поведение водителя. Но нужна защита получше, чтобы это изменение превращалось во внимание к дороге, а не в навык вовремя тронуть руль. Отдельно авторы оговариваются, что эффект для аварийности измерить сложно: известно, что чем дольше водитель не смотрит на дорогу, тем выше риск аварии, но при очень частых коротких отвлечениях промежутки «внимания» между ними мало что значат."
     }
   ],
-  "cover": "/research/autopilot-attention-tricks-ee3cdc2c.webp",
+  "cover": "/research/autopilot-attention-tricks-35cb7e2e.webp",
   "coverSize": [
     1024,
     684
   ],
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "ai:a modern car steering wheel on its own, with a small dashboard display behind it, three-quarter view, the whole wheel visible",
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Steering_wheel_of_Changan_Nevo_Q05_during_GIIAS_2026_in_Bandung_20260913_165328.jpg/1920px-Steering_wheel_of_Changan_Nevo_Q05_during_GIIAS_2026_in_Bandung_20260913_165328.jpg#full",
   "telegram": {
     "messageId": 15,
     "postedAt": "2026-10-12T05:21:07.059Z",
     "cover": "/research/autopilot-attention-tricks-ee3cdc2c.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "M Raisfath",
+    "url": "https://commons.wikimedia.org/wiki/File:Steering_wheel_of_Changan_Nevo_Q05_during_GIIAS_2026_in_Bandung_20260913_165328.jpg",
+    "license": "CC BY 4.0"
   }
 }

@@ -11,6 +11,14 @@
     "year": 1998
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Red_car_tail_light_%28Unsplash%29.jpg/1920px-Red_car_tail_light_%28Unsplash%29.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Red_car_tail_light_(Unsplash).jpg",
+    "author": "chuttersnap chuttersnap",
+    "license": "CC0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "the rear of a dark red 1980s sedan with glowing red tail lights and a lit high center brake light under the rear window, straight rear view, the whole car visible",
   "coverQuery": "car brake lights",
   "coverSprite": {
@@ -271,8 +279,8 @@
       "md": "Вывод отчёта: эффект упал по сравнению с первыми оценками, но одна только экономия на ремонте ($655 млн) намного больше стоимости фонарей ($206 млн), поэтому третий стоп-сигнал остаётся очень выгодным средством безопасности."
     }
   ],
-  "coverSubjectPrompt": "ai:the rear of a dark red 1980s sedan with glowing red tail lights and a lit high center brake light under the rear window, straight rear view, the whole car visible",
-  "cover": "/research/third-brake-light-1ff0c9d1.webp",
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Red_car_tail_light_%28Unsplash%29.jpg/1920px-Red_car_tail_light_%28Unsplash%29.jpg#full",
+  "cover": "/research/third-brake-light-6a47648d.webp",
   "coverSize": [
     1024,
     684
@@ -282,5 +290,11 @@
     "messageId": 22,
     "postedAt": "2026-10-18T05:08:52.110Z",
     "cover": "/research/third-brake-light-1ff0c9d1.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "chuttersnap chuttersnap",
+    "url": "https://commons.wikimedia.org/wiki/File:Red_car_tail_light_(Unsplash).jpg",
+    "license": "CC0"
   }
 }

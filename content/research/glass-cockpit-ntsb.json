@@ -11,6 +11,14 @@
     "year": 2010
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Cessna_172_%282351649088%29_%282%29.jpg/1920px-Cessna_172_%282351649088%29_%282%29.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Cessna_172_(2351649088)_(2).jpg",
+    "author": "abdallahh from Montréal, Canada",
+    "license": "CC BY 2.0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "a small red and white single-engine propeller airplane, full side view, the whole plane visible",
   "coverQuery": "small propeller airplane",
   "blocks": [
@@ -102,7 +110,7 @@
       "md": "Вывод NTSB: цифровые приборы могут сделать полёты безопаснее — они дают пилоту больше информации и функций. Но пилотов нужно готовить к ним отдельно. По итогам исследования NTSB направил авиационным властям США рекомендации по обучению на стеклянных кабинах."
     }
   ],
-  "cover": "/research/glass-cockpit-ntsb-c41db1d0.webp",
+  "cover": "/research/glass-cockpit-ntsb-25711e45.webp",
   "coverSize": [
     1024,
     684
@@ -133,5 +141,11 @@
     "postedAt": "2026-10-08T05:18:57.831Z",
     "cover": "/research/glass-cockpit-ntsb-c41db1d0.webp"
   },
-  "coverSubjectPrompt": "a small red and white single-engine propeller airplane, full side view, the whole plane visible"
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Cessna_172_%282351649088%29_%282%29.jpg/1920px-Cessna_172_%282351649088%29_%282%29.jpg#full",
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "abdallahh from Montréal, Canada",
+    "url": "https://commons.wikimedia.org/wiki/File:Cessna_172_(2351649088)_(2).jpg",
+    "license": "CC BY 2.0"
+  }
 }

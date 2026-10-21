@@ -75,6 +75,7 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
           <a href={r.coverCredit.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
             {r.coverCredit.author} / {r.coverCredit.source}
           </a>
+          {r.coverCredit.license && `, ${r.coverCredit.license}`}
         </div>
       )}
 

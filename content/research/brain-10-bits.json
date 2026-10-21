@@ -11,6 +11,14 @@
     "year": 2024
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Trichter.jpg/1920px-Trichter.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Trichter.jpg",
+    "author": "Ralph Aichinger",
+    "license": "CC BY 2.0",
+    "source": "Wikimedia Commons",
+    "mode": "cutout"
+  },
   "coverPrompt": "a polished copper kitchen funnel standing alone on its wide rim, three-quarter view, the whole funnel visible",
   "coverQuery": "funnel",
   "blocks": [
@@ -130,7 +138,7 @@
       "text": "Отсюда скепсис авторов к нейроинтерфейсам вроде Neuralink, которые обещают ускорить общение с компьютером. Если узкое место — сама мысль, а не пальцы, то провод в голове скорость не поднимет: больше 10 бит в секунду думать всё равно не выйдет."
     }
   ],
-  "cover": "/research/brain-10-bits-50859656.webp",
+  "cover": "/research/brain-10-bits-360a689e.webp",
   "coverSize": [
     1024,
     684
@@ -162,5 +170,11 @@
     }
   },
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "ai:a polished copper kitchen funnel standing alone on its wide rim, three-quarter view, the whole funnel visible"
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Trichter.jpg/1920px-Trichter.jpg#cutout",
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Ralph Aichinger",
+    "url": "https://commons.wikimedia.org/wiki/File:Trichter.jpg",
+    "license": "CC BY 2.0"
+  }
 }

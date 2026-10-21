@@ -11,6 +11,14 @@
     "year": 2026
   },
   "readingMinutes": 5,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Antique_Wooden_SEC_Wall_Clock.jpg/1920px-Antique_Wooden_SEC_Wall_Clock.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Antique_Wooden_SEC_Wall_Clock.jpg",
+    "author": "Amitbalani",
+    "license": "CC0",
+    "source": "Wikimedia Commons",
+    "mode": "cutout"
+  },
   "coverPrompt": "a classic round analog wall clock with a red rim, black hands and numbers, front view, the whole clock visible",
   "coverQuery": "analog wall clock",
   "coverSprite": {
@@ -221,8 +229,8 @@
       "md": "Сами тесты авторы тоже ставят под вопрос. Обзор исследователей из Стэнфорда нашёл некорректные вопросы в девяти популярных бенчмарках — от 2% в математической части MMLU до 42% в наборе школьных задач GSM8K. По разбору IMO-Bench, часть высоких оценок на олимпиадных задачах может объясняться тем, что модели уже видели похожие задачи.\n\nВывод главы: модели закрывают разрыв с экспертами в задачах на знания, а визуальное рассуждение и действия в реальном мире остаются слабым местом. Роботы хорошо работают в контролируемых условиях, но разница между предсказуемой лабораторией и непредсказуемым домом, по оценке авторов, всё ещё большая."
     }
   ],
-  "coverSubjectPrompt": "ai:a classic round analog wall clock with a red rim, black hands and numbers, front view, the whole clock visible",
-  "cover": "/research/ai-jagged-clocks-9328da5e.webp",
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Antique_Wooden_SEC_Wall_Clock.jpg/1920px-Antique_Wooden_SEC_Wall_Clock.jpg#full",
+  "cover": "/research/ai-jagged-clocks-2ba1e504.webp",
   "coverSize": [
     1024,
     684
@@ -232,5 +240,11 @@
     "messageId": 24,
     "postedAt": "2026-10-20T05:18:42.358Z",
     "cover": "/research/ai-jagged-clocks-9328da5e.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Amitbalani",
+    "url": "https://commons.wikimedia.org/wiki/File:Antique_Wooden_SEC_Wall_Clock.jpg",
+    "license": "CC0"
   }
 }

@@ -11,6 +11,14 @@
     "year": 2025
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Spielw%C3%BCrfel.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Spielw%C3%BCrfel.jpg",
+    "author": "Schlurcher",
+    "license": "CC BY 4.0",
+    "source": "Wikimedia Commons",
+    "mode": "cutout"
+  },
   "coverPrompt": "two red translucent casino dice with white pips, three-quarter view, both dice fully visible",
   "coverQuery": "red dice",
   "coverSprite": {
@@ -194,16 +202,22 @@
       "md": "При таком подсчёте угадывать без уверенности становится невыгодно, а честный отказ перестаёт проигрывать. Похоже работали некоторые стандартизированные экзамены вроде старого SAT, где за неверный ответ снимали баллы.\n\nОграничения авторы оговаривают сами: точность ни одной модели не дойдёт до 100% — часть вопросов в принципе не имеет ответа. Но простая правка основных бенчмарков, по их выводу, перестанет поощрять выдумки и уберёт барьеры для борьбы с галлюцинациями."
     }
   ],
-  "cover": "/research/why-llm-hallucinate-f3d7bac4.webp",
+  "cover": "/research/why-llm-hallucinate-52d74385.webp",
   "coverSize": [
     1024,
     684
   ],
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "ai:two red translucent casino dice with white pips, three-quarter view, both dice fully visible",
+  "coverSubjectPrompt": "image:https://upload.wikimedia.org/wikipedia/commons/1/1e/Spielw%C3%BCrfel.jpg#cutout",
   "telegram": {
     "messageId": 14,
     "postedAt": "2026-10-11T05:19:03.863Z",
     "cover": "/research/why-llm-hallucinate-f3d7bac4.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Schlurcher",
+    "url": "https://commons.wikimedia.org/wiki/File:Spielw%C3%BCrfel.jpg",
+    "license": "CC BY 4.0"
   }
 }

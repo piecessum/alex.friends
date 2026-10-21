@@ -11,6 +11,14 @@
     "year": 1974
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/A_car_crash_1960_%28JOKAMT2On14-2%29.tif/lossy-page1-1920px-A_car_crash_1960_%28JOKAMT2On14-2%29.tif.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:A_car_crash_1960_(JOKAMT2On14-2).tif",
+    "author": "Erkki Voutilainen",
+    "license": "CC BY 4.0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "a vintage red sedan car with a crumpled front bumper and a cracked headlight, three-quarter view, the whole car in frame",
   "coverQuery": "crashed car",
   "coverSprite": {
@@ -225,11 +233,17 @@
       "md": "Авторы связывают это с классическим опытом 1932 года: люди перерисовывали простую фигуру по памяти, и рисунок смещался к предмету, название которого им сказали вместе с фигурой."
     }
   ],
-  "coverSubjectPrompt": "ai:a vintage red sedan car with a crumpled front bumper and a cracked headlight, three-quarter view, the whole car in frame",
-  "cover": "/research/smashed-or-hit-4d248f91.webp",
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/A_car_crash_1960_%28JOKAMT2On14-2%29.tif/lossy-page1-1920px-A_car_crash_1960_%28JOKAMT2On14-2%29.tif.jpg#full",
+  "cover": "/research/smashed-or-hit-d874f9dd.webp",
   "coverSize": [
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Erkki Voutilainen",
+    "url": "https://commons.wikimedia.org/wiki/File:A_car_crash_1960_(JOKAMT2On14-2).tif",
+    "license": "CC BY 4.0"
+  }
 }

@@ -11,6 +11,14 @@
     "year": 2025
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Brain_Anatomy_Model_%2850693703637%29.jpg/1920px-Brain_Anatomy_Model_%2850693703637%29.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Brain_Anatomy_Model_(50693703637).jpg",
+    "author": "YVC Biology Department",
+    "license": "CC BY 2.0",
+    "source": "Wikimedia Commons",
+    "mode": "cutout"
+  },
   "coverPrompt": "a pink anatomical model of a human brain, side view, the whole brain visible",
   "coverQuery": "brain model",
   "blocks": [
@@ -212,16 +220,22 @@
       "g": "#6fd18a"
     }
   },
-  "cover": "/research/microplastics-in-brain-252fdd71.webp",
+  "cover": "/research/microplastics-in-brain-fd2b50ca.webp",
   "coverSize": [
     1024,
     684
   ],
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "a pink anatomical model of a human brain, side view, the whole brain visible",
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Brain_Anatomy_Model_%2850693703637%29.jpg/1920px-Brain_Anatomy_Model_%2850693703637%29.jpg#cutout",
   "telegram": {
     "messageId": 13,
     "postedAt": "2026-10-10T05:25:48.646Z",
     "cover": "/research/microplastics-in-brain-252fdd71.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "YVC Biology Department",
+    "url": "https://commons.wikimedia.org/wiki/File:Brain_Anatomy_Model_(50693703637).jpg",
+    "license": "CC BY 2.0"
   }
 }

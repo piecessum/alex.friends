@@ -11,6 +11,14 @@
     "year": 2019
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/be/Car_dashboard_drive_CC0_b2.png",
+    "page": "https://commons.wikimedia.org/wiki/File:Car_dashboard_drive_CC0_b2.png",
+    "author": "JoeNomi 1961",
+    "license": "CC0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "a modern dark grey car dashboard with a digital instrument cluster showing a red collision warning icon, steering wheel visible, three-quarter view",
   "coverQuery": "car dashboard",
   "coverSprite": {
@@ -159,11 +167,17 @@
       "md": "Объяснение авторов связано с тем, как системы проверяют. Тесты IIHS и других потребительских программ повторяют именно типичную аварию: машина едет прямо и догоняет стоящую или тормозящую цель на небольшой скорости и на сухом асфальте. В 2019 году высшую оценку superior в таком тесте получили 66% систем на новых моделях.\n\nПовороты, перестроения, скользкая дорога, высокая скорость и непривычные цели вроде мотоцикла или кузова грузовика тестовая конфигурация не моделирует. Именно в этих обстоятельствах, судя по аварийной статистике, машины с системой и встречаются чаще ожидаемого.\n\nВывод исследования: автотормоз лучше всего справляется с самым частым сценарием — две легковые машины друг за другом, сухая дорога, невысокая скорость. Чтобы приблизить его к потенциальным 70%, авторы предлагают добавить в потребительские тесты как раз те обстоятельства, где машины с системой перепредставлены. «Наша цель — найти дополнительные возможности повысить эффективность автотормоза», — говорит Чиккино.\n\nОграничение работы — полицейские данные. Скорость в них заменена ограничением на дороге — авторы оговаривают это прямо."
     }
   ],
-  "coverSubjectPrompt": "ai:a modern dark grey car dashboard with a digital instrument cluster showing a red collision warning icon, steering wheel visible, three-quarter view",
-  "cover": "/research/autobrake-blind-spots-6bef5f06.webp",
+  "coverSubjectPrompt": "image:https://upload.wikimedia.org/wikipedia/commons/b/be/Car_dashboard_drive_CC0_b2.png#full",
+  "cover": "/research/autobrake-blind-spots-0ec3879e.webp",
   "coverSize": [
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "JoeNomi 1961",
+    "url": "https://commons.wikimedia.org/wiki/File:Car_dashboard_drive_CC0_b2.png",
+    "license": "CC0"
+  }
 }

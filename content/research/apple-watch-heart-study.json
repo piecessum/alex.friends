@@ -11,6 +11,14 @@
     "year": 2019
   },
   "readingMinutes": 5,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Apple_Watch_Series_7%3B_January_2022_%2802%29.jpg/1920px-Apple_Watch_Series_7%3B_January_2022_%2802%29.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Apple_Watch_Series_7;_January_2022_(02).jpg",
+    "author": "MIKI Yoshihito",
+    "license": "CC BY 2.0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "a modern smartwatch with a red sport band, the screen showing a red heart and pulse line, three-quarter view, the whole watch visible",
   "coverQuery": "smartwatch",
   "coverSprite": {
@@ -243,16 +251,22 @@
       "md": "Пластыри вернуло меньше людей, чем планировали: 450 вместо 503 в каждой возрастной группе, поэтому нужной точности по главному показателю не добились. Исследование не было рассчитано на то, чтобы посчитать, сколько аритмий часы пропускают: алгоритм специально настроен так, чтобы сигналить редко, и короткие приступы он не ловит. Отсутствие уведомления не значит, что аритмии нет, а уведомление — ещё не диагноз. Участники сами сообщали о своих болезнях, и часть потерялась по ходу исследования.\n\nВывод авторов: шанс получить уведомление низкий, но у получивших его больше чем в трети случаев аритмию потом находит пластырь, а 84% уведомлений совпадают с аритмией на ЭКГ. Как это влияет на инсульты и лечение, нужно проверять отдельно."
     }
   ],
-  "cover": "/research/apple-watch-heart-study-08955a4e.webp",
+  "cover": "/research/apple-watch-heart-study-da9000f6.webp",
   "coverSize": [
     1024,
     684
   ],
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "ai:a modern smartwatch with a red sport band, the screen showing a red heart and pulse line, three-quarter view, the whole watch visible",
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Apple_Watch_Series_7%3B_January_2022_%2802%29.jpg/1920px-Apple_Watch_Series_7%3B_January_2022_%2802%29.jpg#full",
   "telegram": {
     "messageId": 21,
     "postedAt": "2026-10-17T05:22:02.663Z",
     "cover": "/research/apple-watch-heart-study-08955a4e.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "MIKI Yoshihito",
+    "url": "https://commons.wikimedia.org/wiki/File:Apple_Watch_Series_7;_January_2022_(02).jpg",
+    "license": "CC BY 2.0"
   }
 }

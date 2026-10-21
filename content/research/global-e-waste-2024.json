@@ -11,6 +11,14 @@
     "year": 2024
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Motorola_cell_phone_disassembly_2.jpg/1920px-Motorola_cell_phone_disassembly_2.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Motorola_cell_phone_disassembly_2.jpg",
+    "author": "GALAXY 2018 A7",
+    "license": "CC0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "an old white iPhone with a shattered cracked screen, front view",
   "coverQuery": "broken smartphone",
   "blocks": [
@@ -227,16 +235,22 @@
       "g": "#8a929c"
     }
   },
-  "cover": "/research/global-e-waste-2024-1e1d0ae7.webp",
+  "cover": "/research/global-e-waste-2024-a8f16bff.webp",
   "coverSize": [
     1024,
     684
   ],
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "an old white iPhone with a shattered cracked screen, front view",
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Motorola_cell_phone_disassembly_2.jpg/1920px-Motorola_cell_phone_disassembly_2.jpg#full",
   "telegram": {
     "messageId": 12,
     "postedAt": "2026-10-09T05:22:26.149Z",
     "cover": "/research/global-e-waste-2024-1e1d0ae7.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "GALAXY 2018 A7",
+    "url": "https://commons.wikimedia.org/wiki/File:Motorola_cell_phone_disassembly_2.jpg",
+    "license": "CC0"
   }
 }

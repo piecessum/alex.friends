@@ -11,6 +11,14 @@
     "year": 2022
   },
   "readingMinutes": 3,
+  "coverImage": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/1/1f/BMW_840_Ci_Sport_center_console.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:BMW_840_Ci_Sport_center_console.jpg",
+    "author": "The Car Spy",
+    "license": "CC BY 2.0",
+    "source": "Wikimedia Commons",
+    "mode": "full"
+  },
   "coverPrompt": "the center console of an old 2000s car with many physical buttons, round knobs and a small radio, front view",
   "coverQuery": "car dashboard buttons",
   "blocks": [
@@ -124,7 +132,7 @@
       "text": "С 2026 года Euro NCAP снимает баллы безопасности, если поворотники, аварийка, дворники, сигнал и кнопка SOS спрятаны в сенсорный экран, — для них нужны физические кнопки. Без этого пять звёзд получить сильно сложнее, а в 2027–2028 требования ужесточат."
     }
   ],
-  "cover": "/research/buttons-vs-touchscreens-c65f5aa3.webp",
+  "cover": "/research/buttons-vs-touchscreens-f5e86cdf.webp",
   "coverSize": [
     1024,
     684
@@ -151,10 +159,16 @@
   },
   "coverStyle": "collage-5",
   "telegramAt": "2026-10-10T08:00:00+03:00",
-  "coverSubjectPrompt": "the center console of an old 2000s car with many physical buttons, round knobs and a small radio, front view",
+  "coverSubjectPrompt": "image:https://upload.wikimedia.org/wikipedia/commons/1/1f/BMW_840_Ci_Sport_center_console.jpg#full",
   "telegram": {
     "messageId": 16,
     "postedAt": "2026-10-13T05:23:01.205Z",
     "cover": "/research/buttons-vs-touchscreens-c65f5aa3.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "The Car Spy",
+    "url": "https://commons.wikimedia.org/wiki/File:BMW_840_Ci_Sport_center_console.jpg",
+    "license": "CC BY 2.0"
   }
 }

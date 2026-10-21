@@ -12,6 +12,14 @@
     "year": 2026
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Shopping_cart_of_Prisma_shop.JPG/1920px-Shopping_cart_of_Prisma_shop.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:Shopping_cart_of_Prisma_shop.JPG",
+    "author": "Dmitry G",
+    "license": "Public domain",
+    "source": "Wikimedia Commons",
+    "mode": "cutout"
+  },
   "coverPrompt": "a supermarket shopping cart full of colorful groceries, side view",
   "coverQuery": "shopping cart groceries",
   "blocks": [
@@ -251,7 +259,7 @@
       "md": "Gartner прогнозирует, что к 2028 году 90% B2B-закупок будут вести AI-агенты, Forrester — что 66% B2B-покупателей ждут полной персонализации. Отсюда главный тренд 2026 года по выводам отчёта: AI-функции, guided selling и персонализация становятся тем, чем платформы будут отличаться друг от друга."
     }
   ],
-  "cover": "/research/b2b-platforms-report-2a301b91.webp",
+  "cover": "/research/b2b-platforms-report-3f577164.webp",
   "coverSize": [
     1024,
     684
@@ -284,5 +292,11 @@
     }
   },
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "a supermarket shopping cart full of colorful groceries, side view"
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Shopping_cart_of_Prisma_shop.JPG/1920px-Shopping_cart_of_Prisma_shop.JPG#cutout",
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Dmitry G",
+    "url": "https://commons.wikimedia.org/wiki/File:Shopping_cart_of_Prisma_shop.JPG",
+    "license": "Public domain"
+  }
 }

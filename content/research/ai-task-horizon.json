@@ -11,6 +11,14 @@
     "year": 2025
   },
   "readingMinutes": 5,
+  "coverImage": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Stopwatch_made_in_USSR.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Stopwatch_made_in_USSR.jpg",
+    "author": "Liilia Moroz",
+    "license": "CC0",
+    "source": "Wikimedia Commons",
+    "mode": "cutout"
+  },
   "coverPrompt": "a vintage silver mechanical stopwatch with a white dial and black hands, front view, the whole stopwatch visible",
   "coverQuery": "stopwatch",
   "coverSprite": {
@@ -307,8 +315,8 @@
       "md": "Если рост продолжится в том же темпе, ИИ-агенты будут в половине случаев справляться с задачами на месяц человеческой работы — это 167 рабочих часов. Центральная оценка авторов — середина 2029 года, разброс — с середины 2028-го по середину 2030-го. Если брать только темп 2024–2025 годов, срок сдвигается на 2027-й или даже конец 2026-го.\n\nОграничения авторы перечисляют сами. Задачи в основном про программирование, у них есть понятная автоматическая проверка, и они «чище» реальной работы. На более «грязных» задачах — без ясной обратной связи, с поиском информации — модели решают меньше, хотя растут с похожей скоростью. А если авторы ошиблись в абсолютных цифрах даже в 10 раз, прогноз сдвинется всего примерно на 2 года."
     }
   ],
-  "coverSubjectPrompt": "a vintage silver mechanical stopwatch with a white dial and black hands, front view, the whole stopwatch visible",
-  "cover": "/research/ai-task-horizon-40b844f3.webp",
+  "coverSubjectPrompt": "image:https://upload.wikimedia.org/wikipedia/commons/e/ee/Stopwatch_made_in_USSR.jpg#cutout",
+  "cover": "/research/ai-task-horizon-d371b45e.webp",
   "coverSize": [
     1024,
     684
@@ -318,5 +326,11 @@
     "messageId": 20,
     "postedAt": "2026-10-16T05:25:35.769Z",
     "cover": "/research/ai-task-horizon-40b844f3.webp"
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Liilia Moroz",
+    "url": "https://commons.wikimedia.org/wiki/File:Stopwatch_made_in_USSR.jpg",
+    "license": "CC0"
   }
 }

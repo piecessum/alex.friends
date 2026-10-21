@@ -12,6 +12,14 @@
     "year": 2025
   },
   "readingMinutes": 4,
+  "coverImage": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Laptop_der_Marke_exone_go_20240203_HOF06886_RAW-Export_000276.png/1920px-Laptop_der_Marke_exone_go_20240203_HOF06886_RAW-Export_000276.png",
+    "page": "https://commons.wikimedia.org/wiki/File:Laptop_der_Marke_exone_go_20240203_HOF06886_RAW-Export_000276.png",
+    "author": "PantheraLeo1359531",
+    "license": "CC BY 4.0",
+    "source": "Wikimedia Commons",
+    "mode": "cutout"
+  },
   "coverPrompt": "a sleek modern silver laptop, open, the screen showing colorful lines of program code, three-quarter view",
   "coverQuery": "laptop code",
   "blocks": [
@@ -110,7 +118,7 @@
       "md": "Авторы подчёркивают, что это узкий срез: опытные разработчики, крупные зрелые проекты, инструменты начала 2025 года. На новом проекте, в незнакомом коде или у новичков результат может быть другим, а модели с тех пор обновились."
     }
   ],
-  "cover": "/research/ai-slows-down-devs-5a1e56c5.webp",
+  "cover": "/research/ai-slows-down-devs-899e50ad.webp",
   "coverSize": [
     1024,
     684
@@ -146,5 +154,11 @@
     }
   },
   "coverStyle": "collage-5",
-  "coverSubjectPrompt": "a sleek modern silver laptop, open, the screen showing colorful lines of program code, three-quarter view"
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Laptop_der_Marke_exone_go_20240203_HOF06886_RAW-Export_000276.png/1920px-Laptop_der_Marke_exone_go_20240203_HOF06886_RAW-Export_000276.png#cutout",
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "PantheraLeo1359531",
+    "url": "https://commons.wikimedia.org/wiki/File:Laptop_der_Marke_exone_go_20240203_HOF06886_RAW-Export_000276.png",
+    "license": "CC BY 4.0"
+  }
 }
