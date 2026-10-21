@@ -325,5 +325,10 @@
     "author": "JaredMcKenzie",
     "url": "https://commons.wikimedia.org/wiki/File:Abandoned_shopping_trolley_on_riverbed_at_low_tide,_Manning_River.jpg",
     "license": "CC0"
+  },
+  "telegram": {
+    "messageId": 25,
+    "postedAt": "2026-10-21T05:15:34.166Z",
+    "cover": "/research/cart-abandonment-baymard-d832b45a.webp"
   }
 }
