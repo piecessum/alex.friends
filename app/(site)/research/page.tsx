@@ -1,7 +1,6 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { ResearchCard } from "@/components/research-card";
-import { getAllDigests, getAllResearch } from "@/lib/research";
+import { ResearchStories, type StoryWeek } from "@/components/research-stories";
+import { getAllDigests, getAllResearch, TOPIC_COLORS, TOPICS, type Research } from "@/lib/research";
 
 export const metadata = {
   title: "Исследования — Алексей Масюта",
@@ -9,7 +8,40 @@ export const metadata = {
 
 export default function ResearchPage() {
   const items = getAllResearch();
-  const digest = getAllDigests()[0];
+  const bySlug = new Map<string, Research>(items.map((r) => [r.slug, r]));
+
+  // Дайджесты недели — историями: слайд недели и по слайду на исследование.
+  const weeks: StoryWeek[] = getAllDigests().map((d) => {
+    const research = d.items.flatMap((it) => {
+      const r = bySlug.get(it.slug);
+      return r ? [{ r, takeaway: it.takeaway }] : [];
+    });
+    return {
+      slug: d.slug,
+      label: d.title.includes(":") ? d.title.split(":").pop()!.trim() : d.title,
+      preview: d.cover ?? research[0]?.r.cover,
+      slides: [
+        {
+          kicker: "Дайджест недели",
+          title: d.title,
+          text: d.intro.replace(/\*\*|\*|\[([^\]]+)\]\([^)]+\)/g, "$1"),
+          image: d.cover,
+          background: "#3a3440",
+          href: `/research/week/${d.slug}`,
+          cta: "Все исследования недели",
+        },
+        ...research.map(({ r, takeaway }) => ({
+          kicker: `${TOPICS[r.topic]} · ${r.readingMinutes} мин`,
+          title: r.title,
+          text: takeaway,
+          image: r.cover,
+          background: TOPIC_COLORS[r.topic],
+          href: `/research/${r.slug}`,
+          cta: "Читать статью",
+        })),
+      ],
+    };
+  });
 
   return (
     <main className="w-full flex-1 px-page py-12 sm:py-16">
@@ -22,14 +54,10 @@ export default function ResearchPage() {
         ссылка на оригинальную статью.
       </p>
 
-      {digest && (
-        <Link
-          href={`/research/week/${digest.slug}`}
-          className="group mt-6 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/60 px-4 py-2 text-ui transition hover:border-indigo-400 dark:border-neutral-700 dark:bg-[#181818]/60 dark:hover:border-indigo-500"
-        >
-          <span className="font-medium">{digest.title}</span>
-          <ArrowRight className="h-4 w-4 text-indigo-600 transition group-hover:translate-x-0.5 dark:text-indigo-400" />
-        </Link>
+      {weeks.length > 0 && (
+        <div className="mt-6">
+          <ResearchStories weeks={weeks} />
+        </div>
       )}
 
       {items.length === 0 ? (

@@ -67,6 +67,12 @@ jobs:
 
       - run: git config user.name "Алексей Масюта" && git config user.email "alexmas1998kot@gmail.com"
 
+      # Картинки из самих исследований (блоки image) — PyMuPDF достаёт их из PDF.
+      - name: Картинки из исследований
+        run: |
+          pip install --quiet pymupdf pillow
+          python3 scripts/research-figures.py fetch
+
       - name: Превью
         run: |
           npm run research:cover -- "$REFRESH"

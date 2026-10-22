@@ -106,6 +106,58 @@ export type ResearchBlock =
       ticks?: { value: number; label: string }[];
       source?: string;
     }
+  /** Картинка из самого исследования: рисунок, схема, фото, готовая
+   *  инфографика — без стилизации. Агент задаёт url (прямая ссылка на файл
+   *  картинки) или pdf (ссылка на PDF, страница и номер картинки на ней из
+   *  scripts/research-figures.py list); GitHub Action скачивает её в
+   *  public/research/figures и заполняет src и size. */
+  | {
+      type: "image";
+      src?: string;
+      size?: [number, number];
+      url?: string;
+      pdf?: { url: string; page: number; index: number };
+      caption?: string;
+      source?: string;
+    }
+  /** Последовательность событий во времени: время (или дата) и что произошло. */
+  | {
+      type: "timeline";
+      title: string;
+      subtitle?: string;
+      items: { time: string; label: string; text?: string; highlight?: boolean }[];
+      source?: string;
+    }
+  /** «Сто точек»: доля как закрашенные точки из total (по умолчанию 100) —
+   *  для «каждый четвёртый», «45 из 100». items — 1–3 закрашенные группы. */
+  | {
+      type: "units";
+      title: string;
+      subtitle?: string;
+      total?: number;
+      items: { label: string; value: number }[];
+      source?: string;
+    }
+  /** Кольцо: доли целого, 2–5 частей; center — подпись в центре. */
+  | {
+      type: "donut";
+      title: string;
+      subtitle?: string;
+      center?: string;
+      items: { label: string; value: number }[];
+      source?: string;
+    }
+  /** Циферблат-полукруг: 1–3 значения на одной шкале от 0 до max —
+   *  углы, проценты, «стрелка прибора». */
+  | {
+      type: "dial";
+      title: string;
+      subtitle?: string;
+      max: number;
+      unit?: string;
+      items: { label: string; value: number; display?: string; highlight?: boolean }[];
+      source?: string;
+    }
   /** Врезка «кстати» — интересный факт сбоку от основного повествования. */
   | { type: "fact"; text: string }
   | { type: "quote"; text: string; author?: string };

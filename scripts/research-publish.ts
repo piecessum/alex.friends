@@ -39,6 +39,25 @@ async function sendPhoto(photo: Buffer, caption: string): Promise<number> {
   return data.result.message_id;
 }
 
+/** Текстовый пост (дайджест) — без превью ссылок, просто список. */
+async function sendText(text: string): Promise<number> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (!token) throw new Error("TELEGRAM_BOT_TOKEN не задан");
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      chat_id: CHANNEL,
+      text,
+      parse_mode: "HTML",
+      link_preview_options: { is_disabled: true },
+    }),
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error(`Telegram: ${data.error_code} ${data.description}`);
+  return data.result.message_id;
+}
+
 async function editPhoto(messageId: number, photo: Buffer, caption: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) throw new Error("TELEGRAM_BOT_TOKEN не задан");
@@ -68,7 +87,7 @@ const digestCaption = (d: ResearchDigest, titles: Map<string, string>) =>
     .filter((i) => titles.has(i.slug))
     .map((i, n) => `${n + 1}. <a href="${SITE}/research/${i.slug}">${esc(titles.get(i.slug)!)}</a>`)
     .join("\n") +
-  `\n\n<a href="${SITE}/research/week/${d.slug}">Коротко о каждом — на сайте →</a>`;
+  `\n\n<a href="${SITE}/research?story=${d.slug}">Коротко о каждом — историями на сайте →</a>`;
 
 // Telegram сжимает фото сам; webp как photo он принимает не всегда — шлём jpg.
 const coverJpeg = (r: Research) =>
@@ -152,8 +171,8 @@ async function main() {
       const d: ResearchDigest = JSON.parse(fs.readFileSync(p, "utf8"));
       if (d.telegram || !d.cover || new Date(d.date).getTime() > now) continue;
       if (mskDay(new Date(d.date).getTime()) !== mskDay(now)) continue; // старые не догоняем
-      const photo = await sharp(path.join(process.cwd(), "public", d.cover)).jpeg({ quality: 88 }).toBuffer();
-      const messageId = await sendPhoto(photo, digestCaption(d, titles));
+      // Дайджест — аккуратный список ссылок, без картинки.
+      const messageId = await sendText(digestCaption(d, titles));
       d.telegram = { messageId, postedAt: new Date().toISOString(), cover: d.cover };
       fs.writeFileSync(p, JSON.stringify(d, null, 2) + "\n");
       console.log(`Опубликован дайджест: ${d.slug} → сообщение ${messageId}`);
