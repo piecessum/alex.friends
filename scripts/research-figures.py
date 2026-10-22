@@ -73,7 +73,15 @@ def extract(doc: fitz.Document, xref: int) -> Image.Image:
     pix = fitz.Pixmap(doc, xref)
     if pix.n - pix.alpha >= 4:  # CMYK → RGB
         pix = fitz.Pixmap(fitz.csRGB, pix)
-    return Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
+    return flatten(Image.open(io.BytesIO(pix.tobytes("png"))))
+
+
+def flatten(img: Image.Image) -> Image.Image:
+    """Прозрачные картинки — на белую подложку, иначе прозрачное станет чёрным."""
+    rgba = img.convert("RGBA")
+    bg = Image.new("RGB", rgba.size, (255, 255, 255))
+    bg.paste(rgba, mask=rgba.split()[3])
+    return bg
 
 
 def captions(page: fitz.Page) -> list[str]:
@@ -103,8 +111,8 @@ def cmd_list(src: str) -> None:
         im.thumbnail((cw - 8, ch - 30))
         x, y = (i % cols) * cw + 4, (i // cols) * ch + 26
         sheet.paste(im, (x, y))
-        draw.rectangle([x, y - 22, x + 110, y - 2], fill=(17, 17, 17))
-        draw.text((x + 6, y - 18), f"стр. {p} · #{k}", fill=(255, 255, 255))
+        draw.rectangle([x, y - 22, x + 70, y - 2], fill=(17, 17, 17))
+        draw.text((x + 6, y - 18), f"p{p} #{k}", fill=(255, 255, 255))
     out = "/tmp/research-figures.png"
     sheet.save(out)
 
@@ -128,7 +136,7 @@ def fetch_block(b: dict, slug: str, n: int) -> bool:
             raise RuntimeError(f"{slug}: на стр. {ref['page']} нет картинки #{ref['index']}")
         img = extract(doc, found[0][1])
     elif b.get("url"):
-        img = Image.open(io.BytesIO(download(b["url"]))).convert("RGB")
+        img = flatten(Image.open(io.BytesIO(download(b["url"]))))
     else:
         return False
     if img.width > MAX_WIDTH:

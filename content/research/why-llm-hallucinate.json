@@ -146,19 +146,24 @@
       "source": "OpenAI, 2025"
     },
     {
-      "type": "versus",
-      "title": "Доля неверных ответов",
-      "subtitle": "SimpleQA, % от всех вопросов",
-      "left": {
-        "label": "gpt-5-thinking-mini",
-        "value": 26,
-        "display": "26%"
-      },
-      "right": {
-        "label": "o4-mini",
-        "value": 75,
-        "display": "75%"
-      },
+      "type": "dial",
+      "title": "Сколько ответов неверные",
+      "subtitle": "тест SimpleQA, % от всех вопросов",
+      "max": 100,
+      "unit": "%",
+      "items": [
+        {
+          "label": "o4-mini — почти всегда угадывает",
+          "value": 75,
+          "display": "75%",
+          "highlight": true
+        },
+        {
+          "label": "gpt-5-thinking-mini — чаще отказывается",
+          "value": 26,
+          "display": "26%"
+        }
+      ],
       "source": "OpenAI, 2025"
     },
     {

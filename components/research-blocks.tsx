@@ -632,7 +632,7 @@ function Units({ block }: { block: Extract<ResearchBlock, { type: "units" }> }) 
               key={k}
               {...(g >= 0 ? item(g) : {})}
               className={`aspect-square rounded-[3px] transition-opacity ${
-                g >= 0 ? SERIES[g % SERIES.length] : "bg-neutral-200 dark:bg-neutral-800"
+                g >= 0 ? SERIES[g % SERIES.length] : "bg-neutral-200 dark:bg-neutral-700"
               } ${sel !== null && g !== sel ? "opacity-40" : ""}`}
             />
           ))}
