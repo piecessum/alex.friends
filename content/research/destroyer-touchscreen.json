@@ -52,9 +52,21 @@
     {
       "type": "stats",
       "items": [
-        { "value": "10", "label": "моряков эсминца погибли, 48 ранены", "source": "NTSB, 2019" },
-        { "value": "≈3 мин", "label": "от доклада «рулевое потеряно» до удара", "source": "NTSB, 2019" },
-        { "value": ">$100 млн", "label": "ущерб эсминцу; танкеру — около $225 тысяч", "source": "NTSB, 2019" }
+        {
+          "value": "10",
+          "label": "моряков эсминца погибли, 48 ранены",
+          "source": "NTSB, 2019"
+        },
+        {
+          "value": "≈3 мин",
+          "label": "от доклада «рулевое потеряно» до удара",
+          "source": "NTSB, 2019"
+        },
+        {
+          "value": ">$100 млн",
+          "label": "ущерб эсминцу; танкеру — около $225 тысяч",
+          "source": "NTSB, 2019"
+        }
       ]
     },
     {
@@ -85,8 +97,16 @@
       "type": "versus",
       "title": "Обороты винтов после команды «сбросить ход»",
       "subtitle": "оборотов в минуту, 05:22:20 — за полторы минуты до удара",
-      "left": { "label": "Левый винт", "value": 44, "display": "44" },
-      "right": { "label": "Правый винт", "value": 87, "display": "87" },
+      "left": {
+        "label": "Левый винт",
+        "value": 44,
+        "display": "44"
+      },
+      "right": {
+        "label": "Правый винт",
+        "value": 87,
+        "display": "87"
+      },
       "source": "NTSB, 2019, журнал тяги эсминца"
     },
     {
@@ -97,8 +117,16 @@
       "type": "versus",
       "title": "На сколько градусов эсминец отвернул влево за минуту",
       "subtitle": "градусов за 60 секунд: руль стоит прямо, затем к нему добавились разные обороты винтов",
-      "left": { "label": "05:21–05:22, руль прямо", "value": 13.3, "display": "13,3°" },
-      "right": { "label": "05:22–05:23, винты вразнобой", "value": 27.2, "display": "27,2°" },
+      "left": {
+        "label": "05:21–05:22, руль прямо",
+        "value": 13.3,
+        "display": "13,3°"
+      },
+      "right": {
+        "label": "05:22–05:23, винты вразнобой",
+        "value": 27.2,
+        "display": "27,2°"
+      },
       "source": "NTSB, 2019, автоматический журнал эсминца"
     },
     {
@@ -119,15 +147,53 @@
       "subtitle": "часов сна, примерно; NTSB считает нормой 7–8 часов в сутки",
       "unit": "ч",
       "items": [
-        { "label": "Матрос на тяге", "value": 0, "display": "не спал", "highlight": true },
-        { "label": "Офицер, отдававший команды рулевому", "value": 3, "display": "≈3 ч", "highlight": true },
-        { "label": "Вахтенный офицер", "value": 4, "display": "≈4 ч" },
-        { "label": "Помощник вахтенного офицера", "value": 4, "display": "≈4 ч" },
-        { "label": "Старшина вахты", "value": 4, "display": "≈4 ч" },
-        { "label": "Старпом", "value": 4, "display": "≈4 ч" },
-        { "label": "Рулевой", "value": 5, "display": "≈5 ч" },
-        { "label": "Младший вахтенный офицер", "value": 5, "display": "≈5 ч" },
-        { "label": "Капитан", "value": 5, "display": "≈5 ч" }
+        {
+          "label": "Матрос на тяге",
+          "value": 0,
+          "display": "не спал",
+          "highlight": true
+        },
+        {
+          "label": "Офицер, отдававший команды рулевому",
+          "value": 3,
+          "display": "≈3 ч",
+          "highlight": true
+        },
+        {
+          "label": "Вахтенный офицер",
+          "value": 4,
+          "display": "≈4 ч"
+        },
+        {
+          "label": "Помощник вахтенного офицера",
+          "value": 4,
+          "display": "≈4 ч"
+        },
+        {
+          "label": "Старшина вахты",
+          "value": 4,
+          "display": "≈4 ч"
+        },
+        {
+          "label": "Старпом",
+          "value": 4,
+          "display": "≈4 ч"
+        },
+        {
+          "label": "Рулевой",
+          "value": 5,
+          "display": "≈5 ч"
+        },
+        {
+          "label": "Младший вахтенный офицер",
+          "value": 5,
+          "display": "≈5 ч"
+        },
+        {
+          "label": "Капитан",
+          "value": 5,
+          "display": "≈5 ч"
+        }
       ],
       "source": "NTSB, 2019"
     },
@@ -144,5 +210,18 @@
       "type": "text",
       "md": "NTSB рекомендовал ВМС держать руль в обычном режиме с двойным подтверждением, кроме аварийных ситуаций, учить передаче управления между всеми пультами и при обновлении систем следовать стандарту эргономики. После аварии ВМС обязали корабли включать в оживлённых проливах передатчик автоматической идентификации (AIS) — сигнал, по которому другие суда видят, кто рядом. Ещё ВМС ввели вахты по постоянному графику и разослали на корабли с этой системой новые рекомендации по управлению рулём."
     }
-  ]
+  ],
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "National Museum of the U.S. Navy",
+    "url": "https://commons.wikimedia.org/wiki/File:USS_John_S._McCain_(DDG-56)_in_the_Philippine_Sea,_2017_(170614-N-DL434-064).jpg",
+    "license": "Public domain"
+  },
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/USS_John_S._McCain_%28DDG-56%29_in_the_Philippine_Sea%2C_2017_%28170614-N-DL434-064%29.jpg/1920px-USS_John_S._McCain_%28DDG-56%29_in_the_Philippine_Sea%2C_2017_%28170614-N-DL434-064%29.jpg#full",
+  "cover": "/research/destroyer-touchscreen-f41b57f0.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
