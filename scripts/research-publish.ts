@@ -1,9 +1,10 @@
 // Публикация исследований в Telegram-канал: npm run research:publish
-// Ритм канала (по Москве): пн–пт — исследование с 08:00, одно в день (пока
-// копится очередь — ещё одно вечером, с 19:00); суббота — дайджест недели;
-// воскресенье — выходной. Уходит самое старое из ожидающих исследований, чьё
-// время уже наступило (telegramAt, иначе date) и которое ещё не постилось
-// (нет поля telegram): превью + заголовок + лид + ссылка на сайт. После отправки в JSON пишется telegram.messageId — повторно не уйдёт.
+// Ритм канала (по Москве): пн–пт — с 08:00 ровно одно исследование, то,
+// что вышло сегодня (date или telegramAt — сегодняшние); суббота — дайджест
+// недели; воскресенье — выходной. Вечерних постов и «догоняния» нет: если
+// статья дня по какой-то причине не ушла в свой день, в канал она уже не
+// попадает — она есть на сайте и в субботнем дайджесте.
+// Пост: превью + заголовок + лид + ссылка на сайт. После отправки в JSON пишется telegram.messageId — повторно не уйдёт.
 // Запускать ПОСЛЕ деплоя, чтобы ссылка на сайт уже открывалась.
 // --refresh=slug,slug — у уже опубликованных заменить картинку и подпись в
 // посте канала (после перерисовки превью), без повторной публикации.
@@ -21,8 +22,6 @@ const CHANNEL = process.env.RESEARCH_CHANNEL_ID || "-1004400783573";
 
 /** Раньше этого часа (МСК) в канал не постим. */
 const POST_FROM_HOUR = 8;
-/** С этого часа (МСК) по будням — второй пост, если очередь накопилась. */
-const CATCH_UP_HOUR = 19;
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -114,18 +113,16 @@ async function main() {
   const postedToday = all.filter(
     ({ r }) => r.telegram && mskDay(new Date(r.telegram.postedAt).getTime()) === mskDay(now)
   ).length;
+  // Кандидаты — только статьи сегодняшнего дня (по Москве), уже наступившие.
+  // Превью старого стиля в канал не отправляем — ждём перерисовки.
   const queue = all
-    // Превью старого стиля в канал не отправляем — ждём перерисовки.
-    .filter(({ r }) => !r.telegram && r.cover && r.coverStyle === COVER_STYLE && new Date(r.telegramAt ?? r.date).getTime() <= now)
+    .filter(({ r }) => {
+      const at = new Date(r.telegramAt ?? r.date).getTime();
+      return !r.telegram && r.cover && r.coverStyle === COVER_STYLE && at <= now && mskDay(at) === mskDay(now);
+    })
     .sort((a, b) => (a.r.telegramAt ?? a.r.date).localeCompare(b.r.telegramAt ?? b.r.date));
-  // Сколько исследований можно запостить сейчас: по будням одно с утра и ещё
-  // одно вечером, если очередь не разобрана; в выходные — ни одного.
-  const allowed =
-    weekday === 0 || weekday === 6 || mskHour < POST_FROM_HOUR
-      ? 0
-      : mskHour >= CATCH_UP_HOUR && queue.length > 0
-        ? 2
-        : 1;
+  // По будням — одна статья в день, в выходные — ни одной.
+  const allowed = weekday === 0 || weekday === 6 || mskHour < POST_FROM_HOUR ? 0 : 1;
   const due = queue.slice(0, Math.max(0, allowed - postedToday));
   if (queue.length && !due.length) {
     console.log(
