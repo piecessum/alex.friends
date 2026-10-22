@@ -245,5 +245,10 @@
     "author": "Erkki Voutilainen",
     "url": "https://commons.wikimedia.org/wiki/File:A_car_crash_1960_(JOKAMT2On14-2).tif",
     "license": "CC BY 4.0"
+  },
+  "telegram": {
+    "messageId": 27,
+    "postedAt": "2026-10-22T05:22:04.903Z",
+    "cover": "/research/smashed-or-hit-d874f9dd.webp"
   }
 }
