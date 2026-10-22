@@ -179,5 +179,10 @@
     "author": "JoeNomi 1961",
     "url": "https://commons.wikimedia.org/wiki/File:Car_dashboard_drive_CC0_b2.png",
     "license": "CC0"
+  },
+  "telegram": {
+    "messageId": 28,
+    "postedAt": "2026-10-22T18:49:37.537Z",
+    "cover": "/research/autobrake-blind-spots-0ec3879e.webp"
   }
 }
