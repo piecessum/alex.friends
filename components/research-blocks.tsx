@@ -493,7 +493,14 @@ function ImageBlock({ block }: { block: Extract<ResearchBlock, { type: "image" }
         height={block.size?.[1]}
         loading="lazy"
         decoding="async"
-        className="h-auto w-full rounded-xl bg-white"
+        // Не шире своего размера (мелкие рисунки не мылятся) и не выше 70%
+        // экрана (высокие помещаются в один экран); место резервируется сразу.
+        style={
+          block.size
+            ? { maxWidth: `min(100%, ${block.size[0]}px, calc(70vh * ${(block.size[0] / block.size[1]).toFixed(4)}))` }
+            : undefined
+        }
+        className="mx-auto block h-auto w-full rounded-xl bg-white"
       />
     </Figure>
   );
