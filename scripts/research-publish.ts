@@ -82,12 +82,11 @@ const caption = (r: Research) =>
   `<a href="${SITE}/research/${r.slug}">Читать на сайте →</a>`;
 
 const digestCaption = (d: ResearchDigest, titles: Map<string, string>) =>
-  `<b>${esc(d.title)}</b>\n\n` +
+  `<b>Дайджест недели</b>\n\n` +
   d.items
     .filter((i) => titles.has(i.slug))
     .map((i, n) => `${n + 1}. <a href="${SITE}/research/${i.slug}">${esc(titles.get(i.slug)!)}</a>`)
-    .join("\n") +
-  `\n\n<a href="${SITE}/research?story=${d.slug}">Коротко о каждом — историями на сайте →</a>`;
+    .join("\n");
 
 // Telegram сжимает фото сам; webp как photo он принимает не всегда — шлём jpg.
 const coverJpeg = (r: Research) =>
@@ -169,11 +168,16 @@ async function main() {
     for (const f of fs.readdirSync(DIGEST_DIR).filter((f) => f.endsWith(".json"))) {
       const p = path.join(DIGEST_DIR, f);
       const d: ResearchDigest = JSON.parse(fs.readFileSync(p, "utf8"));
-      if (d.telegram || !d.cover || new Date(d.date).getTime() > now) continue;
+      if (d.telegram || !d.poster || new Date(d.date).getTime() > now) continue;
       if (mskDay(new Date(d.date).getTime()) !== mskDay(now)) continue; // старые не догоняем
-      // Дайджест — аккуратный список ссылок, без картинки.
-      const messageId = await sendText(digestCaption(d, titles));
-      d.telegram = { messageId, postedAt: new Date().toISOString(), cover: d.cover };
+      // Дайджест — картинка «#N» и список ссылок в подписи. Подпись к фото у
+      // Telegram — до 1024 символов; длиннее — список уходит следом текстом.
+      const photo = await sharp(path.join(process.cwd(), "public", d.poster)).jpeg({ quality: 88 }).toBuffer();
+      const text = digestCaption(d, titles);
+      const fits = text.replace(/<[^>]+>/g, "").length <= 1024;
+      const messageId = await sendPhoto(photo, fits ? text : "<b>Дайджест недели</b>");
+      if (!fits) await sendText(text);
+      d.telegram = { messageId, postedAt: new Date().toISOString(), cover: d.poster };
       fs.writeFileSync(p, JSON.stringify(d, null, 2) + "\n");
       console.log(`Опубликован дайджест: ${d.slug} → сообщение ${messageId}`);
     }

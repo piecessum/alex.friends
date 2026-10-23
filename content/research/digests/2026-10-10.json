@@ -53,7 +53,7 @@
       "takeaway": "На каждую койку реанимации — 187 звуковых тревог в сутки. Из проверенных тревог об аритмии ложными оказались 88,8%."
     }
   ],
-  "cover": "/research/week-2026-10-10-d9c0b3fa.webp",
+  "cover": "/research/week-2026-10-10-e4eaa682.webp",
   "coverSize": [
     1024,
     684
@@ -71,5 +71,8 @@
     "/research/autopilot-attention-tricks-35cb7e2e.webp",
     "/research/radiologists-gorilla-bdb945f6.webp",
     "/research/icu-alarm-fatigue-64e39a79.webp"
-  ]
+  ],
+  "coverStyle": "pile-1",
+  "poster": "/research/digest-2026-10-10-1913636f.webp",
+  "posterKey": "number-corner-1#1#b2b"
 }

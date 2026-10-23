@@ -1,6 +1,6 @@
 import { ResearchCard } from "@/components/research-card";
 import { ResearchStories, type StoryWeek } from "@/components/research-stories";
-import { getAllDigests, getAllResearch, TOPIC_COLORS, TOPICS, type Research } from "@/lib/research";
+import { getAllDigests, getAllResearch, TOPIC_ACCENTS, TOPIC_COLORS, TOPICS, type Research } from "@/lib/research";
 
 export const metadata = {
   title: "Исследования — Алексей Масюта",
@@ -19,18 +19,24 @@ export default function ResearchPage() {
   const bySlug = new Map<string, Research>(items.map((r) => [r.slug, r]));
 
   // Дайджесты недели — историями: слайд недели и по слайду на исследование.
-  const weeks: StoryWeek[] = getAllDigests().map((d) => {
+  // Нумерация по порядку выхода: самый первый дайджест — #1.
+  const digests = getAllDigests();
+  const weeks: StoryWeek[] = digests.map((d, i) => {
     const research = d.items.flatMap((it) => {
       const r = bySlug.get(it.slug);
       return r ? [{ r, takeaway: it.takeaway }] : [];
     });
+    const number = digests.length - i;
+    const topic = research[0]?.r.topic;
     return {
       slug: d.slug,
-      label: d.title.includes(":") ? d.title.split(":").pop()!.trim() : d.title,
-      preview: d.cover ?? research[0]?.r.cover,
+      label: `Дайджест #${number}`,
+      number,
+      color: topic ? TOPIC_COLORS[topic] : "#3a3440",
+      accent: topic ? TOPIC_ACCENTS[topic] : "#e6ba6b",
       slides: [
         {
-          kicker: `Дайджест недели · ${research.length} ${plural(research.length, "статья", "статьи", "статей")}`,
+          kicker: `Дайджест #${number} · ${research.length} ${plural(research.length, "статья", "статьи", "статей")}`,
           title: d.title,
           text: d.intro.replace(/\*\*|\*|\[([^\]]+)\]\([^)]+\)/g, "$1"),
           image: d.cover,

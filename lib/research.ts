@@ -259,6 +259,12 @@ export type ResearchDigest = {
   coverSize?: [number, number];
   /** Из каких обложек собран коллаж — сменились обложки, коллаж пересоберётся. */
   coverFrom?: string[];
+  /** Версия стиля коллажа — сменилась, коллаж пересоберётся. */
+  coverStyle?: string;
+  /** Картинка поста в канале — «#N» в формате обложек 3:2. */
+  poster?: string;
+  /** Стиль, номер и тема, из которых нарисована poster. */
+  posterKey?: string;
   telegram?: { messageId: number; postedAt: string; cover?: string };
 };
 

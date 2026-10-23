@@ -29,7 +29,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import { renderCollageCover, renderDigestCover } from "@/lib/collage-cover";
+import { renderCollageCover, renderDigestCover, renderDigestPoster } from "@/lib/collage-cover";
 import { cutout } from "@/lib/cutout";
 import { renderVoxelCover } from "@/lib/voxel-cover";
 import {
@@ -50,6 +50,9 @@ const H = 684;
 // Меняешь стиль (промпт, обработку) — подними версию: все превью
 // перерисуются сами, а посты в канале обновятся (см. research-publish).
 const FALLBACK_STYLE = "voxel-fallback";
+// То же для коллажа-обложки дайджеста.
+const DIGEST_STYLE = "pile-1";
+const DIGEST_POSTER_STYLE = "number-corner-1";
 
 // Объект рисует Leonardo Lucid Origin — точнее следует промпту (~2 000
 // «нейронов» за картинку 768×768: на пост в день хватает). Кончился лимит —
@@ -273,36 +276,66 @@ async function main() {
   await digestCovers();
 }
 
-/** Обложки дайджестов: коллаж из обложек исследований недели. Пересобирается,
- *  если обложки исследований сменились. */
+/** Обложки дайджестов: коллаж из обложек исследований недели (сайт) и
+ *  картинка «#N» для поста в канале. Пересобираются, если сменились обложки
+ *  исследований, номер, тема первой статьи или стиль. */
 async function digestCovers() {
   if (!fs.existsSync(DIGEST_DIR)) return;
-  const covers = new Map(
+  const research = new Map(
     fs
       .readdirSync(DIR)
       .filter((f) => f.endsWith(".json"))
       .map((f) => JSON.parse(fs.readFileSync(path.join(DIR, f), "utf8")) as Research)
-      .map((r) => [r.slug, r.cover] as const)
+      .map((r) => [r.slug, r] as const)
   );
-  for (const f of fs.readdirSync(DIGEST_DIR).filter((f) => f.endsWith(".json"))) {
-    const p = path.join(DIGEST_DIR, f);
-    const d: ResearchDigest = JSON.parse(fs.readFileSync(p, "utf8"));
-    const from = d.items.map((i) => covers.get(i.slug)).filter((c): c is string => !!c);
-    if (!from.length || (d.cover && JSON.stringify(d.coverFrom) === JSON.stringify(from))) continue;
-    console.log(`Собираю обложку дайджеста: ${d.slug}`);
-    const out = await renderDigestCover(
-      from.map((c) => fs.readFileSync(path.join(process.cwd(), "public", c))),
-      d.slug,
-      W,
-      H
-    );
-    const name = `week-${d.slug}-${crypto.createHash("sha1").update(out).digest("hex").slice(0, 8)}.webp`;
+  const digests = fs
+    .readdirSync(DIGEST_DIR)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => ({ p: path.join(DIGEST_DIR, f), d: JSON.parse(fs.readFileSync(path.join(DIGEST_DIR, f), "utf8")) as ResearchDigest }))
+    .sort((a, b) => a.d.date.localeCompare(b.d.date));
+  const writeImage = (out: Buffer, prefix: string, old?: string) => {
+    const name = `${prefix}-${crypto.createHash("sha1").update(out).digest("hex").slice(0, 8)}.webp`;
     fs.writeFileSync(path.join(IMG_DIR, name), out);
-    if (d.cover && d.cover !== `/research/${name}`) fs.rmSync(path.join(process.cwd(), "public", d.cover), { force: true });
-    d.cover = `/research/${name}`;
-    d.coverSize = [W, H];
-    d.coverFrom = from;
-    fs.writeFileSync(p, JSON.stringify(d, null, 2) + "\n");
+    if (old && old !== `/research/${name}`) fs.rmSync(path.join(process.cwd(), "public", old), { force: true });
+    return `/research/${name}`;
+  };
+  for (const [i, { p, d }] of digests.entries()) {
+    let changed = false;
+    // Номер — по порядку выхода, как на сайте: первый дайджест — #1.
+    const number = i + 1;
+    const from = d.items.map((it) => research.get(it.slug)?.cover).filter((c): c is string => !!c);
+    const fresh = d.cover && d.coverStyle === DIGEST_STYLE && JSON.stringify(d.coverFrom) === JSON.stringify(from);
+    if (from.length && !fresh) {
+      console.log(`Собираю обложку дайджеста: ${d.slug}`);
+      const out = await renderDigestCover(
+        from.map((c) => fs.readFileSync(path.join(process.cwd(), "public", c))),
+        d.slug,
+        W,
+        H
+      );
+      d.cover = writeImage(out, `week-${d.slug}`, d.cover);
+      d.coverSize = [W, H];
+      d.coverFrom = from;
+      d.coverStyle = DIGEST_STYLE;
+      changed = true;
+    }
+    const topic = d.items[0] && research.get(d.items[0].slug)?.topic;
+    const posterKey = `${DIGEST_POSTER_STYLE}#${number}#${topic ?? ""}`;
+    if (!d.poster || d.posterKey !== posterKey) {
+      console.log(`Рисую картинку дайджеста #${number} для канала: ${d.slug}`);
+      const out = await renderDigestPoster(
+        number,
+        topic ? TOPIC_COLORS[topic] : "#3a3440",
+        topic ? TOPIC_ACCENTS[topic] : "#e6ba6b",
+        d.slug,
+        W,
+        H
+      );
+      d.poster = writeImage(out, `digest-${d.slug}`, d.poster);
+      d.posterKey = posterKey;
+      changed = true;
+    }
+    if (changed) fs.writeFileSync(p, JSON.stringify(d, null, 2) + "\n");
   }
 }
 

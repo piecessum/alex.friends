@@ -25,12 +25,80 @@ export type StorySlide = {
 export type StoryWeek = {
   slug: string;
   label: string;
-  preview?: string;
+  /** Порядковый номер дайджеста — #1, #2… */
+  number: number;
+  /** Фон и плашка превью — цвета темы первой статьи недели. */
+  color: string;
+  accent: string;
   slides: StorySlide[];
 };
 
 const SLIDE_MS = 9000;
 const VIEWED_KEY = "research-stories-viewed";
+const PAPER = "#efe8da"; // газетная бумага, как полоски на превью статей
+const INK = "#1c1b1f";
+
+/** Детерминированный ГПСЧ от строки — как в lib/collage-cover.ts. */
+function rng(seed: string) {
+  let h = 2166136261;
+  for (const ch of seed) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return ((h ^= h >>> 16) >>> 0) / 4294967296;
+  };
+}
+
+/** Полоса рваной бумаги для SVG: x0…x1 по ширине, y0…y1 по высоте. */
+function tornStrip(rand: () => number, x0: number, x1: number, y0: number, y1: number, depth = 3) {
+  const n = 12;
+  const pts: string[] = [];
+  for (let i = 0; i <= n; i++) pts.push(`${x0 + ((x1 - x0) * i) / n},${y0 + rand() * depth}`);
+  for (let i = n; i >= 0; i--) pts.push(`${x0 + ((x1 - x0) * i) / n},${y1 - rand() * depth}`);
+  return pts.join(" ");
+}
+
+/** Превью дайджеста в стиле обложек исследований: матовый фон с зерном,
+ *  круг-плашка и обрывок газеты с крупным номером. */
+function StoryCover({ week }: { week: StoryWeek }) {
+  const rand = rng(week.slug);
+  const tilt = -8 + rand() * 6;
+  const cx = 22 + rand() * 44;
+  const strip = tornStrip(rand, -6, 94, 48, 94);
+  const tape = tornStrip(rand, 30, 80, 104, 114, 2);
+  const tapeTilt = 4 + rand() * 8;
+  const grain = `story-grain-${week.slug}`;
+  return (
+    <svg viewBox="0 0 88 124" className="h-full w-full" aria-hidden>
+      <defs>
+        <filter id={grain}>
+          <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" stitchTiles="stitch" />
+          <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0" />
+        </filter>
+      </defs>
+      <rect width="88" height="124" fill={week.color} />
+      <circle cx={cx} cy="34" r="24" fill={week.accent} />
+      <g transform={`rotate(${tilt} 44 71)`}>
+        <polygon points={strip} fill={PAPER} />
+        <text
+          x="44"
+          y="87"
+          textAnchor="middle"
+          fill={INK}
+          fontSize="40"
+          fontWeight="800"
+          letterSpacing="-2"
+          style={{ fontFamily: "'Times New Roman', Times, serif" }}
+        >
+          <tspan fontSize="24" fontWeight="400" dy="-12" opacity="0.6">#</tspan>
+          <tspan dy="12">{week.number}</tspan>
+        </text>
+      </g>
+      <polygon points={tape} fill={PAPER} opacity="0.85" transform={`rotate(${tapeTilt} 55 109)`} />
+      <rect width="88" height="124" filter={`url(#${grain})`} />
+    </svg>
+  );
+}
 
 export function ResearchStories({ weeks }: { weeks: StoryWeek[] }) {
   const [week, setWeek] = useState<number | null>(null);
@@ -196,20 +264,19 @@ export function ResearchStories({ weeks }: { weeks: StoryWeek[] }) {
     <>
       <div className="bleed-page flex items-start gap-4 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {weeks.map((wk, i) => (
-          <button key={wk.slug} type="button" onClick={() => open(i)} className="group flex shrink-0 flex-col items-center">
+          <button
+            key={wk.slug}
+            type="button"
+            onClick={() => open(i)}
+            aria-label={wk.label}
+            className="group shrink-0"
+          >
             <span
-              className={`relative block h-[124px] w-[88px] overflow-hidden rounded-2xl ring-[3px] ring-offset-2 ring-offset-white transition group-hover:brightness-110 dark:ring-offset-[#181818] ${
+              className={`relative block h-[124px] w-[88px] overflow-hidden rounded-2xl ring-[3px] ring-offset-2 ring-offset-white transition group-hover:-rotate-2 group-hover:scale-[1.03] dark:ring-offset-[#181818] ${
                 viewed.has(wk.slug) ? "ring-neutral-300 dark:ring-neutral-700" : "ring-indigo-500"
               }`}
-              style={{ background: wk.slides[1]?.background ?? "#3a3440" }}
             >
-              {wk.preview && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={wk.preview} alt="" className="h-full w-full object-cover" loading="lazy" />
-              )}
-            </span>
-            <span className="mt-2 w-[88px] text-center text-small leading-tight text-neutral-600 dark:text-neutral-400">
-              {wk.label}
+              <StoryCover week={wk} />
             </span>
           </button>
         ))}

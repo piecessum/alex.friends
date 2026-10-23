@@ -33,7 +33,7 @@
       "takeaway": "Разброс надёжности между моделями — почти в 30 раз: от 0,22% до 6,3% поломок в год. У одной Toshiba после проблем с прошивкой квартальный показатель подскакивал до 17%."
     }
   ],
-  "cover": "/research/week-2026-10-17-97f41b17.webp",
+  "cover": "/research/week-2026-10-17-a8db9b9a.webp",
   "coverSize": [
     1024,
     684
@@ -46,5 +46,8 @@
     "/research/ai-jagged-clocks-2ba1e504.webp",
     "/research/cart-abandonment-baymard-d832b45a.webp",
     "/research/backblaze-drive-stats-2025-a982fb54.webp"
-  ]
+  ],
+  "coverStyle": "pile-1",
+  "poster": "/research/digest-2026-10-17-59b7d3b6.webp",
+  "posterKey": "number-corner-1#2#ai"
 }
