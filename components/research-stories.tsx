@@ -44,6 +44,7 @@ export function ResearchStories({ weeks }: { weeks: StoryWeek[] }) {
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const heldRef = useRef(false);
   const touchY = useRef<number | null>(null);
+  const preloaded = useRef(new Set<string>());
 
   useEffect(() => {
     try {
@@ -166,6 +167,27 @@ export function ResearchStories({ weeks }: { weeks: StoryWeek[] }) {
     setTimeout(() => (heldRef.current = false), 60);
   };
 
+  // Подгружаем картинки заранее: когда браузер свободен — обложки всех
+  // недель, при открытии недели — ещё и следующую неделю.
+  useEffect(() => {
+    const load = (urls: (string | undefined)[]) =>
+      urls.forEach((u) => {
+        if (!u || preloaded.current.has(u)) return;
+        preloaded.current.add(u);
+        const img = new Image();
+        img.src = u;
+        img.decode?.().catch(() => {});
+      });
+    if (week === null) {
+      const idle = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback;
+      const run = () => weeks.forEach((wk) => load(wk.slides.map((x) => x.image)));
+      if (idle) idle(run);
+      else setTimeout(run, 1500);
+    } else if (week + 1 < weeks.length) {
+      load(weeks[week + 1].slides.map((x) => x.image));
+    }
+  }, [week, weeks]);
+
   if (!weeks.length) return null;
   const w = week !== null ? weeks[week] : null;
   const s = w ? w.slides[slide] : null;
@@ -250,18 +272,36 @@ export function ResearchStories({ weeks }: { weeks: StoryWeek[] }) {
               <X className="h-6 w-6" />
             </button>
 
-            {/* Слайд: подпись, заголовок, вывод — сверху, картинка — снизу */}
-            <div className="relative z-10 flex h-full flex-col px-6 pb-24 pt-16 text-white">
-              <div className="text-small font-medium uppercase tracking-wider text-white/75">{s.kicker}</div>
-              <h3 className="mt-2 text-[26px] font-bold leading-[1.15] tracking-tight drop-shadow-sm">{s.title}</h3>
-              <p className="mt-3 text-[17px] leading-snug text-white/90 drop-shadow-sm">{s.text}</p>
-              {s.image && (
-                <div className="mt-auto pt-5">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={s.image} alt="" className="w-full rounded-xl shadow-2xl" draggable={false} />
-                </div>
-              )}
-            </div>
+            {/* Все слайды недели лежат стопкой, виден только текущий: картинки
+                загружены и декодированы заранее, при перелистывании ничего
+                не догружается. Слайд: подпись, заголовок, вывод — сверху,
+                картинка — снизу. */}
+            {w.slides.map((sl, i) => (
+              <div
+                key={i}
+                aria-hidden={i !== slide}
+                className={`absolute inset-0 z-10 flex flex-col px-6 pb-24 pt-16 text-white ${i === slide ? "" : "invisible"}`}
+              >
+                <div className="text-small font-medium uppercase tracking-wider text-white/75">{sl.kicker}</div>
+                <h3 className="mt-2 text-[26px] font-bold leading-[1.15] tracking-tight drop-shadow-sm">{sl.title}</h3>
+                <p className="mt-3 text-[17px] leading-snug text-white/90 drop-shadow-sm">{sl.text}</p>
+                {sl.image && (
+                  <div className="mt-auto pt-5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={sl.image}
+                      alt=""
+                      width={1024}
+                      height={684}
+                      decoding="sync"
+                      loading="eager"
+                      className="aspect-[3/2] w-full rounded-xl object-cover shadow-2xl"
+                      draggable={false}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
 
             {/* Зоны тапа: левая треть — назад, остальное — дальше */}
             <button type="button" aria-label="Назад" onClick={prev} className="absolute left-0 top-0 z-20 h-full w-1/3" />
