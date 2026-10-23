@@ -191,5 +191,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 29,
+    "postedAt": "2026-10-23T05:19:44.695Z",
+    "cover": "/research/choice-blindness-morals-1c21a859.webp"
+  }
 }
