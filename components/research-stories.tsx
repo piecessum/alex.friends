@@ -272,7 +272,7 @@ export function ResearchStories({ weeks }: { weeks: StoryWeek[] }) {
             className="group shrink-0"
           >
             <span
-              className={`relative block h-[124px] w-[88px] overflow-hidden rounded-2xl ring-[3px] ring-offset-2 ring-offset-white transition group-hover:-rotate-2 group-hover:scale-[1.03] dark:ring-offset-[#181818] ${
+              className={`relative block h-[124px] w-[88px] overflow-hidden rounded-2xl ring-[3px] ring-offset-2 ring-offset-white transition-transform duration-200 group-hover:-translate-y-1 dark:ring-offset-[#181818] ${
                 viewed.has(wk.slug) ? "ring-neutral-300 dark:ring-neutral-700" : "ring-indigo-500"
               }`}
             >
