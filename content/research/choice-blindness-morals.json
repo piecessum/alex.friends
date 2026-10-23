@@ -84,7 +84,12 @@
       "type": "image",
       "url": "https://journals.plos.org/plosone/article/figure/image?size=large&id=10.1371/journal.pone.0045457.g001",
       "caption": "Как работал фокус. 1 — поверх первой страницы приклеен листок с исходными утверждениями. 2–4 — человек отвечает на первой странице и переходит ко второй. 5 — при перевороте листок остаётся на липком пятне сзади. 6 — на первой странице уже утверждения с обратным смыслом, а отметки те же",
-      "source": "Hall, Johansson, Strandberg, PLOS ONE, 2012, рис. 1 (CC BY)"
+      "source": "Hall, Johansson, Strandberg, PLOS ONE, 2012, рис. 1 (CC BY)",
+      "src": "/research/figures/choice-blindness-morals-1-057011e4.webp",
+      "size": [
+        1600,
+        1011
+      ]
     },
     {
       "type": "text",
@@ -131,7 +136,12 @@
       "type": "image",
       "url": "https://journals.plos.org/plosone/article/figure/image?size=large&id=10.1371/journal.pone.0045457.g002",
       "caption": "Куда оценщики отнесли объяснения участников: к исходной позиции (слева), непонятно (в центре), к противоположной (справа). Тёмные столбики — обычные ответы, светлые — перевёрнутые (M). Обычные ответы объясняли свою позицию, перевёрнутые — чужую",
-      "source": "Hall, Johansson, Strandberg, PLOS ONE, 2012, рис. 2 (CC BY)"
+      "source": "Hall, Johansson, Strandberg, PLOS ONE, 2012, рис. 2 (CC BY)",
+      "src": "/research/figures/choice-blindness-morals-2-8d0dd9eb.webp",
+      "size": [
+        1600,
+        1026
+      ]
     },
     {
       "type": "text",
@@ -168,5 +178,18 @@
       "type": "fact",
       "text": "Если бы участникам в конце не показали трюк, перевёрнутые мнения, по словам авторов, могли бы так и остаться их взглядами. Среди тех, кто заметил подмену сразу, большинство просто переставили отметку на зеркальную сторону шкалы — с 1 на 9 и наоборот."
     }
-  ]
+  ],
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Evan-amos",
+    "url": "https://commons.wikimedia.org/wiki/File:Wood-clipboard.jpg",
+    "license": "Public domain"
+  },
+  "coverSubjectPrompt": "image:https://upload.wikimedia.org/wikipedia/commons/c/c0/Wood-clipboard.jpg#cutout",
+  "cover": "/research/choice-blindness-morals-1c21a859.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
