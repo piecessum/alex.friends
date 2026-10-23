@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { createPortal } from "react-dom";
-import { Maximize2, X } from "lucide-react";
 import type { ResearchBlock } from "@/lib/research";
 
 // Цвета графиков — проверенная палитра (dataviz: первые три слота валидны
@@ -71,9 +69,6 @@ function Markdown({ md }: { md: string }) {
 
 // ---- обвязка графика ------------------------------------------------------
 
-/** График открыт на весь экран — графики могут рисоваться крупнее. */
-const FullscreenContext = React.createContext(false);
-
 /**
  * Выбранный элемент графика: мышью — по наведению, пальцем — тапом.
  * Повторный тап по тому же элементу или тап мимо графика снимает выбор.
@@ -99,10 +94,7 @@ function useSelect() {
   return { ref, sel, setSel, item };
 }
 
-/**
- * Обвязка графика без карточки: заголовок, сам график на ширину текста,
- * источник. Кнопка в строке заголовка открывает график на весь экран.
- */
+/** Обвязка графика без карточки: заголовок, сам график на ширину текста, источник. */
 function Figure({
   title,
   subtitle,
@@ -117,87 +109,21 @@ function Figure({
   note?: string;
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = React.useState(false);
-
-  // На весь экран: Esc закрывает, страница под графиком не скроллится.
-  React.useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
-
-  const expand = (
-    <button
-      type="button"
-      aria-label="Открыть на весь экран"
-      onClick={() => setOpen(true)}
-      className="-mr-2 -mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-neutral-400 transition hover:bg-black/5 hover:text-neutral-900 dark:hover:bg-white/5 dark:hover:text-neutral-100"
-    >
-      <Maximize2 className="h-4 w-4" />
-    </button>
-  );
-  const caption = (big: boolean) =>
-    title && (
-      <figcaption className={`flex items-start justify-between gap-3 ${big ? "mb-6" : "mb-4"}`}>
-        <div>
-          <div
-            className={`font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 ${big ? "text-lead" : "text-caption"}`}
-          >
-            {title}
-          </div>
-          {subtitle && (
-            <div className="mt-1 text-ui text-neutral-500 dark:text-neutral-400">{subtitle}</div>
-          )}
-        </div>
-        {!big && expand}
-      </figcaption>
-    );
-  const footer = (note || source) && (
-    <div className="mt-3 space-y-1">
-      {note && <div className="text-ui text-neutral-600 dark:text-neutral-400">{note}</div>}
-      {source && <div className="text-small text-neutral-400 dark:text-neutral-500">Источник: {source}</div>}
-    </div>
-  );
-
   return (
-    <figure className="relative">
-      {caption(false)}
-      {!title && <div className="absolute right-2 top-2 z-10 rounded-full bg-white/80 dark:bg-black/50">{expand}</div>}
+    <figure>
+      {title && (
+        <figcaption className="mb-4">
+          <div className="text-caption font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">{title}</div>
+          {subtitle && <div className="mt-1 text-ui text-neutral-500 dark:text-neutral-400">{subtitle}</div>}
+        </figcaption>
+      )}
       {children}
-      {footer}
-
-      {open &&
-        createPortal(
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={title ?? note}
-            className="fixed inset-0 z-[100] overflow-y-auto bg-white dark:bg-[#181818]"
-          >
-            <div className="relative mx-auto flex min-h-full max-w-6xl flex-col justify-center px-4 py-14 sm:px-8">
-              <button
-                type="button"
-                aria-label="Закрыть"
-                onClick={() => setOpen(false)}
-                className="fixed right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:text-white"
-              >
-                <X className="h-5 w-5" />
-              </button>
-              <FullscreenContext.Provider value={true}>
-                {caption(true)}
-                {children}
-                {footer}
-              </FullscreenContext.Provider>
-            </div>
-          </div>,
-          document.body
-        )}
+      {(note || source) && (
+        <div className="mt-3 space-y-1">
+          {note && <div className="text-ui text-neutral-600 dark:text-neutral-400">{note}</div>}
+          {source && <div className="text-small text-neutral-400 dark:text-neutral-500">Источник: {source}</div>}
+        </div>
+      )}
     </figure>
   );
 }
@@ -371,7 +297,6 @@ function Versus({ block }: { block: Extract<ResearchBlock, { type: "versus" }> }
 const MONTHS_SHORT = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
 
 function Line({ block }: { block: Extract<ResearchBlock, { type: "line" }> }) {
-  const big = React.useContext(FullscreenContext);
   const [wref, width] = useWidth<HTMLDivElement>(640);
   const { ref, sel, setSel } = useSelect();
 
@@ -384,7 +309,7 @@ function Line({ block }: { block: Extract<ResearchBlock, { type: "line" }> }) {
   // Шкалы. Y — линейная от нуля или логарифмическая (рост «в разы»).
   // Подписи шкалы Y стоят над линиями сетки внутри графика — слева не
   // тратим ширину, на телефоне график занимает всю ширину текста.
-  const H = big ? Math.min(520, Math.max(320, Math.round(width * 0.5))) : width < 480 ? 230 : 280;
+  const H = width < 480 ? 230 : 280;
   const pad = { top: 26, right: 8, bottom: 26, left: 6 };
   const iw = Math.max(width - pad.left - pad.right, 10);
   const ih = H - pad.top - pad.bottom;
@@ -556,7 +481,6 @@ function Line({ block }: { block: Extract<ResearchBlock, { type: "line" }> }) {
 
 /** Картинка из исследования — как есть, без стилизации. */
 function ImageBlock({ block }: { block: Extract<ResearchBlock, { type: "image" }> }) {
-  const big = React.useContext(FullscreenContext);
   if (!block.src) return null;
   return (
     <Figure note={block.caption} source={block.source}>
@@ -569,7 +493,7 @@ function ImageBlock({ block }: { block: Extract<ResearchBlock, { type: "image" }
         height={block.size?.[1]}
         loading="lazy"
         decoding="async"
-        className={`mx-auto h-auto rounded-xl bg-white ${big ? "max-h-[85vh] w-auto max-w-full object-contain" : "w-full"}`}
+        className="h-auto w-full rounded-xl bg-white"
       />
     </Figure>
   );

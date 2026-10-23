@@ -6,6 +6,14 @@ export const metadata = {
   title: "Исследования — Алексей Масюта",
 };
 
+/** 1 статья, 2 статьи, 5 статей. */
+function plural(n: number, one: string, few: string, many: string) {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+  return many;
+}
+
 export default function ResearchPage() {
   const items = getAllResearch();
   const bySlug = new Map<string, Research>(items.map((r) => [r.slug, r]));
@@ -22,7 +30,7 @@ export default function ResearchPage() {
       preview: d.cover ?? research[0]?.r.cover,
       slides: [
         {
-          kicker: "Дайджест недели",
+          kicker: `Дайджест недели · ${research.length} ${plural(research.length, "статья", "статьи", "статей")}`,
           title: d.title,
           text: d.intro.replace(/\*\*|\*|\[([^\]]+)\]\([^)]+\)/g, "$1"),
           image: d.cover,
@@ -56,6 +64,9 @@ export default function ResearchPage() {
 
       {weeks.length > 0 && (
         <div className="mt-6">
+          <div className="mb-2 text-ui text-neutral-500 dark:text-neutral-400">
+            Дайджесты по неделям — листай историями
+          </div>
           <ResearchStories weeks={weeks} />
         </div>
       )}
