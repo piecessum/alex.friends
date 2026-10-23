@@ -64,9 +64,7 @@ export default function ResearchPage() {
 
       {weeks.length > 0 && (
         <div className="mt-6">
-          <div className="mb-2 text-ui text-neutral-500 dark:text-neutral-400">
-            Дайджесты по неделям — листай историями
-          </div>
+          <div className="mb-2 text-body text-neutral-600 dark:text-neutral-400">Недельные дайджесты:</div>
           <ResearchStories weeks={weeks} />
         </div>
       )}
