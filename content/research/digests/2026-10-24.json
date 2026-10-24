@@ -39,5 +39,10 @@
   ],
   "coverStyle": "pile-1",
   "poster": "/research/digest-2026-10-24-329b148e.webp",
-  "posterKey": "number-corner-1#3#brain"
+  "posterKey": "number-corner-1#3#brain",
+  "telegram": {
+    "messageId": 30,
+    "postedAt": "2026-10-24T05:13:21.081Z",
+    "cover": "/research/digest-2026-10-24-329b148e.webp"
+  }
 }
