@@ -24,5 +24,20 @@
       "slug": "choice-blindness-morals",
       "takeaway": "Даже у тех, кто ставил крайние отметки 1 или 9, почти треть подмен прошла незамеченной. По версии авторов, доводы люди часто придумывают уже после ответа — экспериментаторы ничего не подсказывали."
     }
-  ]
+  ],
+  "cover": "/research/week-2026-10-24-35912867.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverFrom": [
+    "/research/smashed-or-hit-d874f9dd.webp",
+    "/research/autobrake-blind-spots-0ec3879e.webp",
+    "/research/ai-news-assistants-d5ee8dc7.webp",
+    "/research/destroyer-touchscreen-f41b57f0.webp",
+    "/research/choice-blindness-morals-1c21a859.webp"
+  ],
+  "coverStyle": "pile-1",
+  "poster": "/research/digest-2026-10-24-329b148e.webp",
+  "posterKey": "number-corner-1#3#brain"
 }
