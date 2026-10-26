@@ -68,7 +68,12 @@
         "index": 2
       },
       "caption": "Стенд в шкафу без внешних звуков: камера с подсветкой сверху, слева две обычные колонки, которые играют сериалы, справа умные колонки, которые их слушают.",
-      "source": "Dubois и др., PoPETs, 2020, рис. 1"
+      "source": "Dubois и др., PoPETs, 2020, рис. 1",
+      "src": "/research/figures/smart-speakers-misactivations-1-6558a517.webp",
+      "size": [
+        800,
+        508
+      ]
     },
     {
       "type": "text",
@@ -166,5 +171,18 @@
       "text": "То, что срабатывания случайны, не снижает риска: разговоры, записанные по ошибке, часто уходят через интернет и хранятся на чужих серверах.",
       "author": "Дэниел Дюбуа и соавторы, вывод статьи"
     }
-  ]
+  ],
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Smart Home Perfected",
+    "url": "https://commons.wikimedia.org/wiki/File:Alexa_Amazon_Echo_Smart_Speaker_-_Flashing_Blue_Ring_(Creative_Commons)_(51049059491).jpg",
+    "license": "CC BY 2.0"
+  },
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Alexa_Amazon_Echo_Smart_Speaker_-_Flashing_Blue_Ring_%28Creative_Commons%29_%2851049059491%29.jpg/1920px-Alexa_Amazon_Echo_Smart_Speaker_-_Flashing_Blue_Ring_%28Creative_Commons%29_%2851049059491%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail#cutout",
+  "cover": "/research/smart-speakers-misactivations-63fc6863.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
