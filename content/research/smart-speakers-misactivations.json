@@ -184,5 +184,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 31,
+    "postedAt": "2026-10-26T05:20:21.076Z",
+    "cover": "/research/smart-speakers-misactivations-63fc6863.webp"
+  }
 }
