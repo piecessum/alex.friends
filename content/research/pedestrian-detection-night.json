@@ -59,7 +59,12 @@
         "index": 1
       },
       "caption": "Манекен взрослого пешехода переходит дорогу перед Honda Accord. Ноги у манекена двигаются как при ходьбе, а для радара и камеры он выглядит как настоящий человек",
-      "source": "AAA, 2019, фактшит исследования"
+      "source": "AAA, 2019, фактшит исследования",
+      "src": "/research/figures/pedestrian-detection-night-1-3c4918b7.webp",
+      "size": [
+        1302,
+        836
+      ]
     },
     {
       "type": "heading",
@@ -98,7 +103,12 @@
         "index": 2
       },
       "caption": "Тестовая машина сбивает манекен сразу после правого поворота. Ни одна машина в этом сценарии не затормозила",
-      "source": "AAA, 2019, фактшит исследования"
+      "source": "AAA, 2019, фактшит исследования",
+      "src": "/research/figures/pedestrian-detection-night-2-b787596e.webp",
+      "size": [
+        560,
+        421
+      ]
     },
     {
       "type": "bars",
@@ -106,11 +116,33 @@
       "subtitle": "% заездов, в которых автотормоз не дал задеть манекен, все четыре машины вместе",
       "unit": "%",
       "items": [
-        { "label": "Взрослый переходит, день, 32 км/ч", "value": 40, "display": "40%" },
-        { "label": "Двое у обочины, 32 км/ч", "value": 20, "display": "20%" },
-        { "label": "Ребёнок из-за машин, 32 км/ч", "value": 11, "display": "11%" },
-        { "label": "Пешеход за поворотом, 24 км/ч", "value": 0, "display": "0%", "highlight": true },
-        { "label": "Взрослый переходит ночью, 40 км/ч", "value": 0, "display": "0%", "highlight": true }
+        {
+          "label": "Взрослый переходит, день, 32 км/ч",
+          "value": 40,
+          "display": "40%"
+        },
+        {
+          "label": "Двое у обочины, 32 км/ч",
+          "value": 20,
+          "display": "20%"
+        },
+        {
+          "label": "Ребёнок из-за машин, 32 км/ч",
+          "value": 11,
+          "display": "11%"
+        },
+        {
+          "label": "Пешеход за поворотом, 24 км/ч",
+          "value": 0,
+          "display": "0%",
+          "highlight": true
+        },
+        {
+          "label": "Взрослый переходит ночью, 40 км/ч",
+          "value": 0,
+          "display": "0%",
+          "highlight": true
+        }
       ],
       "source": "AAA, Automatic Emergency Braking with Pedestrian Detection, 2019"
     },
@@ -128,10 +160,22 @@
       "subtitle": "% погибших пешеходов в США в 2017 году по времени суток",
       "center": "≈6000 погибших",
       "items": [
-        { "label": "В темноте", "value": 75 },
-        { "label": "Днём", "value": 21 },
-        { "label": "В сумерках", "value": 2 },
-        { "label": "На рассвете", "value": 2 }
+        {
+          "label": "В темноте",
+          "value": 75
+        },
+        {
+          "label": "Днём",
+          "value": 21
+        },
+        {
+          "label": "В сумерках",
+          "value": 2
+        },
+        {
+          "label": "На рассвете",
+          "value": 2
+        }
       ],
       "source": "NHTSA через отчёт AAA, 2019"
     },
@@ -147,7 +191,12 @@
         "index": 2
       },
       "caption": "Ночной заезд: машина с ближним светом подъезжает к манекену на неосвещённой дороге",
-      "source": "AAA, 2019, фактшит исследования"
+      "source": "AAA, 2019, фактшит исследования",
+      "src": "/research/figures/pedestrian-detection-night-3-ab5b8994.webp",
+      "size": [
+        469,
+        321
+      ]
     },
     {
       "type": "quote",
@@ -166,7 +215,12 @@
         "index": 2
       },
       "caption": "Концепт Cadillac Cyclone 1959 года. На таких концептах General Motors пробовала радарные системы, которые должны были замечать препятствия",
-      "source": "General Motors, через отчёт AAA, 2019, рис. 1"
+      "source": "General Motors, через отчёт AAA, 2019, рис. 1",
+      "src": "/research/figures/pedestrian-detection-night-4-dc0d504f.webp",
+      "size": [
+        1033,
+        689
+      ]
     },
     {
       "type": "fact",
@@ -185,5 +239,18 @@
       "text": "Число погибших пешеходов растёт, и эти системы могут многое изменить, когда их доработают. Но наше исследование показало, что пока они далеки от идеала и за рулём всё равно нужен внимательный водитель.",
       "author": "Грег Бреннон, директор по автомобильной инженерии AAA"
     }
-  ]
+  ],
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "P.Ctnt",
+    "url": "https://commons.wikimedia.org/wiki/File:Korean_Sign_-_Pedestrian_Crossing_4.jpg",
+    "license": "Public domain"
+  },
+  "coverSubjectPrompt": "image:https://upload.wikimedia.org/wikipedia/commons/c/c3/Korean_Sign_-_Pedestrian_Crossing_4.jpg#full",
+  "cover": "/research/pedestrian-detection-night-5ac1867f.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
