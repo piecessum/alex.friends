@@ -194,5 +194,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 33,
+    "postedAt": "2026-10-28T08:59:57.446Z",
+    "cover": "/research/ai-model-collapse-7004e756.webp"
+  }
 }
