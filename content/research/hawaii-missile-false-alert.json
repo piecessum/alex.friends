@@ -226,5 +226,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 34,
+    "postedAt": "2026-10-29T05:21:06.885Z",
+    "cover": "/research/hawaii-missile-false-alert-58e93641.webp"
+  }
 }
