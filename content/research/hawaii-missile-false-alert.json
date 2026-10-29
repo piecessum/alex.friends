@@ -56,7 +56,12 @@
         "index": 1
       },
       "caption": "То самое сообщение на экране телефона: «Ракета летит на Гавайи. Ищите укрытие. Это не учения».",
-      "source": "FCC, 2018, приложение A"
+      "source": "FCC, 2018, приложение A",
+      "src": "/research/figures/hawaii-missile-false-alert-1-58b5a29d.webp",
+      "size": [
+        746,
+        497
+      ]
     },
     {
       "type": "stats",
@@ -107,7 +112,12 @@
         "index": 1
       },
       "caption": "Список шаблонов, каким он стал после ошибки: сверху — «Учебное сообщение», ниже — новый шаблон опровержения ложной тревоги (False Alarm), учебная тревога штаба, ежемесячная проверка и боевая тревога штаба (PACOM).",
-      "source": "FCC, 2018, приложение B"
+      "source": "FCC, 2018, приложение B",
+      "src": "/research/figures/hawaii-missile-false-alert-2-7068b413.webp",
+      "size": [
+        557,
+        304
+      ]
     },
     {
       "type": "heading",
@@ -171,7 +181,12 @@
         "index": 2
       },
       "caption": "Опровержение в 8:45: «Ракетной угрозы для штата Гавайи нет. Повторяем: ложная тревога».",
-      "source": "FCC, 2018, приложение A"
+      "source": "FCC, 2018, приложение A",
+      "src": "/research/figures/hawaii-missile-false-alert-3-65cd8927.webp",
+      "size": [
+        750,
+        442
+      ]
     },
     {
       "type": "text",
@@ -198,5 +213,18 @@
       "type": "text",
       "md": "Агентство ввело правило двух человек: и учебную, и настоящую тревогу теперь подтверждает второй дежурный. Все учения проходят при начальнике. Появились готовые шаблоны опровержения. Ракетные учения приостановили. Поставщик программы пообещал раскрасить и упорядочить шаблоны, а в последнем вопросе писать прямо, учебная это тревога или настоящая.\n\nFCC дала советы всем службам оповещения. Учебный режим держать отдельно от боевого. Перед отправкой важной тревоги текст проверяет больше одного человека. В учебных сообщениях не писать «Это не учения» и «реальная обстановка», а писать «Это проверка». Опровержение рассылать по тем же каналам, что и ложную тревогу, и заранее расписать, как это делать."
     }
-  ]
+  ],
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "User PBMI",
+    "url": "https://commons.wikimedia.org/wiki/File:ChryslerAirRaidSiren-WPCMuseum-03-20-2011.JPG",
+    "license": "CC BY 3.0"
+  },
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/ChryslerAirRaidSiren-WPCMuseum-03-20-2011.JPG/1920px-ChryslerAirRaidSiren-WPCMuseum-03-20-2011.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail#cutout",
+  "cover": "/research/hawaii-missile-false-alert-58e93641.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
