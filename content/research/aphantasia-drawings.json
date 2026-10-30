@@ -85,7 +85,12 @@
       "type": "image",
       "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4348/7856239/10f954c3d741/nihms-1660866-f0001.jpg",
       "caption": "Как шёл эксперимент: 1 — три фото по 10 секунд; 2 — рисунок по памяти; 3 — узнать свои фото среди похожих; 4 — перерисовать фото, глядя на него; 5 — анкеты о воображении",
-      "source": "Bainbridge et al., Cortex, 2021, рис. 1 (работа правительства США, общественное достояние)"
+      "source": "Bainbridge et al., Cortex, 2021, рис. 1 (работа правительства США, общественное достояние)",
+      "src": "/research/figures/aphantasia-drawings-1-18480935.webp",
+      "size": [
+        1600,
+        471
+      ]
     },
     {
       "type": "text",
@@ -104,10 +109,28 @@
       "title": "Сколько предметов нарисовали",
       "subtitle": "в среднем на одну комнату",
       "items": [
-        { "label": "По памяти: обычное воображение", "value": 6.32, "display": "6,3", "highlight": true },
-        { "label": "По памяти: афантазия", "value": 4.98, "display": "5,0", "highlight": true },
-        { "label": "С натуры: обычное воображение", "value": 18.0, "display": "18,0" },
-        { "label": "С натуры: афантазия", "value": 20.07, "display": "20,1" }
+        {
+          "label": "По памяти: обычное воображение",
+          "value": 6.32,
+          "display": "6,3",
+          "highlight": true
+        },
+        {
+          "label": "По памяти: афантазия",
+          "value": 4.98,
+          "display": "5,0",
+          "highlight": true
+        },
+        {
+          "label": "С натуры: обычное воображение",
+          "value": 18,
+          "display": "18,0"
+        },
+        {
+          "label": "С натуры: афантазия",
+          "value": 20.07,
+          "display": "20,1"
+        }
       ],
       "source": "Bainbridge et al., Cortex, 2021"
     },
@@ -119,7 +142,12 @@
       "type": "image",
       "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4348/7856239/3e7c5e14256b/nihms-1660866-f0003.jpg",
       "caption": "Рисунки участников. Слева — люди с афантазией, справа — с обычным воображением; в каждой паре рисунок по памяти и рисунок того же человека с натуры. Сверху — те, кто вспомнил меньше всех, снизу — больше всех",
-      "source": "Bainbridge et al., Cortex, 2021, рис. 3 (работа правительства США, общественное достояние)"
+      "source": "Bainbridge et al., Cortex, 2021, рис. 3 (работа правительства США, общественное достояние)",
+      "src": "/research/figures/aphantasia-drawings-2-bee6831a.webp",
+      "size": [
+        1600,
+        1855
+      ]
     },
     {
       "type": "heading",
@@ -155,7 +183,12 @@
       "type": "image",
       "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4348/7856239/bad91bc4d523/nihms-1660866-f0005.jpg",
       "caption": "Где участники в среднем нарисовали главные предметы на каждом фото. Сплошной овал — люди с афантазией, пунктир — с обычным воображением. Овалы почти совпадают друг с другом и с настоящими предметами",
-      "source": "Bainbridge et al., Cortex, 2021, рис. 5 (работа правительства США, общественное достояние)"
+      "source": "Bainbridge et al., Cortex, 2021, рис. 5 (работа правительства США, общественное достояние)",
+      "src": "/research/figures/aphantasia-drawings-3-55530bc9.webp",
+      "size": [
+        1600,
+        679
+      ]
     },
     {
       "type": "heading",
@@ -169,7 +202,12 @@
       "type": "image",
       "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4348/7856239/cfd941977ed8/nihms-1660866-f0006.jpg",
       "caption": "Все ложные воспоминания обведены. Слева — люди с обычным воображением (14 рисунков из 152): пианино, лишний стол, лампа, комод, цветы, растение. Справа — люди с афантазией (3 из 176): окно, дерево и вентилятор, перенесённые с других фото",
-      "source": "Bainbridge et al., Cortex, 2021, рис. 6 (работа правительства США, общественное достояние)"
+      "source": "Bainbridge et al., Cortex, 2021, рис. 6 (работа правительства США, общественное достояние)",
+      "src": "/research/figures/aphantasia-drawings-4-563b0880.webp",
+      "size": [
+        1600,
+        1136
+      ]
     },
     {
       "type": "fact",
@@ -188,5 +226,18 @@
       "text": "Рисунки людей с афантазией рассказывают сложную историю: память на предметы ослаблена, а словесная и пространственная память, когда они вспоминают реальные комнаты, в порядке.",
       "author": "Вильма Бейнбридж, Зоэ Паундер, Элисон Эрдли, Крис Бейкер, 2021"
     }
-  ]
+  ],
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Andrew Taylor from Poulsbo, United States",
+    "url": "https://commons.wikimedia.org/wiki/File:Pencil_(6956509317).jpg",
+    "license": "CC BY 2.0"
+  },
+  "coverSubjectPrompt": "image:https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Pencil_%286956509317%29.jpg/1920px-Pencil_%286956509317%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail#cutout",
+  "cover": "/research/aphantasia-drawings-37414090.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
