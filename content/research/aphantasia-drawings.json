@@ -239,5 +239,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 35,
+    "postedAt": "2026-10-30T05:21:23.099Z",
+    "cover": "/research/aphantasia-drawings-37414090.webp"
+  }
 }
