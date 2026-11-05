@@ -162,21 +162,3 @@ test("Saturday writes a digest from this week's articles, and skips a rerun", as
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
-
-test("API errors expose a diagnostic code without echoing response messages or keys", async t => {
-  const { root, dir } = workspace();
-  const key = process.env.OPENAI_API_KEY;
-  process.env.OPENAI_API_KEY = "test-secret-key";
-  t.mock.method(globalThis, "fetch", async () => Response.json({ error: { code: "insufficient_quota", message: "untrusted text test-secret-key" } }, { status: 429 }));
-  try {
-    await assert.rejects(generate(root, new Date("2026-11-05T04:00:00Z"), []), (error: Error) => {
-      assert.match(error.message, /429 \(insufficient_quota\)/);
-      assert.ok(!error.message.includes("test-secret-key"));
-      return true;
-    });
-    assert.deepEqual(fs.readdirSync(dir), ["AGENT.md"]);
-  } finally {
-    if (key === undefined) delete process.env.OPENAI_API_KEY; else process.env.OPENAI_API_KEY = key;
-    fs.rmSync(root, { recursive: true, force: true });
-  }
-});

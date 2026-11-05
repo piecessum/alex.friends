@@ -24,12 +24,7 @@ async function respond(body: Record<string, unknown>): Promise<Response> {
     signal: AbortSignal.timeout(12 * 60_000),
   });
   // Do not print request bodies or credentials in CI errors.
-  if (!res.ok) {
-    const payload = await res.json().catch(() => null);
-    const rawCode = payload?.error?.code ?? payload?.error?.type;
-    const code = typeof rawCode === "string" && /^[a-z0-9_]{1,80}$/i.test(rawCode) ? rawCode : "unknown";
-    throw new Error(`OpenAI HTTP ${res.status} (${code}); request ${res.headers.get("x-request-id") ?? "unknown"}. Check API access, model and billing.`);
-  }
+  if (!res.ok) throw new Error(`OpenAI HTTP ${res.status}; request ${res.headers.get("x-request-id") ?? "unknown"}. Check API access, model and billing.`);
   const result = await res.json() as Response;
   if (result.status !== "completed") throw new Error(`OpenAI response ${result.id}: ${result.status}; nothing written`);
   return result;
