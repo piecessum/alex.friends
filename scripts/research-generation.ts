@@ -74,12 +74,21 @@ export function sourceKey(value: string) {
   return `${url.hostname.replace(/^www\./, "")}${url.pathname.replace(/\/$/, "")}${url.search}`.toLowerCase();
 }
 
-export function prepareArticle(value: unknown, day: string, all: Research[]): Research {
+export function webSources(events: string): string[] {
+  return events.split("\n").filter(Boolean).flatMap(line => {
+    const event = JSON.parse(line);
+    if (event.item?.type !== "web_search") return [];
+    return (event.item.results ?? []).filter((r: { url?: unknown }) => typeof r.url === "string").map((r: { url: string }) => r.url);
+  });
+}
+
+export function prepareArticle(value: unknown, day: string, all: Research[], searchedUrls: string[]): Research {
   validateSchema(value, articleSchema);
   const draft = value as Omit<Research, "date" | "coverImage"> & { coverImage: Research["coverImage"] | null };
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(draft.slug) || draft.slug.length > 90) throw new Error("Invalid slug");
   if (all.some(r => r.slug === draft.slug || sourceKey(r.source.url) === sourceKey(draft.source.url))) throw new Error("Article or source already exists");
   sourceKey(draft.source.url);
+  if (!searchedUrls.some(url => sourceKey(url) === sourceKey(draft.source.url))) throw new Error("Source was not returned by web search");
   const recentTopics = [...all].filter(r => r.date <= `${day}T08:00:00+03:00`).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 2).map(r => r.topic);
   if (recentTopics.includes(draft.topic)) throw new Error("Topic repeats one of the last two articles");
   const words = draft.blocks.filter(b => b.type === "text").map(b => b.md).join(" ").split(/\s+/).length;

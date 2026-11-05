@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { subscriptionEnv } from "./research-local";
-import { articleSchema, moscowDay, planGeneration, prepareArticle, sourceKey, validateSchema } from "./research-generation";
+import { articleSchema, moscowDay, planGeneration, prepareArticle, sourceKey, validateSchema, webSources } from "./research-generation";
 import type { Research } from "../lib/research";
 
 test("subscription child never inherits API credentials or endpoints", () => {
@@ -24,8 +24,16 @@ test("Saturday includes exactly the Moscow work week and skips existing digest",
 });
 test("invalid model output cannot add publishing metadata or arbitrary blocks", () => {
   assert.throws(() => validateSchema({}, articleSchema));
-  assert.throws(() => prepareArticle({ slug: "../bad", telegram: { messageId: 1 } }, "2026-11-05", []));
+  assert.throws(() => prepareArticle({ slug: "../bad", telegram: { messageId: 1 } }, "2026-11-05", [], []));
   assert.throws(() => sourceKey("file:///etc/passwd"));
   assert.notEqual(sourceKey("https://example.org/article?id=1"), sourceKey("https://example.org/article?id=2"));
   assert.equal(sourceKey("https://example.org/article?utm_source=x"), sourceKey("https://example.org/article"));
+});
+test("source evidence comes from web tool events, not generated final text", () => {
+  const events = [
+    { item: { type: "agent_message", results: [{ url: "https://invented.example" }] } },
+    { item: { type: "web_search", results: [{ url: "https://arxiv.org/abs/2402.05314" }] } },
+    { item: { type: "web_search" } },
+  ].map(e => JSON.stringify(e)).join("\n");
+  assert.deepEqual(webSources(events), ["https://arxiv.org/abs/2402.05314"]);
 });

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { articleSchema, digestSchema, planGeneration, prepareArticle, validateSchema } from "./research-generation";
+import { articleSchema, digestSchema, planGeneration, prepareArticle, validateSchema, webSources } from "./research-generation";
 import type { Research, ResearchDigest } from "../lib/research";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -67,7 +67,7 @@ ${plan.kind === "article" ? `Найди реальное исследовани�
     let file: string;
     let prepared: Research | ResearchDigest;
     if (plan.kind === "article") {
-      prepared = prepareArticle(value, plan.day, all);
+      prepared = prepareArticle(value, plan.day, all, webSources(events));
       // Check that the claimed original is accessible before publishing.
       const res = await fetch(prepared.source.url, { signal: AbortSignal.timeout(60_000) });
       await res.body?.cancel();
@@ -82,7 +82,7 @@ ${plan.kind === "article" ? `Найди реальное исследовани�
     }
     fs.writeFileSync(output, JSON.stringify(prepared, null, 2) + "\n");
     if (!publish) { console.log(`Draft: ${output}`); return; }
-    // Build in the isolated checkout, reusing only the installed dependencies.
+    // Build in the isolated checkout without loading the editor's .env files.
     run("npm", ["ci", "--ignore-scripts", "--no-audit", "--no-fund"], work);
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, JSON.stringify(prepared, null, 2) + "\n", { flag: "wx" });
