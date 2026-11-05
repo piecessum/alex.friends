@@ -28,6 +28,10 @@ on:
         description: "Модель Cloudflare для превью (пусто — по умолчанию)"
         required: false
         default: ""
+  # A push made by GITHUB_TOKEN does not start another push workflow.
+  workflow_run:
+    workflows: ["Research author"]
+    types: [completed]
 
 permissions:
   contents: write
@@ -38,6 +42,7 @@ concurrency:
 
 jobs:
   publish:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -50,6 +55,8 @@ jobs:
       CLOUDFLARE_IMAGE_MODEL: ${{ inputs.image_model }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-node@v4
         with:

@@ -1,0 +1,92 @@
+name: Research author
+
+on:
+  schedule:
+    - cron: "5 5,6 * * 1-6"
+  workflow_dispatch:
+    inputs:
+      check_only:
+        description: "Проверить расписание и отдельный вход, не создавать выпуск"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: research-author
+  cancel-in-progress: false
+
+jobs:
+  author:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CODEX_HOME: ${{ runner.temp }}/research-codex
+      RESEARCH_AUTH_CACHE: ${{ github.workspace }}/.cache/research-auth
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run research:test
+      - name: Версия отдельного входа
+        id: login
+        run: node scripts/research-auth-state.mjs version
+        env:
+          RESEARCH_CODEX_AUTH: ${{ secrets.RESEARCH_CODEX_AUTH }}
+      # The cache is readable to repository users, so it contains ONLY AES-GCM ciphertext.
+      - uses: actions/cache/restore@v4
+        with:
+          path: .cache/research-auth
+          key: research-auth-${{ steps.login.outputs.version }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: research-auth-${{ steps.login.outputs.version }}-
+      - name: Восстановить отдельный вход
+        id: restore
+        run: node scripts/research-auth-state.mjs restore
+        env:
+          RESEARCH_CODEX_AUTH: ${{ secrets.RESEARCH_CODEX_AUTH }}
+      - run: npm run research:setup
+      - name: Подписка доступна
+        run: .cache/codex-cli/node_modules/.bin/codex login status
+      - name: Проверить запрос из облака через подписку
+        if: inputs.check_only == true
+        run: |
+          .cache/codex-cli/node_modules/.bin/codex exec \
+            --ignore-user-config --ephemeral --sandbox read-only \
+            -c 'forced_login_method="chatgpt"' -c 'approval_policy="never"' \
+            --output-last-message "$RUNNER_TEMP/research-check.txt" \
+            'Ничего не меняй, инструменты не используй. Ответь только: OK' < /dev/null
+      - name: Настроить публикацию
+        run: |
+          gh auth setup-git
+          git config user.name "Алексей Масюта"
+          git config user.email "alexmas1998kot@gmail.com"
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Подготовить выпуск
+        if: inputs.check_only != true
+        run: npm run research:local -- --publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Проверить день без генерации
+        if: inputs.check_only == true
+        run: npm run research:local -- --check
+      - name: Сохранить обновлённый вход в зашифрованном виде
+        if: always() && steps.restore.outcome == 'success'
+        run: node scripts/research-auth-state.mjs save
+        env:
+          RESEARCH_CODEX_AUTH: ${{ secrets.RESEARCH_CODEX_AUTH }}
+      - uses: actions/cache/save@v4
+        if: always() && steps.restore.outcome == 'success'
+        with:
+          path: .cache/research-auth
+          key: research-auth-${{ steps.login.outputs.version }}-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Удалить открытый файл входа с временного runner
+        if: always()
+        run: rm -rf "$CODEX_HOME"

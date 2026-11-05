@@ -5,7 +5,7 @@ import { articleSchema, moscowDay, planGeneration, prepareArticle, sourceKey, va
 import type { Research } from "../lib/research";
 
 test("subscription child never inherits API credentials or endpoints", () => {
-  const env: NodeJS.ProcessEnv = { NODE_ENV: "test", OPENAI_API_KEY: "paid-key", OPENAI_BASE_URL: "https://paid.example", OPENAI_API_BASE: "x", CODEX_API_KEY: "key", PATH: "/usr/bin" };
+  const env: NodeJS.ProcessEnv = { NODE_ENV: "test", OPENAI_API_KEY: "paid-key", OPENAI_BASE_URL: "https://paid.example", OPENAI_API_BASE: "x", CODEX_API_KEY: "key", PATH: "/usr/bin", GH_TOKEN: "repo-token", GITHUB_TOKEN: "repo-token", RESEARCH_CODEX_AUTH: "bootstrap-token" };
   assert.deepEqual(subscriptionEnv(env), { NODE_ENV: "test", PATH: "/usr/bin" });
   assert.equal(env.OPENAI_API_KEY, "paid-key");
 });

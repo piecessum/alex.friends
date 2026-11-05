@@ -12,7 +12,7 @@
     "research:setup": "npm install --prefix .cache/codex-cli --no-audit --no-fund @openai/codex@0.166.0",
     "research:local": "node --import tsx scripts/research-local.ts",
     "research:schedule": "python3 scripts/install-research-schedule.py",
-    "research:test": "node --import tsx --test scripts/research-local.test.ts",
+    "research:test": "node --import tsx --test scripts/research-local.test.ts scripts/research-auth-state.test.mjs",
     "research:cover": "tsx scripts/research-cover.ts",
     "research:publish": "tsx scripts/research-publish.ts"
   },

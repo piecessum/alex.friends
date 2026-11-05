@@ -12,7 +12,7 @@ const read = <T,>(dir: string): T[] => fs.existsSync(dir) ? fs.readdirSync(dir).
 
 export function subscriptionEnv(env: NodeJS.ProcessEnv) {
   const copy = { ...env };
-  for (const key of ["OPENAI_API_KEY", "OPENAI_BASE_URL", "OPENAI_API_BASE", "CODEX_API_KEY"]) delete copy[key];
+  for (const key of ["OPENAI_API_KEY", "OPENAI_BASE_URL", "OPENAI_API_BASE", "CODEX_API_KEY", "GH_TOKEN", "GITHUB_TOKEN", "RESEARCH_CODEX_AUTH"]) delete copy[key];
   return copy;
 }
 
