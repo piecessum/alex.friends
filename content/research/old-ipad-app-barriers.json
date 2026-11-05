@@ -78,5 +78,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 36,
+    "postedAt": "2026-11-05T19:58:09.244Z",
+    "cover": "/research/old-ipad-app-barriers-f3512112.webp"
+  }
 }
