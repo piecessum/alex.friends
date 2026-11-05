@@ -1,0 +1,31 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { subscriptionEnv } from "./research-local";
+import { articleSchema, moscowDay, planGeneration, prepareArticle, sourceKey, validateSchema } from "./research-generation";
+import type { Research } from "../lib/research";
+
+test("subscription child never inherits API credentials or endpoints", () => {
+  const env: NodeJS.ProcessEnv = { NODE_ENV: "test", OPENAI_API_KEY: "paid-key", OPENAI_BASE_URL: "https://paid.example", OPENAI_API_BASE: "x", CODEX_API_KEY: "key", PATH: "/usr/bin" };
+  assert.deepEqual(subscriptionEnv(env), { NODE_ENV: "test", PATH: "/usr/bin" });
+  assert.equal(env.OPENAI_API_KEY, "paid-key");
+});
+test("one issue per Moscow day, Sunday off", () => {
+  assert.equal(moscowDay(new Date("2026-11-05T21:30:00Z")), "2026-11-06");
+  assert.equal(planGeneration([], [], new Date("2026-11-05T04:00:00Z")).kind, "article");
+  assert.equal(planGeneration([{ date: "2026-11-05T08:00:00+03:00" } as Research], [], new Date("2026-11-05T04:00:00Z")).kind, "skip");
+  assert.equal(planGeneration([], [], new Date("2026-11-08T04:00:00Z")).kind, "skip");
+});
+test("Saturday includes exactly the Moscow work week and skips existing digest", () => {
+  const all = ["2026-11-01T22:00:00Z", "2026-11-06T08:00:00+03:00", "2026-11-07T08:00:00+03:00"].map(date => ({ date } as Research));
+  const now = new Date("2026-11-07T04:00:00Z");
+  assert.equal(planGeneration(all, [], now).articles.length, 2);
+  assert.equal(planGeneration(all, ["2026-11-07"], now).kind, "skip");
+  assert.equal(planGeneration([], [], now).kind, "skip");
+});
+test("invalid model output cannot add publishing metadata or arbitrary blocks", () => {
+  assert.throws(() => validateSchema({}, articleSchema));
+  assert.throws(() => prepareArticle({ slug: "../bad", telegram: { messageId: 1 } }, "2026-11-05", []));
+  assert.throws(() => sourceKey("file:///etc/passwd"));
+  assert.notEqual(sourceKey("https://example.org/article?id=1"), sourceKey("https://example.org/article?id=2"));
+  assert.equal(sourceKey("https://example.org/article?utm_source=x"), sourceKey("https://example.org/article"));
+});
