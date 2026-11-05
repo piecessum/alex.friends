@@ -18,7 +18,7 @@
 //
 // Нейросеть — Cloudflare Workers AI (Lucid Origin, запасная FLUX schnell),
 // бесплатно в пределах 10 000 «нейронов» в день. Нужны CLOUDFLARE_ACCOUNT_ID и
-// CLOUDFLARE_API_TOKEN (запасной вариант — OPENAI_API_KEY).
+// CLOUDFLARE_API_TOKEN. Платного запасного провайдера нет.
 //
 // Если нейросеть недоступна (лимит, сбой), исследование без превью вовсе
 // получает временное превью кубиками из coverSprite (lib/voxel-cover.ts) —
@@ -59,7 +59,6 @@ const DIGEST_POSTER_STYLE = "number-corner-1";
 // запасная FLUX schnell (~100 нейронов, но путает предметы чаще).
 const CF_MODEL = process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/leonardo/lucid-origin";
 const CF_FALLBACK = "@cf/black-forest-labs/flux-1-schnell";
-const OPENAI_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-1";
 
 // Что просим у модели: один объект на белом — дальше всё делает код. Людей и
 // руки запрещаем: пальцы нейросеть рисует криво.
@@ -93,17 +92,6 @@ async function generateCloudflare(prompt: string, model = CF_MODEL): Promise<Buf
   return Buffer.from(data.result.image, "base64");
 }
 
-async function generateOpenAI(prompt: string): Promise<Buffer> {
-  const res = await fetch("https://api.openai.com/v1/images/generations", {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${clean(process.env.OPENAI_API_KEY)}` },
-    body: JSON.stringify({ model: OPENAI_MODEL, prompt, size: "1024x1024", quality: "medium", n: 1 }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(`OpenAI: ${res.status} ${data?.error?.message ?? ""}`);
-  return Buffer.from(data.data[0].b64_json, "base64");
-}
-
 async function generateSubject(scene: string): Promise<Buffer> {
   const prompt = SUBJECT + scene;
   if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN) {
@@ -115,8 +103,7 @@ async function generateSubject(scene: string): Promise<Buffer> {
       return generateCloudflare(prompt, CF_FALLBACK);
     }
   }
-  if (process.env.OPENAI_API_KEY) return generateOpenAI(prompt);
-  throw new Error("нет ключей нейросети (CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN или OPENAI_API_KEY)");
+  throw new Error("нет ключей Cloudflare; платная генерация через OpenAI отключена");
 }
 
 // ---- сток (Pexels) ----------------------------------------------------------
