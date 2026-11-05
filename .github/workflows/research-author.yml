@@ -22,13 +22,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      CODEX_HOME: ${{ runner.temp }}/research-codex
       RESEARCH_AUTH_CACHE: ${{ github.workspace }}/.cache/research-auth
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
           persist-credentials: false
+      - name: Временная папка отдельного входа
+        run: echo "CODEX_HOME=$RUNNER_TEMP/research-codex" >> "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
