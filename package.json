@@ -9,6 +9,8 @@
     "sync": "tsx scripts/sync-channel.ts",
     "sync:work": "tsx scripts/sync-work.ts",
     "sync:pins": "tsx scripts/sync-pinterest.ts",
+    "research:generate": "node --import tsx scripts/research-generate.ts",
+    "research:test": "node --import tsx --test scripts/research-generation.test.ts",
     "research:cover": "tsx scripts/research-cover.ts",
     "research:publish": "tsx scripts/research-publish.ts"
   },

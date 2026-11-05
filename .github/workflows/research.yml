@@ -1,11 +1,10 @@
 # Исследования: превью + публикация в Telegram-канал.
-# Ежедневный облачный агент только пишет content/research/<slug>.json и пушит
-# (у него нет ключей). Дальше — здесь, где ключи лежат в секретах:
+# Генератор через OpenAI API готовит один материал в день, затем:
 #   1) рисуем превью (Cloudflare Workers AI, бесплатно) и коммитим (пуш запускает деплой Vercel);
 #   2) ждём, пока новое исследование откроется на сайте;
 #   3) постим в канал и коммитим отметку telegram.messageId.
 # Раз в час — публикация отложенных (поле telegramAt).
-# Нужны секреты CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, TELEGRAM_BOT_TOKEN
+# Нужны секреты OPENAI_API_KEY, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, TELEGRAM_BOT_TOKEN
 # (бот — админ канала). PEXELS_API_KEY — превью из стоковых фото (без него
 # предмет рисует нейросеть).
 
@@ -17,9 +16,16 @@ on:
     paths: ["content/research/*.json", "content/research/digests/*.json"]
   # Раз в час — запас исследований уходит в канал по своему telegramAt.
   schedule:
+    # Подготовить газету к утру; ежечасный запуск также повторит неудачную попытку.
+    - cron: "5 5 * * 1-6"
     - cron: "40 * * * *"
   workflow_dispatch:
     inputs:
+      generate:
+        description: "Подготовить сегодняшнюю статью / субботний дайджест"
+        type: boolean
+        required: false
+        default: false
       refresh:
         description: "Перерисовать превью и обновить пост в канале (slug через запятую)"
         required: false
@@ -39,10 +45,12 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      RESEARCH_MODEL: ${{ vars.RESEARCH_MODEL || 'gpt-5.4' }}
       PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       RESEARCH_CHANNEL_ID: ${{ secrets.RESEARCH_CHANNEL_ID }}
@@ -58,6 +66,35 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      - name: Проверки генератора
+        run: npm run research:test
+
+      - name: Подготовка утренней газеты
+        id: generate
+        if: github.event_name == 'schedule' || inputs.generate == true
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          # До 08:00 Next.js исключает будущий выпуск из статической сборки.
+          hour=$(TZ=Europe/Moscow date +%H)
+          if [ "$hour" -lt 8 ]; then
+            echo "Сегодняшний выпуск готовим после 08:00 МСК."
+            exit 0
+          fi
+          if [ -z "$OPENAI_API_KEY" ] && [ "$EVENT_NAME" = schedule ]; then
+            echo "::warning::Генерация не подключена: добавьте секрет OPENAI_API_KEY. Обработка готовых материалов продолжится."
+            echo "Генерация не подключена: нужен секрет OPENAI_API_KEY." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          npm run research:generate
+          if [ -n "$(git status --porcelain -- content/research)" ]; then
+            echo "created=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Проверка сборки нового выпуска
+        if: steps.generate.outputs.created == 'true'
+        run: npm run build
 
       # Модель вырезки объектов (lib/cutout.ts, ~160 МБ) — не качать каждый раз.
       - uses: actions/cache@v4
