@@ -6,7 +6,7 @@
     "html": "Кароч! Сделал себе на сайте <a href=\"https://alex-friends.vercel.app/research\" target=\"_blank\" rel=\"noopener noreferrer\">утреннюю газету с исследованиями</a>, накидал интересных для меня тем там интерфейсы, психология, нейросети, гаджеты, как устроен мозг... всё в кучу. Короткий пересказ научного исследования, ну или не научного, с фактами и заключениями, которые заставляют задуматься <img class=\"emoji\" src=\"/api/tg-emoji/5463304095362193956\" alt=\"🧠\" />. Утром открываешь Telegram и читаешь по дороге на работу.\n\nНаклодкодил свою дичь: облачный агент готовил статьи, собирал картинку, дальше статья автоматически появлялись на сайте и через бота в тг-канале: <a href=\"https://t.me/chto_issled\" target=\"_blank\" rel=\"noopener noreferrer\">@chto_issled</a>. Потом <img class=\"emoji\" src=\"/api/tg-emoji/5262999696988742863\" alt=\"💬\" />контора пидорасов всех православных исключила из чата.\n\nРешил попробовать родоначальников —  <img class=\"emoji\" src=\"/api/tg-emoji/5262535526988165767\" alt=\"💬\" />Codex. Попросил починить. Он первым делом собрал решение через платный API и отправил меня подключать биллинг <img class=\"emoji\" src=\"/api/tg-emoji/5458602772620384357\" alt=\"👃\" />.\n\nЯ давай его поносить, мол, я и так подписку уже оплатил, шевели своими ии-шными шестернями и давай верни как было.\n\nИ удивительно, вонять не стал, нашёл вариант через подписку. Правда, с постоянно включённым Mac. Пришлось подрубать навыки написания промптинга, профессионально, инженерно, точно и без двойных трактовок написал: <i>фсьо должно работать само, давай делай мне </i><i><s>b2b saas</s> статейки</i> <i>на сайт, читать хачюю.\n</i>\nВ итоге перенесли запуск в облако GitHub. Работает через уже оплаченную подписку, отдельный API не нужен, вечно включеный Mac тоже. Сейчас тестирую, насколько стабильно всё будет выходить.\n\nНу пока статью выпустил норм →  <a href=\"https://t.me/chto_issled/36\" target=\"_blank\" rel=\"noopener noreferrer\">про приложения на старом iPad</a>\n\nС ии-агентами уже переговоры надо вести и торговаться, так-то интересно, но неужели их этому научили, чтоб в случае чего:\n<blockquote>запусти навык: $$требовать_бабки;</blockquote>\nИли они так обучились самостоятельно, учитывая в каком мире мы живём..? как обычно вопрос риторический<a href=\"https://t.me/chto_issled/36\" target=\"_blank\" rel=\"noopener noreferrer\">\n</a>\n<a href=\"https://t.me/s/ux_review?q=%23%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82\" target=\"_blank\" rel=\"noopener noreferrer\">#проект</a> <a href=\"https://t.me/s/ux_review?q=%23%D0%BC%D1%8B%D1%81%D0%BB%D1%8C\" target=\"_blank\" rel=\"noopener noreferrer\">#мысль</a>",
     "photos": [],
     "videos": [],
-    "views": "9",
+    "views": "19",
     "tags": [
       "проект",
       "мысль"
@@ -30,7 +30,7 @@
       "url": "https://1in8b.life/",
       "image": "/channel/4e45487ddc6c7b72.webp"
     },
-    "views": "31",
+    "views": "37",
     "tags": [],
     "sizes": {
       "/channel/4e45487ddc6c7b72.webp": [
@@ -57,7 +57,7 @@
         "src": "https://cdn4.telesco.pe/file/fc81cdff6d.mp4?token=lBRqM83elNzzJFt75M8vXwRqIMJu07Fae7uG3INRWMUWRtHaTb--TmAo_DKZ-2n0QOCCzN7jfGG6K-ZVLUogC3w3KuLWrkoPx1BmiDifK-M281bvBioEnv0RuTSE56Sf5c5QFeOwFrlH-RTw51tMJMLLgXyajke5mKrmAEyZrIbY5wasuCozmf4UUEA4q1Qx74AsaRkfBOlwJXSLIW6c2VFc-WjYhPhS9_7D7fH34KVQHk_xzdQ3NzA5KmlqNOc8-IQvU38-QHLgEO278VJrKyxuuOAdfPKLQeBLpcxHhi4IwDN9jUMU6p_lq2KHrOp8jkKiIa4NK4XYJBjdDwgLzQ"
       }
     ],
-    "views": "55",
+    "views": "59",
     "tags": [
       "плохо"
     ],
@@ -83,7 +83,7 @@
       "id": "851",
       "text": "Короче альтернатив мало, а их должно быть больше"
     },
-    "views": "63",
+    "views": "65",
     "tags": [
       "мысль"
     ]
@@ -97,7 +97,7 @@
       "/channel/870-r0.webp"
     ],
     "videos": [],
-    "views": "62",
+    "views": "64",
     "tags": [
       "красиво",
       "проект"
@@ -134,7 +134,7 @@
       "url": "https://t.me/rationalnumbers/9629",
       "name": "Рациональные числа"
     },
-    "views": "43",
+    "views": "44",
     "tags": [
       "циферки"
     ],
@@ -166,7 +166,7 @@
       "url": "https://t.me/retra/36123",
       "name": "r/ретранслятор"
     },
-    "views": "60",
+    "views": "61",
     "tags": [
       "хорошо"
     ],
@@ -4903,7 +4903,7 @@
       {
         "thumb": "/channel/e44d4716273835c8.webp",
         "duration": "0:10",
-        "src": "https://cdn4.telesco.pe/file/a59809ba89.mp4?token=Bdan83kjkDi-K9zJ0uDsBk9XdVPu5n2FWOLf37SEYRQ28vXejwZz8QzblS2XSUgP0wsOi4cJndUp-CCR0hC90NHObdNtUs-C-jRUtijcCSaYiGl_4rJXFyklEU3TZ--iR107mkN_Oo0HDqKqzUd6W0M7VEHd_W2kTp5bv3bpVyeFiXXAUFfVG4vHJ2bjkhhyTRKJU1NV9dsziLWjYczXcKrEbgXs5naj3nMsn4MbwIm2d5Ec34tnP2b25fUzRFLRHru2GJnFAm7sC3GjMNAOQ_tYldNn-kBrYsl90zEQ30apVCAuB1HN20yJ9PWqcj7zpqS84r9bewYA_tYBzIasZw"
+        "src": "https://cdn4.telesco.pe/file/a59809ba89.mp4?token=KOAoXNisNraQI4sPoYsWHb76kwXYN--UbGija8sgYvHB4K8LqYZz2wusFM6Wt2JQ7rX1TxR04JN7LSAr1C6owjerIr3Z_LJzFBbWuDEBtOhvPFhIeA0N6obWEAI2akW-ZMPS49XzUmVgWCjhrzVpgocIrAoyxmVFamV-4x24x_3WTHK1lZxVwG04Vn7rXqCEeEKm7wEyYvnMoLjhAfkDCnJt9g9PFgVkHAR1SS4ZWMGkZblza8wLwAs3sw7L1AI__GAIEWES2ZIL3irMYEXIFY_H5b_k8UXDAe1RqJWWEJFLvIZDotOL2Z_vUOIgN6rFc5GLmnTGdWd_EFhfABgXyw"
       },
       {
         "thumb": "/channel/f11286e527975b5d.webp",
@@ -4913,7 +4913,7 @@
       {
         "thumb": "/channel/d09c8049265ae0a6.webp",
         "duration": "0:08",
-        "src": "https://cdn4.telesco.pe/file/51a4543b9f.mp4?token=XqzMBMg_ba37JteCSGBzZE14nwStmowF_x9ApM7ty-Hxbk5ae_ZieC3kzEe01MRK7gvJLSD6gNhpYY8mLofpyVw8bBK2C1A62KNMRkxg_WKdaqLLWhWrskZwXj2-ixUszsUFuo0CsdEzm1gRR9_gekN5QUbBcNucZtmO1l8sRY_SZFDWvB5N2vObaAAO8rsoNk8XGxB0D-W3f_stom_ZydJUcxJwStvSf-3_fqZCWg17LnROfVJyWDTDyL_JwIRvWRZb6IKkRjOeBw9Ptgfv-pOFwJQzuFWCIr-dMuIN3Vvydjr_P0tWkPrW8SP6sh4WRQ9zfpxxOq_QOyyxWMIZdw"
+        "src": "https://cdn4.telesco.pe/file/51a4543b9f.mp4?token=CLzROFov8IoR2TGSAwZ7QBAv3-cn99rgDSL7ghAgyh3mCKCkd1En_mXwZjPtzCUx0ESVZXz7NTpBFmiInSPWQId_DJpe4LK41D7TnijhgsjicVRMStsZUB5lZwXV9szdoepfPCrYvXSKVYmT7FPd58o7jpvrutYDEUdXdS08YZ8SQ_bDNXmLxJPWgDkHt1zSytE__36LKaUytVz_wOxWxm8bkWZirQRCiXKbqg2L6Qoep3J1ner4v_o6cb7HHn8OIOrU-rRErUUuffQfKA1e30erwaW8-DaCzbvkQPrW8gKqwJk1jDku-WBjFdBeBpTeImKQnQTZE1DnJcUy8qjmOQ"
       },
       {
         "thumb": "/channel/33e08be2a5fff961.webp",
@@ -5829,7 +5829,7 @@
       {
         "thumb": "/channel/ba58f42cd0286c42.webp",
         "duration": "0:40",
-        "src": "https://cdn4.telesco.pe/file/d2408900f1.mp4?token=d_TU9kW4-Kksq3e5CkcYoLcVNkXZvbx9TjYc7kPtzURAoKwtvifQFkFN28HDdpvh9L59bqGsuTAHQHvF200rDVbmnytcc9_3-UHzBYRGGHwPJr1RtM2Swytb0e-VFw7T0NBJksCOtNx9UUC9l5TnRS-vL4RF7Dv5hg75ZZjkRlpDIvLg-CRlHNCf1Mw1vH0xoGi3c-ZHmp9TkeKPzD7VU6mU9TUPb6TEquaqRT62ShNs7ifi6ITPQ9sHSZwqItz2iUbpTpvWx8_e2Etn6jYBEzk56ZfJnjrC6Q5DXavVJtq7DFOg1RcUW77CM7aVJ5IEVKouEKeAlf0Ww4lQLmuq5Q"
+        "src": "https://cdn4.telesco.pe/file/d2408900f1.mp4?token=oFIHMyERECpbQQxs8z35ByUIzghm4fJ602GmKhF5fhN3VdeEW7jm19Vvc4U-FxH0H6cp7wsx4D2RzHFuuU1uEeeBwULpYc3fuYTuqF1OBfEDnZ5w0tGOerDBJR1GyE_CQV81OGpJqJLcRkxoJsZp_DuOCZzIovci6oILPiQYfQrmbeBdnRpv6bnM3aRIuOXqNW6-4HlG7cn-pj5eFG1BZR0NnbBzUA6ShFs3eU3gtGHL0-nRND3L3VK-woeB8Xl2E1r01aKT4o0GdbmAmREVvVleoTLb_f6BMs-Hniuikn_cxaRO9VSR75kaO1UPb8LQ01U3svgY_-kTzcBYk3_MNg"
       },
       {
         "thumb": "/channel/1d0b6072fa50aeb3.webp",
@@ -7287,7 +7287,7 @@
       {
         "thumb": "/channel/8102e235bb48f7ef.webp",
         "duration": "1:23",
-        "src": "https://cdn4.telesco.pe/file/5c9deaffae.mp4?token=PlL0D-Iqb4mnwXkCCG7pd3kGo4ed1IWKUsCuk38s178-g5V1ne5287wOIhF0yrvlvzAMvYWIGvk3ZDnpS4vagkJzhWMUoaWoMO5-DLKcssXgxOzY2SYhHzyUMx-KZo3dEqnIpsCpzB--7-CpdPF6HnS5Gq66Oc7KpNrkT-WTNPVbvYzPIfHi0HCLciW9yJwTF1TPPmaG7e-CEK3dNLbNc59RNAKsgobEiJdM8ObGaSYTg5c0NNE6xYFmgXjt5D1MmjHUgjMzSDQrA_QV6MaVsraTryMZchFf47XmepaqrZZYkEkze70q6XKvDqAAmP2ao87YyIRP-OjyzDdJdf3RcZMz758zfYMWrV4jHb-UXCWAUotn8qEVIYwJu2FUaSD2EYoxAMTkzVLRKXh3Vluh8_aLm9zRJ7bGQG7_IViEDeRTQU-0Hx_grYEYfwEh46oo3iq2S9G08Z5s-GhfDLq57kukpmAd5VhzxlYL_hoPvCrnVXCQb8UElkXux-TCN0vgH-cPGd7DK23xBmgvsoPJ4JbiYg4hKkWZK0-2O2lZeWPdmfAcJx3cxnPOE66HiAFtaqYOJWXH4osMekol9C5lAJgacCgTE-L_XotC2kDtfWfKTrEpFT5JMl7TJJNaD4rWlVwIUxChbvjPVO94s2LCUwha5cF66sXLJFK3ZDUMhhM"
+        "src": "https://cdn4.telesco.pe/file/5c9deaffae.mp4?token=AQlQZnjZBd6me50BtCHwY2z2-yBrj1iXKgNjllKfhHYvsuzY1Sm4s5-JeJhed-BitgMEkgTVCH2-_TI6lv3Al2OjJ1hjtcYi2mdrFyO7FYvmAfAcosdo9Hm6uilSVF239499MWujrDUHCfrv8ymnTSjax97QtVq_mng0JNGxGhQhLhKKpyX0hx7AntrAklV5nDatQhLCuYnKp56Jr2dey7XEqcD_eEZO2wmV8KsWf4FGnODovfbyEiB_gUgUrK3CcTbpVCeIVs5lRjMvjV9W034V6SwS6WD4b6cAPIoEq11nJV7rgkU41mr4VWYNVEJ6jKseahQT35fqMt5m4QeySEHbvFxc1bQNGvTBr927-fH2DQJnEt8htQ9xZsyjp294yhnzamSpgqZNJppLtXQaVipHYxbIvcUYdlphQIdjksMSykqbfJlFIAf_0699qhVIb--hTxPTfq3wEM9fLLwxNcm8IfPZ1qS79UT3tE65LmgqbGFs38hNskfgfAnB8MqpE8YVwfq7mxy2183DrBODZwjeDFDla4M79JIm5SlME8pDgDANSZp3P3xcZsRDxw_4MVRIeGSrsXN8oeUttlVNzQGgcI6ZVUv1eEYYa_CcYgH1iEO_049pVsZWXaloPgeVaJ7vozdlPTlwHgpcJswnb-URLZh6UX4F38jEj3SbLm4"
       }
     ],
     "forward": {
@@ -7623,7 +7623,7 @@
       {
         "thumb": "/channel/260cdf8e63e01508.webp",
         "duration": "0:17",
-        "src": "https://cdn4.telesco.pe/file/8b0e479f14.mp4?token=XHflFHVjM2BDvms_CdTBRITI2_W4mwY9cqag2KJ6x28HxEN9NZfB_MaY5sRdpDgOlQZcjCF9QdtVMl5l0-VuO4jc1WBUKrHVUf4kRLE117QSagrNVasZMrnpyafNCETAAyeRatX9FoEOqe-1vwQ5Vrn4M46ZRtxnKBObWnpw4m9oQViqUVsbpV-xWbboiLBXiztfR9ut-mquVLt5j71XsE4Bk4o2fwFb8-tLLb4D8_Wfga0LKL_uEUkhGMDcE53MOg9K9e5JGJvBixbl6S_PmkinPxvFCtEr2DRlXP-OWajHY0gWjCIxSWyVbXkYPyXsCkMVTXuDCIzEHwL2FmktOg"
+        "src": "https://cdn4.telesco.pe/file/8b0e479f14.mp4?token=Tc_CcU9_Uua6l8pnsZfoEsXKHxnzK_kGhzn2n0vg6iSXPuYaGq-fQPNEUg0YdJz-Jpn8Af34n2SE4cXV0miaeiUh3S8PPyvtxUOXwxa6a5dzuVY7f17dU5WrCF15R-n2XSXW08r6xklf1qkI_mklJ9OAWjaGdtvnBfHQtDLd3oZdGsEK4ltKLaXohi-j0nQE5mne9L_TtfyFdQSkHYDc3LWJYcPWx_6nfV9IkRhC8EUITbCnensq0aOzztKRmkgLkuc4ldx-jtPV43VPiBvRVc8fiq2gdbySnAgRhI9YTwNB-A5EM2TGVdzrOuUvQLDh2NXPSDZey1Pn_lunqoHe3g"
       }
     ],
     "views": "107",
