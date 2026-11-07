@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import type { NoteIndexItem } from "@/lib/notes";
 import type { TgPost } from "@/lib/telegram";
 import { postBody } from "@/lib/post-text";
+import { formatRuDate } from "@/lib/utils";
 
 const KEY_FILTER = "writingsFilter";
 const KEY_SCROLL = "writingsScroll";
@@ -34,8 +35,7 @@ const MONTHS = [
 
 function formatPostDate(iso: string): string {
   if (!iso) return "";
-  const d = new Date(iso);
-  return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  return formatRuDate(iso);
 }
 
 function formatNoteDate(month: number, day: number, year?: number): string {
@@ -137,7 +137,7 @@ function buildTiles(notes: NoteIndexItem[], posts: TgPost[]): Tile[] {
       kind: "note",
       key: `note-${n.slug}`,
       href: `/notes/${n.slug}`,
-      sortDate: new Date(n.year || 2020, (n.month || 1) - 1, n.day || 1).getTime(),
+      sortDate: Date.UTC(n.year || 2020, (n.month || 1) - 1, n.day || 1, -3),
       cover: n.cover,
       date: formatNoteDate(n.month, n.day, n.year),
       title: n.title,
