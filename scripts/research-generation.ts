@@ -69,6 +69,13 @@ export function validateSchema(value: unknown, schema: Schema, at = "result"): v
 export function sourceKey(value: string) {
   const url = new URL(value);
   if (!["http:", "https:"].includes(url.protocol)) throw new Error("Source must be an HTTP URL");
+  const decoded = decodeURIComponent(url.pathname + url.search);
+  const doi = decoded.match(/10\.\d{4,9}\/[^\s&#?]+/i)?.[0];
+  if (doi) return `doi:${doi.replace(/\/$/, "").toLowerCase()}`;
+  if (/(^|\.)(arxiv\.org|ar5iv\.labs\.arxiv\.org)$/.test(url.hostname)) {
+    const id = url.pathname.match(/\/(?:abs|pdf|html)\/(.+?)(?:\.pdf)?$/)?.[1];
+    if (id) return `arxiv:${id.replace(/v\d+$/, "").toLowerCase()}`;
+  }
   for (const key of [...url.searchParams.keys()]) if (/^(utm_|ref$|fbclid$|gclid$)/i.test(key)) url.searchParams.delete(key);
   url.searchParams.sort();
   return `${url.hostname.replace(/^www\./, "")}${url.pathname.replace(/\/$/, "")}${url.search}`.toLowerCase();
@@ -77,8 +84,12 @@ export function sourceKey(value: string) {
 export function webSources(events: string): string[] {
   return events.split("\n").filter(Boolean).flatMap(line => {
     const event = JSON.parse(line);
-    if (event.item?.type !== "web_search") return [];
-    return (event.item.results ?? []).filter((r: { url?: unknown }) => typeof r.url === "string").map((r: { url: string }) => r.url);
+    if (!["web_search", "web_search_call"].includes(event.item?.type)) return [];
+    const item = event.item;
+    return [item.action?.url, item.url, /^https?:\/\//.test(item.query ?? "") ? item.query : undefined,
+      ...(item.results ?? []).map((r: { url?: string }) => r.url),
+      ...(item.action?.sources ?? []).map((r: { url?: string }) => r.url),
+    ].filter((url): url is string => typeof url === "string" && /^https?:\/\//.test(url));
   });
 }
 

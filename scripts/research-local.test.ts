@@ -37,3 +37,11 @@ test("source evidence comes from web tool events, not generated final text", () 
   ].map(e => JSON.stringify(e)).join("\n");
   assert.deepEqual(webSources(events), ["https://arxiv.org/abs/2402.05314"]);
 });
+test("Linux compact search events preserve URLs of opened originals", () => {
+  const events = [{item:{type:"web_search",action:{type:"open_page",url:"https://arxiv.org/pdf/2402.05314"}}}, {item:{type:"web_search",query:"https://example.org/paper"}}].map(e => JSON.stringify(e)).join("\n");
+  assert.deepEqual(webSources(events), ["https://arxiv.org/pdf/2402.05314", "https://example.org/paper"]);
+});
+test("equivalent scholarly links identify the same original", () => {
+  assert.equal(sourceKey("https://arxiv.org/abs/2402.05314"),sourceKey("https://arxiv.org/pdf/2402.05314v1.pdf"));
+  assert.equal(sourceKey("https://doi.org/10.1371/journal.pone.0045457"),sourceKey("https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0045457"));
+});

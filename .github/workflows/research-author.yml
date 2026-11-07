@@ -5,6 +5,14 @@ on:
     - cron: "5 5,6 * * 1-6"
   workflow_dispatch:
     inputs:
+      issue_day:
+        description: "Дата выпуска YYYY-MM-DD (восстановление или подготовка заранее)"
+        type: string
+        default: ""
+      diagnose_scheduler:
+        description: "Проверить доступ Cloudflare к облачному расписанию"
+        type: boolean
+        default: false
       check_only:
         description: "Проверить расписание и отдельный вход, не создавать выпуск"
         type: boolean
@@ -18,7 +26,18 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  scheduler-probe:
+    if: inputs.diagnose_scheduler == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Проверить доступ к Workers
+        env:
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          node --input-type=module -e 'const r=await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT.trim()}/workers/scripts`,{headers:{authorization:`Bearer ${process.env.CF_TOKEN.trim()}`}}); const j=await r.json();console.log(JSON.stringify({status:r.status,success:j.success,codes:(j.errors??[]).map(e=>e.code)}));'
   author:
+    if: inputs.diagnose_scheduler != true
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -75,6 +94,7 @@ jobs:
         run: npm run research:local -- --publish
         env:
           GH_TOKEN: ${{ github.token }}
+          RESEARCH_ISSUE_DAY: ${{ inputs.issue_day }}
       - name: Проверить день без генерации
         if: inputs.check_only == true
         run: npm run research:local -- --check
@@ -83,6 +103,15 @@ jobs:
         run: node scripts/research-auth-state.mjs save
         env:
           RESEARCH_CODEX_AUTH: ${{ secrets.RESEARCH_CODEX_AUTH }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: research-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .cache/research-draft-*.json
+            .cache/research-events-*.jsonl
+          if-no-files-found: ignore
+          retention-days: 7
       - uses: actions/cache/save@v4
         if: always() && steps.restore.outcome == 'success'
         with:

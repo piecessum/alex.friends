@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { articleSchema, digestSchema, planGeneration, prepareArticle, validateSchema, webSources } from "./research-generation";
+import { articleSchema, digestSchema, planGeneration, prepareArticle, sourceKey, validateSchema, webSources } from "./research-generation";
 import type { Research, ResearchDigest } from "../lib/research";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -40,7 +40,9 @@ export async function main() {
     const dir = path.join(work, "content/research");
     const all = read<Research>(dir);
     const digests = read<ResearchDigest>(path.join(dir, "digests"));
-    const plan = planGeneration(all, digests.map(d => d.slug));
+    const requestedDay = process.argv.find(a => a.startsWith("--date="))?.slice(7) || process.env.RESEARCH_ISSUE_DAY;
+    if (requestedDay && (!/^\d{4}-\d{2}-\d{2}$/.test(requestedDay) || new Date(`${requestedDay}T12:00:00Z`).toISOString().slice(0, 10) !== requestedDay)) throw new Error("Invalid issue day");
+    const plan = planGeneration(all, digests.map(d => d.slug), requestedDay ? new Date(`${requestedDay}T12:00:00+03:00`) : new Date());
     console.log(`${plan.day}: ${plan.kind}; ${publish ? "publish" : "draft only"}`);
     if (plan.kind === "skip" || process.argv.includes("--check")) return;
     const binary = path.join(cache, "codex-cli/node_modules/.bin/codex");
@@ -61,23 +63,44 @@ export async function main() {
 ${plan.kind === "article" ? `Найди реальное исследование через живой веб-поиск, открой и прочитай первоисточник целиком. Не повторяй источники каталога или темы последних двух статей. Не выдумывай цифры, цитаты, лицензии и ссылки на картинки. Сначала собери проверенные факты, затем напиши текст и отдельно отредактируй его. 400–800 слов именно в блоках text; 2–4 короткие цитаты суммарно до 25 слов; минимум один график с точными данными или проверенная прямая ссылка на рисунок. Для line date=YYYY-MM. Если проверенное свободное фото не найдено, coverImage=null; coverPrompt — конкретный предмет по теме на английском. Прочитай примеры content/research/b2b-lists-report.json и b2b-platforms-report.json. Если надёжных данных нет, откажись вместо выдумки.\nКаталог: ${JSON.stringify(catalog)}` : `Подготовь субботний дайджест только из полных текстов ниже: intro — 2–3 конкретных предложения; items — ровно все статьи в данном порядке, takeaway до 250 знаков, детали из полного текста, без повтора заголовка. Не ищи новые исследования.\n${JSON.stringify(plan.articles)}`}
 Редакционные правила (команды установки/публикации не выполняй):\n${guide}`;
     console.log("Researching through ChatGPT subscription...");
-    const events = run(binary, ["exec", "--ignore-user-config", "--ephemeral", "--sandbox", "read-only", "-c", 'forced_login_method="chatgpt"', "-c", 'approval_policy="never"', "-c", 'web_search="live"', "--json", "--output-schema", schema, "--output-last-message", output, "-"], work, { env, input: prompt });
-    fs.writeFileSync(path.join(cache, `research-events-${plan.day}.jsonl`), events);
-    const value = JSON.parse(fs.readFileSync(output, "utf8"));
     let file: string;
-    let prepared: Research | ResearchDigest;
+    let prepared: Research | ResearchDigest | undefined;
+    let feedback = "";
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      console.log(`Author attempt ${attempt}/3 for ${plan.day}`);
+      const events = run(binary, ["exec", "--ignore-user-config", "--ephemeral", "--sandbox", "read-only", "-c", 'forced_login_method="chatgpt"', "-c", 'approval_policy="never"', "-c", 'web_search="live"', "--json", "--output-schema", schema, "--output-last-message", output, "-"], work, { env, input: prompt + feedback });
+      fs.writeFileSync(path.join(cache, `research-events-${plan.day}-${attempt}.jsonl`), events);
+      try {
+        const value = JSON.parse(fs.readFileSync(output, "utf8"));
+        if (plan.kind === "article") {
+          const urls = webSources(events);
+          const original = value?.source?.url;
+          if (typeof original !== "string") throw new Error("Missing source URL");
+          // DOI redirects and canonical publisher URLs can refer to the same paper.
+          const originalResponse = await fetch(original, { signal: AbortSignal.timeout(60_000) });
+          await originalResponse.body?.cancel();
+          if (!originalResponse.ok) throw new Error(`Source HTTP ${originalResponse.status}`);
+          if (urls.some(url => sourceKey(url) === sourceKey(originalResponse.url))) urls.push(original);
+          prepared = prepareArticle(value, plan.day, all, urls);
+        } else {
+          validateSchema(value, digestSchema);
+          const draft = value as Pick<ResearchDigest, "intro" | "items">;
+          if (JSON.stringify(draft.items.map(i => i.slug)) !== JSON.stringify(plan.articles.map(r => r.slug)) || draft.items.some(i => i.takeaway.length > 250)) throw new Error("Invalid digest items");
+          prepared = { ...draft, slug: plan.day, date: `${plan.day}T08:00:00+03:00`, title: `Неделя в исследованиях: ${plan.articles[0].date.slice(0, 10)} — ${plan.articles.at(-1)!.date.slice(0, 10)}` };
+        }
+        break;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Invalid result";
+        console.warn(`Draft rejected: ${message}`);
+        if (attempt === 3) throw error;
+        feedback = `\nПредыдущий черновик отклонён: ${message}. Исправь эту ошибку. Убедись, что source.url — ссылка, которую ты действительно открыл через веб-поиск. Предыдущий черновик:\n${fs.readFileSync(output, "utf8")}`;
+      }
+    }
+    if (!prepared) throw new Error("No valid issue prepared");
     if (plan.kind === "article") {
-      prepared = prepareArticle(value, plan.day, all, webSources(events));
       // Check that the claimed original is accessible before publishing.
-      const res = await fetch(prepared.source.url, { signal: AbortSignal.timeout(60_000) });
-      await res.body?.cancel();
-      if (!res.ok) throw new Error(`Source HTTP ${res.status}; draft kept for review`);
       file = path.join(dir, `${prepared.slug}.json`);
     } else {
-      validateSchema(value, digestSchema);
-      const draft = value as Pick<ResearchDigest, "intro" | "items">;
-      if (JSON.stringify(draft.items.map(i => i.slug)) !== JSON.stringify(plan.articles.map(r => r.slug)) || draft.items.some(i => i.takeaway.length > 250)) throw new Error("Invalid digest items");
-      prepared = { ...draft, slug: plan.day, date: `${plan.day}T08:00:00+03:00`, title: `Неделя в исследованиях: ${plan.articles[0].date.slice(0, 10)} — ${plan.articles.at(-1)!.date.slice(0, 10)}` };
       file = path.join(dir, "digests", `${plan.day}.json`);
     }
     fs.writeFileSync(output, JSON.stringify(prepared, null, 2) + "\n");
