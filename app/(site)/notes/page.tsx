@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { PieChart } from "lucide-react";
 import { NotesTabs } from "@/components/notes-tabs";
 import { WritingsGrid } from "@/components/writings-grid";

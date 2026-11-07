@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { motion } from "motion/react";
 import {
   ArrowUpRight,
@@ -70,7 +70,7 @@ export default function Dashboard() {
       <div className="mx-auto max-w-5xl px-page py-12 sm:py-16">
         {/* Шапка дашборда: аватар + приветствие + переключатель темы */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="flex items-center gap-4"
@@ -96,7 +96,7 @@ export default function Dashboard() {
 
         {/* О себе */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
           className="mt-8 max-w-[40em] space-y-3 text-body text-neutral-700 dark:text-neutral-300"
@@ -179,7 +179,7 @@ export default function Dashboard() {
             return (
               <motion.div
                 key={w.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 + i * 0.07 }}
                 className={w.span}

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight } from "lucide-react";
 import type { NoteIndexItem } from "@/lib/notes";
 import type { TgPost } from "@/lib/telegram";

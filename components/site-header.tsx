@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowUpRight } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { links } from "@/lib/site";

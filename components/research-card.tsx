@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight } from "lucide-react";
 import { TOPIC_COLORS, TOPICS, type Research } from "@/lib/research";
 import { formatRuDate } from "@/lib/utils";

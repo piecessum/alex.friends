@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { hueOf } from "@/lib/vinyl-utils";

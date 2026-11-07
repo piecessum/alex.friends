@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowLeft } from "lucide-react";
 import { StatsDashboard, StatsTotals } from "@/components/stats-dashboard";
 import { GraphFrame } from "@/components/graph-frame";

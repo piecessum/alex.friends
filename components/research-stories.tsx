@@ -7,7 +7,7 @@
 // неделю сразу (ссылка из субботнего поста в канале).
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 
 export type StorySlide = {

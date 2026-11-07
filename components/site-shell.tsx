@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { usePathname } from "next/navigation";
+import { useLayoutEffect, useRef } from "react";
 import {
   NotebookPen,
   Disc3,
@@ -11,6 +12,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { NavigationProvider, useNavigationState } from "@/components/navigation-state";
+import { PageLoading } from "@/components/page-loading";
 
 type Tab = {
   label: string;
@@ -98,14 +101,28 @@ function NavIcon({
       {content}
     </a>
   ) : (
-    <Link href={tab.href} aria-label={tab.label} title={tab.label} className={cls}>
+    <Link href={tab.href} aria-label={tab.label} title={tab.label} aria-current={active ? "page" : undefined} className={cls}>
       {content}
     </Link>
   );
 }
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
+  return <NavigationProvider><Shell>{children}</Shell></NavigationProvider>;
+}
+
+function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { pending } = useNavigationState();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const destination = pending ? pending.href.split(/[?#]/)[0] : pathname;
+  useLayoutEffect(() => { scrollRef.current?.scrollTo({ top: 0 }); }, [destination]);
+  const content = (
+    <div className="relative min-h-full" aria-busy={!!pending}>
+      <div className={pending ? "invisible pointer-events-none" : undefined} inert={pending ? true : undefined}>{children}</div>
+      {pending && <div className={`${isDetailPage(pathname) ? "fixed z-20" : "absolute"} inset-0 bg-white dark:bg-[#181818]`}><PageLoading /></div>}
+    </div>
+  );
 
   // Пост / пластинка / исследование — на весь экран, без рельса и подложки.
   // Назад ведёт ссылка на самой странице, тема — кнопка в углу (уезжает при скролле).
@@ -117,7 +134,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         <div className="absolute right-4 top-4 z-10 sm:right-6 sm:top-6">
           <ThemeToggle />
         </div>
-        {children}
+        {content}
       </div>
     );
   }
@@ -129,9 +146,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       {/* Мобилка: верхняя панель — слева домой + разделы, справа смена темы */}
       <nav className="flex shrink-0 items-center justify-between px-3 pb-1 pt-2 sm:hidden">
         <div className="flex items-center gap-1">
-          <NavIcon tab={homeTab} active={isActive(homeTab, pathname)} compact />
+          <NavIcon tab={homeTab} active={isActive(homeTab, destination)} compact />
           {tabs.map((t) => (
-            <NavIcon key={t.href} tab={t} active={isActive(t, pathname)} compact />
+            <NavIcon key={t.href} tab={t} active={isActive(t, destination)} compact />
           ))}
         </div>
         <ThemeToggle />
@@ -141,9 +158,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           Сверху — «Домой» и разделы, внизу в углу — только смена темы. */}
       <aside className="hidden w-16 shrink-0 flex-col items-center justify-between py-4 sm:flex">
         <nav className="flex flex-col items-center gap-2">
-          <NavIcon tab={homeTab} active={isActive(homeTab, pathname)} tip />
+          <NavIcon tab={homeTab} active={isActive(homeTab, destination)} tip />
           {tabs.map((t) => (
-            <NavIcon key={t.href} tab={t} active={isActive(t, pathname)} tip />
+            <NavIcon key={t.href} tab={t} active={isActive(t, destination)} tip />
           ))}
         </nav>
         <ThemeToggle />
@@ -153,8 +170,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           к краям экрана (серая подложка только сверху, за панелью) и скруглена
           лишь сверху; на десктопе — со всех сторон в отступах. */}
       <div className="min-h-0 min-w-0 flex-1 sm:p-3 sm:pl-0">
-        <div className="h-full overflow-y-auto overflow-x-hidden rounded-2xl border-t border-neutral-200/70 bg-white shadow-sm [scrollbar-gutter:stable_both-edges] sm:border dark:border-neutral-800/70 dark:bg-[#181818]">
-          {children}
+        <div ref={scrollRef} className="h-full overflow-y-auto overflow-x-hidden rounded-2xl border-t border-neutral-200/70 bg-white shadow-sm [scrollbar-gutter:stable_both-edges] sm:border dark:border-neutral-800/70 dark:bg-[#181818]">
+          {content}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { Eye, ArrowUpRight, CornerUpRight, Reply } from "lucide-react";
 import { PostMedia } from "@/components/post-media";
 import { RichPostBody } from "@/components/rich-post-body";
