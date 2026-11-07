@@ -136,7 +136,13 @@ def fetch_block(b: dict, slug: str, n: int) -> bool:
             raise RuntimeError(f"{slug}: на стр. {ref['page']} нет картинки #{ref['index']}")
         img = extract(doc, found[0][1])
     elif b.get("url"):
-        img = flatten(Image.open(io.BytesIO(download(b["url"]))))
+        data = download(b["url"])
+        if b["url"].split("?")[0].lower().endswith(".svg") or b"<svg" in data[:1024]:
+            doc = fitz.open(stream=data, filetype="svg")
+            pix = doc[0].get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False)
+            img = Image.open(io.BytesIO(pix.tobytes("png")))
+        else:
+            img = flatten(Image.open(io.BytesIO(data)))
     else:
         return False
     if img.width > MAX_WIDTH:

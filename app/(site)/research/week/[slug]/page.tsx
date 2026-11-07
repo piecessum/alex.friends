@@ -51,7 +51,7 @@ export default async function DigestPage({ params }: { params: Promise<{ slug: s
           width={d.coverSize?.[0]}
           height={d.coverSize?.[1]}
           fetchPriority="high"
-          className="mt-8 aspect-[3/2] w-full rounded-2xl bg-neutral-200 object-cover dark:bg-neutral-800"
+          className="mt-8 aspect-[3/2] w-full rounded-[3px] bg-neutral-200 object-cover dark:bg-neutral-800"
         />
       )}
 
@@ -73,7 +73,7 @@ export default async function DigestPage({ params }: { params: Promise<{ slug: s
                   alt=""
                   loading="lazy"
                   style={{ background: TOPIC_COLORS[r!.topic] }}
-                  className="aspect-[3/2] w-28 shrink-0 self-start rounded-xl object-cover sm:w-40"
+                  className="aspect-[3/2] w-28 shrink-0 self-start rounded-[3px] object-cover sm:w-40"
                 />
               )}
               <div className="min-w-0">

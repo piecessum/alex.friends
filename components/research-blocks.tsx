@@ -500,7 +500,7 @@ function ImageBlock({ block }: { block: Extract<ResearchBlock, { type: "image" }
             ? { maxWidth: `min(100%, ${block.size[0]}px, calc(70vh * ${(block.size[0] / block.size[1]).toFixed(4)}))` }
             : undefined
         }
-        className="mx-auto block h-auto w-full rounded-xl bg-white"
+        className="mx-auto block h-auto w-full rounded-[3px] bg-white"
       />
     </Figure>
   );

@@ -38,7 +38,7 @@ export function RichPostBody({
               height={b.height}
               eager={n === 0}
               onClick={() => setIndex(n)}
-              className="mx-auto h-auto cursor-zoom-in rounded-xl bg-neutral-200/60 dark:bg-neutral-800/60"
+              className="mx-auto h-auto cursor-zoom-in rounded-[3px] bg-neutral-200/60 dark:bg-neutral-800/60"
             />
             {b.caption && (
               <figcaption

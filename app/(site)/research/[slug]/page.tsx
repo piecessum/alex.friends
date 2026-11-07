@@ -63,7 +63,7 @@ export default async function ResearchItemPage({ params }: { params: Promise<{ s
           height={r.coverSize?.[1]}
           fetchPriority="high"
           style={{ background: TOPIC_COLORS[r.topic] }}
-          className="mt-8 aspect-[3/2] w-full rounded-2xl object-cover"
+          className="mt-8 aspect-[3/2] w-full rounded-[3px] object-cover"
         />
       )}
       {r.cover && r.coverCredit && (
