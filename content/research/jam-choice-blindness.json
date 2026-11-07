@@ -75,5 +75,12 @@
       "author": "Дэниел Саймонс и Дэниел Левин, Psychonomic Bulletin & Review, 1998; перевод"
     }
   ],
-  "date": "2026-11-09T08:00:00+03:00"
+  "date": "2026-11-09T08:00:00+03:00",
+  "coverSubjectPrompt": "ai:A glass jar of dark blueberry jam with a red metal lid, three-quarter view, entire jar visible",
+  "cover": "/research/jam-choice-blindness-b6ed3422.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
