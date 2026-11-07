@@ -1,8 +1,12 @@
 name: Research author
 
 on:
+  push:
+    branches: [main]
+    paths: [".openai/research-ticks/*.json"]
   schedule:
-    - cron: "5 5,6 * * 1-6"
+    # Prepare ahead. Cloudflare also triggers this job directly in the evening.
+    - cron: "9 14,18,22 * * *"
   workflow_dispatch:
     inputs:
       issue_day:
@@ -13,6 +17,10 @@ on:
         description: "Проверить доступ Cloudflare к облачному расписанию"
         type: boolean
         default: false
+      deploy_clock:
+        description: "Установить и проверить независимый будильник Cloudflare"
+        type: boolean
+        default: false
       check_only:
         description: "Проверить расписание и отдельный вход, не создавать выпуск"
         type: boolean
@@ -20,12 +28,44 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: research-author
   cancel-in-progress: false
 
 jobs:
+  deploy-clock:
+    if: inputs.deploy_clock == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Установить будильник
+        run: node scripts/deploy-research-clock.mjs
+        env:
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          RESEARCH_CRON_SECRET: ${{ secrets.RESEARCH_CRON_SECRET }}
+      - name: Дождаться настоящего Cron Trigger
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for attempt in $(seq 1 60); do
+            if gh api "repos/$GITHUB_REPOSITORY/contents/.openai/research-clock/$GITHUB_RUN_ID.json" > /dev/null 2>&1; then
+              echo "Независимый будильник сам вызвал сайт; подтверждение записано."
+              exit 0
+            fi
+            if [ $((attempt % 4)) -eq 0 ]; then echo "Ожидаем распространение Cron Trigger в Cloudflare..."; fi
+            sleep 15
+          done
+          echo "::error::Проверка реального Cron Trigger не завершилась"
+          exit 1
   scheduler-probe:
     if: inputs.diagnose_scheduler == true
     runs-on: ubuntu-latest
@@ -37,7 +77,7 @@ jobs:
         run: |
           node --input-type=module -e 'const r=await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT.trim()}/workers/scripts`,{headers:{authorization:`Bearer ${process.env.CF_TOKEN.trim()}`}}); const j=await r.json();console.log(JSON.stringify({status:r.status,success:j.success,codes:(j.errors??[]).map(e=>e.code)}));'
   author:
-    if: inputs.diagnose_scheduler != true
+    if: inputs.diagnose_scheduler != true && inputs.deploy_clock != true
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -54,6 +94,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --ignore-scripts
+      - name: Дата выпуска
+        env:
+          ISSUE_INPUT: ${{ inputs.issue_day }}
+          PUSH_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          node --input-type=module -e 'import fs from "node:fs";import {issueDay} from "./scripts/research-issue-day.mjs";fs.appendFileSync(process.env.GITHUB_ENV,`RESEARCH_ISSUE_DAY=${issueDay(process.env.ISSUE_INPUT,process.env.PUSH_MESSAGE)}\n`);'
       - run: npm run research:test
       - name: Версия отдельного входа
         id: login
@@ -90,11 +136,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Подготовить выпуск
+        id: generate
         if: inputs.check_only != true
         run: npm run research:local -- --publish
         env:
           GH_TOKEN: ${{ github.token }}
-          RESEARCH_ISSUE_DAY: ${{ inputs.issue_day }}
       - name: Проверить день без генерации
         if: inputs.check_only == true
         run: npm run research:local -- --check
@@ -120,3 +166,14 @@ jobs:
       - name: Удалить открытый файл входа с временного runner
         if: always()
         run: rm -rf "$CODEX_HOME"
+      - name: Зафиксировать сбой выпуска
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Газета: не готов выпуск ${RESEARCH_ISSUE_DAY:-unknown}"
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "$title in:title" --json number --jq '.[0].number // empty')
+          if [ -z "$existing" ]; then
+            echo "Автоматическая подготовка не завершилась. Диагностика: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > "$RUNNER_TEMP/research-failure.md"
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body-file "$RUNNER_TEMP/research-failure.md"
+          fi

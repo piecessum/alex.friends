@@ -2,12 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ResearchBlocks } from "@/components/research-blocks";
-import { getAllDigests, getDigest, getResearch, TOPIC_COLORS, TOPICS } from "@/lib/research";
+import { getDigest, getResearch, TOPIC_COLORS, TOPICS } from "@/lib/research";
 import { formatRuDate } from "@/lib/utils";
 
-export function generateStaticParams() {
-  return getAllDigests().map((d) => ({ slug: d.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const d = getDigest((await params).slug);

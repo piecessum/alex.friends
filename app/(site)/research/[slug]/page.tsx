@@ -4,7 +4,6 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ResearchBlocks } from "@/components/research-blocks";
 import { ResearchCard } from "@/components/research-card";
 import {
-  getAllResearch,
   getRelatedResearch,
   getResearch,
   TOPIC_COLORS,
@@ -12,9 +11,7 @@ import {
 } from "@/lib/research";
 import { formatRuDate } from "@/lib/utils";
 
-export function generateStaticParams() {
-  return getAllResearch().map((r) => ({ slug: r.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const r = getResearch((await params).slug);

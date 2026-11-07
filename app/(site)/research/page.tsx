@@ -2,6 +2,9 @@ import { ResearchCard } from "@/components/research-card";
 import { ResearchStories, type StoryWeek } from "@/components/research-stories";
 import { getAllDigests, getAllResearch, TOPIC_ACCENTS, TOPIC_COLORS, TOPICS, type Research } from "@/lib/research";
 
+// Prepared issues become visible at their Moscow publication time without a redeploy.
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Исследования — Алексей Масюта",
 };

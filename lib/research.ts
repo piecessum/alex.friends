@@ -225,9 +225,8 @@ export const COVER_STYLE = "collage-5";
 
 const DIR = path.join(process.cwd(), "content", "research");
 
-export function getAllResearch({ includeFuture = false } = {}): Research[] {
+export function getAllResearch({ includeFuture = false, now = Date.now() } = {}): Research[] {
   if (!fs.existsSync(DIR)) return [];
-  const now = Date.now();
   return fs
     .readdirSync(DIR)
     .filter((f) => f.endsWith(".json"))
@@ -270,9 +269,8 @@ export type ResearchDigest = {
 
 export const DIGEST_DIR = path.join(DIR, "digests");
 
-export function getAllDigests({ includeFuture = false } = {}): ResearchDigest[] {
+export function getAllDigests({ includeFuture = false, now = Date.now() } = {}): ResearchDigest[] {
   if (!fs.existsSync(DIGEST_DIR)) return [];
-  const now = Date.now();
   return fs
     .readdirSync(DIGEST_DIR)
     .filter((f) => f.endsWith(".json"))

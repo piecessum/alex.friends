@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { articleSchema, digestSchema, planGeneration, prepareArticle, sourceKey, validateSchema, webSources } from "./research-generation";
+import { articleSchema, digestSchema, digestTitle, planGeneration, prepareArticle, sourceKey, validateSchema, webSources } from "./research-generation";
 import type { Research, ResearchDigest } from "../lib/research";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -16,8 +16,10 @@ export function subscriptionEnv(env: NodeJS.ProcessEnv) {
   return copy;
 }
 
-function run(command: string, args: string[], cwd: string, options: { env?: NodeJS.ProcessEnv; input?: string; timeout?: number } = {}) {
-  const result = spawnSync(command, args, { cwd, encoding: "utf8", maxBuffer: 30 * 1024 * 1024, timeout: 30 * 60_000, ...options });
+function run(command: string, args: string[], cwd: string, options: { env?: NodeJS.ProcessEnv; input?: string; timeout?: number; outputLog?: string } = {}) {
+  const { outputLog, ...childOptions } = options;
+  const result = spawnSync(command, args, { cwd, encoding: "utf8", maxBuffer: 30 * 1024 * 1024, timeout: 30 * 60_000, ...childOptions });
+  if (outputLog && result.stdout) fs.writeFileSync(outputLog, result.stdout);
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`${path.basename(command)} failed (${result.status}). ${result.stderr?.slice(-1500) ?? ""}`);
   return result.stdout;
@@ -68,9 +70,9 @@ ${plan.kind === "article" ? `Найди реальное исследовани�
     let feedback = "";
     for (let attempt = 1; attempt <= 3; attempt++) {
       console.log(`Author attempt ${attempt}/3 for ${plan.day}`);
-      const events = run(binary, ["exec", "--ignore-user-config", "--ephemeral", "--sandbox", "read-only", "-c", 'forced_login_method="chatgpt"', "-c", 'approval_policy="never"', "-c", 'web_search="live"', "--json", "--output-schema", schema, "--output-last-message", output, "-"], work, { env, input: prompt + feedback });
-      fs.writeFileSync(path.join(cache, `research-events-${plan.day}-${attempt}.jsonl`), events);
+      fs.rmSync(output, { force: true });
       try {
+        const events = run(binary, ["exec", "--ignore-user-config", "--ephemeral", "--sandbox", "read-only", "-c", 'forced_login_method="chatgpt"', "-c", 'approval_policy="never"', "-c", 'web_search="live"', "--json", "--output-schema", schema, "--output-last-message", output, "-"], work, { env, input: prompt + feedback, timeout: 8 * 60_000, outputLog: path.join(cache, `research-events-${plan.day}-${attempt}.jsonl`) });
         const value = JSON.parse(fs.readFileSync(output, "utf8"));
         if (plan.kind === "article") {
           const urls = webSources(events);
@@ -86,14 +88,14 @@ ${plan.kind === "article" ? `Найди реальное исследовани�
           validateSchema(value, digestSchema);
           const draft = value as Pick<ResearchDigest, "intro" | "items">;
           if (JSON.stringify(draft.items.map(i => i.slug)) !== JSON.stringify(plan.articles.map(r => r.slug)) || draft.items.some(i => i.takeaway.length > 250)) throw new Error("Invalid digest items");
-          prepared = { ...draft, slug: plan.day, date: `${plan.day}T08:00:00+03:00`, title: `Неделя в исследованиях: ${plan.articles[0].date.slice(0, 10)} — ${plan.articles.at(-1)!.date.slice(0, 10)}` };
+          prepared = { ...draft, slug: plan.day, date: `${plan.day}T08:00:00+03:00`, title: digestTitle(plan.day) };
         }
         break;
       } catch (error) {
         const message = error instanceof Error ? error.message : "Invalid result";
         console.warn(`Draft rejected: ${message}`);
         if (attempt === 3) throw error;
-        feedback = `\nПредыдущий черновик отклонён: ${message}. Исправь эту ошибку. Убедись, что source.url — ссылка, которую ты действительно открыл через веб-поиск. Предыдущий черновик:\n${fs.readFileSync(output, "utf8")}`;
+        feedback = `\nПредыдущая попытка не завершилась: ${message}. Исправь ошибку. Убедись, что source.url — ссылка, которую ты действительно открыл через веб-поиск. Предыдущий черновик:\n${fs.existsSync(output) ? fs.readFileSync(output, "utf8") : "Черновик не был сохранён."}`;
       }
     }
     if (!prepared) throw new Error("No valid issue prepared");

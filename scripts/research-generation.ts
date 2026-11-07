@@ -4,6 +4,15 @@ export function moscowDay(now = new Date()) {
   return new Date(now.getTime() + 3 * 3600_000).toISOString().slice(0, 10);
 }
 
+export function digestTitle(day: string) {
+  const saturday = new Date(`${day}T12:00:00Z`);
+  const monday = new Date(saturday.getTime() - 5 * 86400_000);
+  const friday = new Date(saturday.getTime() - 86400_000);
+  const format = (d: Date) => new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", timeZone: "UTC" }).format(d);
+  const range = monday.getUTCMonth() === friday.getUTCMonth() ? `${monday.getUTCDate()}–${format(friday)}` : `${format(monday)} — ${format(friday)}`;
+  return `Неделя в исследованиях: ${range}`;
+}
+
 export function planGeneration(all: Research[], digestDays: string[], now = new Date()) {
   const day = moscowDay(now);
   const weekday = new Date(`${day}T12:00:00+03:00`).getUTCDay();

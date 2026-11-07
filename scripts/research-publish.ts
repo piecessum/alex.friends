@@ -15,6 +15,7 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import { COVER_STYLE, DIGEST_DIR, type Research, type ResearchDigest } from "@/lib/research";
+import { deliverOnce, TelegramRejected } from "@/lib/research-delivery";
 
 const DIR = path.join(process.cwd(), "content", "research");
 const SITE = process.env.SITE_URL || "https://alex-friends.vercel.app";
@@ -27,7 +28,7 @@ const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 
 async function sendPhoto(photo: Buffer, caption: string): Promise<number> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  if (!token) throw new Error("TELEGRAM_BOT_TOKEN не задан");
+  if (!token) throw new TelegramRejected("TELEGRAM_BOT_TOKEN не задан");
   const form = new FormData();
   form.set("chat_id", CHANNEL);
   form.set("caption", caption);
@@ -35,7 +36,7 @@ async function sendPhoto(photo: Buffer, caption: string): Promise<number> {
   form.set("photo", new Blob([new Uint8Array(photo)]), "cover.jpg");
   const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: "POST", body: form });
   const data = await res.json();
-  if (!data.ok) throw new Error(`Telegram: ${data.error_code} ${data.description}`);
+  if (!data.ok) throw new TelegramRejected(`Telegram: ${data.error_code} ${data.description}`);
   return data.result.message_id;
 }
 
@@ -157,7 +158,8 @@ async function main() {
       console.warn(`  ! ${r.slug}: нет превью — пропускаю (сначала npm run research:cover)`);
       continue;
     }
-    const messageId = await sendPhoto(await coverJpeg(r), caption(r));
+    const photo = await coverJpeg(r);
+    const messageId = await deliverOnce({ kind: "article", day: mskDay(new Date(r.telegramAt ?? r.date).getTime()), slug: r.slug }, () => sendPhoto(photo, caption(r)));
     r.telegram = { messageId, postedAt: new Date().toISOString(), cover: r.cover };
     fs.writeFileSync(p, JSON.stringify(r, null, 2) + "\n");
     console.log(`Опубликовано: ${r.slug} → сообщение ${messageId}`);
@@ -175,7 +177,7 @@ async function main() {
       const photo = await sharp(path.join(process.cwd(), "public", d.poster)).jpeg({ quality: 88 }).toBuffer();
       const text = digestCaption(d, titles);
       const fits = text.replace(/<[^>]+>/g, "").length <= 1024;
-      const messageId = await sendPhoto(photo, fits ? text : "<b>Дайджест недели</b>");
+      const messageId = await deliverOnce({ kind: "digest", day: mskDay(new Date(d.date).getTime()), slug: d.slug }, () => sendPhoto(photo, fits ? text : "<b>Дайджест недели</b>"));
       if (!fits) await sendText(text);
       d.telegram = { messageId, postedAt: new Date().toISOString(), cover: d.poster };
       fs.writeFileSync(p, JSON.stringify(d, null, 2) + "\n");
