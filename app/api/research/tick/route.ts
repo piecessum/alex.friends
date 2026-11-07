@@ -38,25 +38,38 @@ export async function POST(request: Request) {
     }
     if (body.action !== "publish" && body.action !== "check") return NextResponse.json({ error: "Unknown action" }, { status: 400 });
     if (slot.weekday === 0 && body.action !== "check") return NextResponse.json({ state: "Sunday off", day: slot.day });
-    const kind = slot.weekday === 6 ? "digest" as const : "article" as const;
+    let target = slot;
+    if (body.action === "check" && body.day !== undefined) {
+      if (typeof body.day !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(body.day)) return NextResponse.json({ error: "Invalid inspection day" }, { status: 400 });
+      const instant = new Date(`${body.day}T08:00:00+03:00`);
+      if (Number.isNaN(instant.getTime()) || publicationSlot(instant).day !== body.day) return NextResponse.json({ error: "Invalid inspection day" }, { status: 400 });
+      target = publicationSlot(instant);
+    }
+    const kind = target.weekday === 6 ? "digest" as const : "article" as const;
     const articles = getAllResearch({ includeFuture: true });
     const issue = kind === "digest"
-      ? getAllDigests({ includeFuture: true }).find(d => d.slug === slot.day)
-      : articles.find(r => publicationSlot(new Date(r.telegramAt ?? r.date)).day === slot.day);
+      ? getAllDigests({ includeFuture: true }).find(d => d.slug === target.day)
+      : articles.find(r => publicationSlot(new Date(r.telegramAt ?? r.date)).day === target.day);
     const cover = issue && ("items" in issue ? issue.poster : issue.cover);
     if (body.action === "check") {
       const botCanPost = await checkTelegramAccess();
+      let imageReady = !!issue?.telegram;
+      if (!imageReady && cover && hasReadyCover(issue)) {
+        const image = await fetch(`${SITE}${telegramImagePath(cover)}`, { method: "HEAD", signal: AbortSignal.timeout(10_000) });
+        imageReady = image.ok && !!image.headers.get("content-type")?.startsWith("image/jpeg");
+      }
+      const ready = hasReadyCover(issue) && imageReady;
       if (botCanPost && typeof body.probe === "string" && /^\d{6,24}$/.test(body.probe)) {
         const { api, owner, repo, branch } = githubResearch();
         try {
           await api.repos.createOrUpdateFileContents({ owner, repo, branch,
             path: `.openai/research-clock/${body.probe}.json`, message: "research: cloud clock verified",
-            content: Buffer.from(JSON.stringify({ receivedAt: new Date().toISOString(), scheduledAt: body.scheduledAt, probe: body.probe, botCanPost, ready: hasReadyCover(issue) }) + "\n").toString("base64"),
+            content: Buffer.from(JSON.stringify({ receivedAt: new Date().toISOString(), scheduledAt: body.scheduledAt, probe: body.probe, botCanPost, ready }) + "\n").toString("base64"),
             author: { name: "Алексей Масюта", email: "alexmas1998kot@gmail.com" },
           });
         } catch (error) { if (![409, 422].includes((error as { status: number }).status)) throw error; }
       }
-      return NextResponse.json({ day: slot.day, kind, ready: hasReadyCover(issue), published: !!issue?.telegram, slug: issue?.slug, botCanPost }, { status: botCanPost ? 200 : 503 });
+      return NextResponse.json({ day: target.day, kind, ready, published: !!issue?.telegram, slug: issue?.slug, botCanPost }, { status: botCanPost ? 200 : 503 });
     }
     if (slot.hour < 8) return NextResponse.json({ state: "Not before 08:00 Moscow", day: slot.day });
     if (issue?.telegram) return NextResponse.json({ state: "already-published", day: slot.day, messageId: issue.telegram.messageId });
