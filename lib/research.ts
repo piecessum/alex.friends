@@ -223,6 +223,12 @@ export type Research = {
  *  а в канал исследование не уйдёт, пока превью не нового стиля. */
 export const COVER_STYLE = "collage-5";
 
+/** JPEG is prepared in CI, so the serverless publisher needs no native image library. */
+export function telegramImagePath(cover: string): string {
+  if (!cover.startsWith("/research/") || cover.includes("..") || !/\.(webp|png|jpe?g)$/i.test(cover)) throw new Error("Invalid research image path");
+  return cover.replace(/\.(webp|png|jpe?g)$/i, ".jpg");
+}
+
 const DIR = path.join(process.cwd(), "content", "research");
 
 export function getAllResearch({ includeFuture = false, now = Date.now() } = {}): Research[] {

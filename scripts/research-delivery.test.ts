@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { checkTelegramAccess, cronAuthorized, deliverOnce, hasReadyCover, TelegramRejected, type ReceiptStore, type DeliveryIssue } from "../lib/research-delivery";
-import { getAllResearch, getAllDigests } from "../lib/research";
+import { getAllResearch, getAllDigests, telegramImagePath } from "../lib/research";
 import { digestTitle } from "./research-generation";
 import { clockAction } from "./research-clock.mjs";
 import { issueDay } from "./research-issue-day.mjs";
@@ -66,6 +66,12 @@ test("the clock accepts only its dedicated key", () => {
   assert.equal(cronAuthorized("Bearer other", "dedicated"), false);
   assert.equal(cronAuthorized(null, "dedicated"), false);
   assert.equal(cronAuthorized("Bearer dedicated", undefined), false);
+});
+test("Telegram JPEGs are prepared under the same trusted research image path", () => {
+  assert.equal(telegramImagePath("/research/digest-2026-11-07-example.webp"), "/research/digest-2026-11-07-example.jpg");
+  assert.equal(telegramImagePath("/research/example.jpg"), "/research/example.jpg");
+  assert.throws(() => telegramImagePath("https://example.org/photo.webp"));
+  assert.throws(() => telegramImagePath("/research/../secret.webp"));
 });
 test("readiness checks the bot's actual channel posting permission without sending messages", async t => {
   const previous = process.env.TELEGRAM_BOT_TOKEN;

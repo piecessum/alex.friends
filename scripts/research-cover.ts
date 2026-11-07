@@ -39,6 +39,7 @@ import {
   TOPIC_COLORS,
   type Research,
   type ResearchDigest,
+  telegramImagePath,
 } from "@/lib/research";
 
 const DIR = path.join(process.cwd(), "content", "research");
@@ -261,6 +262,25 @@ async function main() {
   }
 
   await digestCovers();
+  await telegramJpegs();
+}
+
+/** Preparing JPEGs here avoids native Sharp in the scheduled serverless sender. */
+async function telegramJpegs() {
+  const covers: string[] = [];
+  for (const file of fs.readdirSync(DIR).filter(f => f.endsWith(".json"))) {
+    const r: Research = JSON.parse(fs.readFileSync(path.join(DIR, file), "utf8"));
+    if (!r.telegram && r.cover) covers.push(r.cover);
+  }
+  for (const file of fs.readdirSync(DIGEST_DIR).filter(f => f.endsWith(".json"))) {
+    const d: ResearchDigest = JSON.parse(fs.readFileSync(path.join(DIGEST_DIR, file), "utf8"));
+    if (!d.telegram && d.poster) covers.push(d.poster);
+  }
+  for (const cover of covers) {
+    const target = path.join(process.cwd(), "public", telegramImagePath(cover));
+    if (fs.existsSync(target)) continue;
+    await sharp(path.join(process.cwd(), "public", cover)).jpeg({ quality: 88 }).toFile(target);
+  }
 }
 
 /** Обложки дайджестов: коллаж из обложек исследований недели (сайт) и

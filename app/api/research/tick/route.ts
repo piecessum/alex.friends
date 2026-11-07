@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import sharp from "sharp";
-import { getAllDigests, getAllResearch } from "@/lib/research";
+import { getAllDigests, getAllResearch, telegramImagePath } from "@/lib/research";
 import { checkTelegramAccess, cronAuthorized, deliverOnce, githubResearch, hasReadyCover, markPosted, publicationSlot, sendTelegramPhoto } from "@/lib/research-delivery";
 
 export const runtime = "nodejs";
@@ -65,9 +64,9 @@ export async function POST(request: Request) {
       await requestIssue(slot.day, "morning-repair");
       return NextResponse.json({ error: "Issue not ready; repair requested", day: slot.day, kind }, { status: 503 });
     }
-    const response = await fetch(`${SITE}${cover}`, { signal: AbortSignal.timeout(12_000) });
+    const response = await fetch(`${SITE}${telegramImagePath(cover)}`, { signal: AbortSignal.timeout(12_000) });
     if (!response.ok) throw new Error("Cover is not deployed");
-    const jpeg = await sharp(Buffer.from(await response.arrayBuffer())).jpeg({ quality: 88 }).toBuffer();
+    const jpeg = Buffer.from(await response.arrayBuffer());
     let caption: string;
     if ("items" in issue) {
       const bySlug = new Map(articles.map(r => [r.slug, r]));

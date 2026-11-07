@@ -1,23 +1,28 @@
+// Management uses official Cloudflare OAuth; routine execution stays in the cloud.
 import fs from "node:fs";
-const account = process.env.CF_ACCOUNT?.trim(), token = process.env.CF_TOKEN?.trim();
-const secret = process.env.RESEARCH_CRON_SECRET?.trim();
-if (!account || !token || !secret) throw new Error("Cloud clock credentials missing");
-const base = `https://api.cloudflare.com/client/v4/accounts/${account}/workers/scripts/alex-friends-research-clock`;
-async function api(url, method, body) {
-  const response = await fetch(url, { method, headers: { authorization: `Bearer ${token}`, ...(body instanceof FormData ? {} : { "content-type": "application/json" }) }, body: body instanceof FormData ? body : body === undefined ? undefined : JSON.stringify(body) });
-  const data = await response.json();
-  if (!response.ok || !data.success) throw new Error(`Cloud clock API HTTP ${response.status}; codes ${(data.errors || []).map(e => e.code).join(",")}`);
-  return data.result;
-}
-const form = new FormData();
-form.set("metadata", JSON.stringify({ main_module: "worker.mjs", compatibility_date: "2026-11-07", keep_bindings: ["secret_text"], bindings: [
-  { type: "plain_text", name: "CLOCK_PROBE", text: process.env.GITHUB_RUN_ID },
-  { type: "plain_text", name: "CLOCK_TEST_UNTIL", text: new Date(Date.now() + 3600_000).toISOString() },
-] }));
-form.set("worker.mjs", new Blob([fs.readFileSync("scripts/research-clock.mjs", "utf8")], { type: "application/javascript+module" }), "worker.mjs");
-await api(base, "PUT", form);
-await api(`${base}/secrets`, "PUT", { type: "secret_text", name: "RESEARCH_CRON_SECRET", text: secret });
-await api(`${base}/subdomain`, "POST", { enabled: false });
-await api(`${base}/schedules`, "PUT", [{ cron: "* * * * *" }]);
-const schedules = await api(`${base}/schedules`, "GET");
-console.log("Independent cloud clock configured:", JSON.stringify(schedules));
+import path from "node:path";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const cache = path.join(root, ".cache");
+const key = fs.readFileSync(path.join(cache, "research-cron-secret"), "utf8").trim();
+if (!key) throw new Error("Configure the dedicated clock key first");
+const probe = String(Date.now());
+fs.writeFileSync(path.join(cache, "research-clock-probe"), probe);
+const config = path.join(cache, "research-clock.wrangler.json");
+const bindings = path.join(cache, "research-clock-bindings.json");
+fs.writeFileSync(config, JSON.stringify({
+  name: "alex-friends-research-clock", main: path.join(root, "scripts/research-clock.mjs"),
+  compatibility_date: "2026-11-07", workers_dev: false,
+  triggers: { crons: ["* * * * *"] },
+  vars: { CLOCK_PROBE: probe, CLOCK_TEST_UNTIL: new Date(Date.now() + 3600_000).toISOString() },
+}, null, 2));
+fs.writeFileSync(bindings, JSON.stringify({ RESEARCH_CRON_SECRET: key }), { mode: 0o600 });
+const env = { ...process.env, WRANGLER_SEND_METRICS: "false" };
+for (const name of ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_API_KEY", "CLOUDFLARE_EMAIL"]) delete env[name];
+try {
+  const result = spawnSync(path.join(cache, "wrangler-cli/node_modules/.bin/wrangler"), ["deploy", "--config", config, "--secrets-file", bindings, "--autoconfig=false"], { cwd: root, stdio: "inherit", env });
+  if (result.error) throw result.error;
+  if (result.status !== 0) process.exitCode = 1;
+  else console.log(`Clock probe: .openai/research-clock/${probe}.json (wait for a real Cron Trigger)`);
+} finally { fs.rmSync(bindings, { force: true }); }

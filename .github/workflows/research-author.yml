@@ -17,10 +17,6 @@ on:
         description: "Проверить доступ Cloudflare к облачному расписанию"
         type: boolean
         default: false
-      deploy_clock:
-        description: "Установить и проверить независимый будильник Cloudflare"
-        type: boolean
-        default: false
       check_only:
         description: "Проверить расписание и отдельный вход, не создавать выпуск"
         type: boolean
@@ -35,37 +31,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy-clock:
-    if: inputs.deploy_clock == true
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Установить будильник
-        run: node scripts/deploy-research-clock.mjs
-        env:
-          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          RESEARCH_CRON_SECRET: ${{ secrets.RESEARCH_CRON_SECRET }}
-      - name: Дождаться настоящего Cron Trigger
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for attempt in $(seq 1 60); do
-            if gh api "repos/$GITHUB_REPOSITORY/contents/.openai/research-clock/$GITHUB_RUN_ID.json" > /dev/null 2>&1; then
-              echo "Независимый будильник сам вызвал сайт; подтверждение записано."
-              exit 0
-            fi
-            if [ $((attempt % 4)) -eq 0 ]; then echo "Ожидаем распространение Cron Trigger в Cloudflare..."; fi
-            sleep 15
-          done
-          echo "::error::Проверка реального Cron Trigger не завершилась"
-          exit 1
   scheduler-probe:
     if: inputs.diagnose_scheduler == true
     runs-on: ubuntu-latest
@@ -77,7 +42,7 @@ jobs:
         run: |
           node --input-type=module -e 'const r=await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT.trim()}/workers/scripts`,{headers:{authorization:`Bearer ${process.env.CF_TOKEN.trim()}`}}); const j=await r.json();console.log(JSON.stringify({status:r.status,success:j.success,codes:(j.errors??[]).map(e=>e.code)}));'
   author:
-    if: inputs.diagnose_scheduler != true && inputs.deploy_clock != true
+    if: inputs.diagnose_scheduler != true
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
