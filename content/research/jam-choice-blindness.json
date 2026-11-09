@@ -82,5 +82,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 38,
+    "postedAt": "2026-11-09T05:00:24.903Z",
+    "cover": "/research/jam-choice-blindness-b6ed3422.webp"
+  }
 }
