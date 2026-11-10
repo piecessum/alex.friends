@@ -2,6 +2,7 @@
   "kind": "article",
   "day": "2026-11-10",
   "slug": "notification-sound-test",
-  "state": "sending",
-  "at": "2026-11-10T05:00:14.627Z"
+  "state": "sent",
+  "at": "2026-11-10T05:00:14.627Z",
+  "messageId": 39
 }
