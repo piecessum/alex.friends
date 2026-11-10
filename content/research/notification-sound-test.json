@@ -86,5 +86,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 39,
+    "postedAt": "2026-11-10T05:00:17.642Z",
+    "cover": "/research/notification-sound-test-52f0b693.webp"
+  }
 }
