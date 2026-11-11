@@ -61,5 +61,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 40,
+    "postedAt": "2026-11-11T05:00:18.098Z",
+    "cover": "/research/reversal-curse-9e28497e.webp"
+  }
 }
