@@ -76,5 +76,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 41,
+    "postedAt": "2026-11-12T05:00:20.941Z",
+    "cover": "/research/scene-memory-boundaries-6876dfe6.webp"
+  }
 }
