@@ -2,6 +2,7 @@
   "kind": "article",
   "day": "2026-11-12",
   "slug": "scene-memory-boundaries",
-  "state": "sending",
-  "at": "2026-11-12T05:00:14.159Z"
+  "state": "sent",
+  "at": "2026-11-12T05:00:14.159Z",
+  "messageId": 41
 }
