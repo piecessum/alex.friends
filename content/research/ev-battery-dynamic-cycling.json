@@ -29,7 +29,12 @@
       "type": "image",
       "url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41560-024-01675-8/MediaObjects/41560_2024_1675_Fig1_HTML.png",
       "caption": "Схема испытаний: постоянный ток, повторяющиеся импульсы, составленные поездки и записи реального движения. Слева — изменение тока, справа — варианты режимов и число элементов.",
-      "source": "Geslin et al., Nature Energy, 2024, рис. 1. CC BY-NC-ND 4.0"
+      "source": "Geslin et al., Nature Energy, 2024, рис. 1. CC BY-NC-ND 4.0",
+      "src": "/research/figures/ev-battery-dynamic-cycling-1-f276768d.webp",
+      "size": [
+        685,
+        402
+      ]
     },
     {
       "type": "text",
@@ -39,7 +44,12 @@
       "type": "image",
       "url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41560-024-01675-8/MediaObjects/41560_2024_1675_Fig2_HTML.png",
       "caption": "Слева сверху — оставшаяся ёмкость SOH и накопленные полные циклы EFC. Цветные линии обозначают постоянный ток, серые — переменную нагрузку. Три ряда соответствуют разным средним токам разряда.",
-      "source": "Geslin et al., Nature Energy, 2024, рис. 2. CC BY-NC-ND 4.0"
+      "source": "Geslin et al., Nature Energy, 2024, рис. 2. CC BY-NC-ND 4.0",
+      "src": "/research/figures/ev-battery-dynamic-cycling-2-44666636.webp",
+      "size": [
+        685,
+        561
+      ]
     },
     {
       "type": "text",
@@ -67,5 +77,12 @@
       "md": "Ограничение эксперимента — одна химическая система элементов. Большинство режимов рассчитали на автобусы, такси и другой транспорт с длительной ежедневной работой. В них не было продолжительных стоянок, обычных для личной машины. Разряд продолжался до заданного нижнего напряжения, затем элемент заряжали снова. Авторы предлагают проверять батареи с реалистичной нагрузкой и дальше исследовать причины различий в износе. [Ограничения и выводы](https://pangea.stanford.edu/ERE/pdf/OnoriPDF/Journals/99.pdf)."
     }
   ],
-  "date": "2026-11-13T08:00:00+03:00"
+  "date": "2026-11-13T08:00:00+03:00",
+  "coverSubjectPrompt": "ai:a blue cylindrical lithium-ion battery cell, entire object visible, three-quarter view, metallic terminals, no text",
+  "cover": "/research/ev-battery-dynamic-cycling-c2660cad.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
