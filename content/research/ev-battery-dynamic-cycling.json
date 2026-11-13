@@ -84,5 +84,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 42,
+    "postedAt": "2026-11-13T05:00:18.478Z",
+    "cover": "/research/ev-battery-dynamic-cycling-c2660cad.webp"
+  }
 }
