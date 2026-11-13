@@ -24,5 +24,20 @@
   ],
   "slug": "2026-11-14",
   "date": "2026-11-14T08:00:00+03:00",
-  "title": "Неделя в исследованиях: 9–13 ноября"
+  "title": "Неделя в исследованиях: 9–13 ноября",
+  "cover": "/research/week-2026-11-14-cd82a9ff.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverFrom": [
+    "/research/jam-choice-blindness-b6ed3422.webp",
+    "/research/notification-sound-test-52f0b693.webp",
+    "/research/reversal-curse-9e28497e.webp",
+    "/research/scene-memory-boundaries-6876dfe6.webp",
+    "/research/ev-battery-dynamic-cycling-c2660cad.webp"
+  ],
+  "coverStyle": "pile-1",
+  "poster": "/research/digest-2026-11-14-06cde02f.webp",
+  "posterKey": "number-corner-1#5#brain"
 }
