@@ -24,7 +24,12 @@
       "type": "image",
       "url": "https://media.nngroup.com/media/editor/2020/07/27/all-signifiers-first-stim.png",
       "caption": "Пять вариантов одного меню: галочка вниз, плюс, стрелка вправо, выдуманный символ и строка без значка.",
-      "source": "Nielsen Norman Group, 2020, экспериментальные макеты"
+      "source": "Nielsen Norman Group, 2020, экспериментальные макеты",
+      "src": "/research/figures/accordion-menu-icons-1-67d118dc.webp",
+      "size": [
+        1600,
+        420
+      ]
     },
     {
       "type": "text",
@@ -39,7 +44,12 @@
       "type": "image",
       "url": "https://media.nngroup.com/media/editor/2020/07/29/rate-of-new-page-expectation-chart-larger-corrected.png",
       "caption": "Доля ожиданий перехода на новую страницу. Результаты привычных значков статистически не отличались от 50%; без значка и с выдуманным символом перехода ожидали чаще.",
-      "source": "Nielsen Norman Group, 2020, график ожиданий"
+      "source": "Nielsen Norman Group, 2020, график ожиданий",
+      "src": "/research/figures/accordion-menu-icons-2-2982ba5c.webp",
+      "size": [
+        1076,
+        634
+      ]
     },
     {
       "type": "text",
@@ -83,5 +93,12 @@
       "md": "В этом разборе есть отдельные требования к доступности. Заголовок должен работать как кнопка для управления с клавиатуры. Программа чтения с экрана должна сообщать, открыт блок или закрыт. Для печати автор предлагает раскрывать разделы автоматически либо добавить кнопку раскрытия всех блоков. Существенные сведения рекомендует оставлять видимыми. Заголовки должны объяснять содержание до раскрытия, а несколько разделов — оставаться открытыми одновременно."
     }
   ],
-  "date": "2026-11-16T08:00:00+03:00"
+  "date": "2026-11-16T08:00:00+03:00",
+  "coverSubjectPrompt": "ai:a graphite smartphone displaying stacked blue expandable menu panels, three-quarter view, whole device visible, no text",
+  "cover": "/research/accordion-menu-icons-4da7c959.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
