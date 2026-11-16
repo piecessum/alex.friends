@@ -24,7 +24,12 @@
       "type": "image",
       "url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fsrep09831/MediaObjects/41598_2015_Article_BFsrep09831_Fig1_HTML.jpg",
       "caption": "Слева — установка для невидимого тела, справа — для тела манекена. Серый силуэт обозначает пустое пространство: участник его не видел. Внизу показаны кадры из очков. Адрес изображения указан в оригинале; при проверке загрузка завершилась тайм-аутом.",
-      "source": "Guterstam, Abdulkarim, Ehrsson, Scientific Reports, 2015, рис. 1; CC BY 4.0"
+      "source": "Guterstam, Abdulkarim, Ehrsson, Scientific Reports, 2015, рис. 1; CC BY 4.0",
+      "src": "/research/figures/invisible-body-anxiety-1-0c32e737.webp",
+      "size": [
+        685,
+        569
+      ]
     },
     {
       "type": "text",
@@ -64,12 +69,24 @@
       "type": "image",
       "url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fsrep09831/MediaObjects/41598_2015_Article_BFsrep09831_Fig5_HTML.jpg",
       "caption": "Рисунок опыта с аудиторией. Сверху — последовательность видео; ниже — оценки стресса и частота пульса. Invisible означает невидимое тело, Mannequin — манекен; Sync — совпадающие прикосновения, Async — прикосновения с задержкой. Адрес изображения указан в оригинале; при проверке загрузка завершилась тайм-аутом.",
-      "source": "Guterstam, Abdulkarim, Ehrsson, Scientific Reports, 2015, рис. 5; CC BY 4.0"
+      "source": "Guterstam, Abdulkarim, Ehrsson, Scientific Reports, 2015, рис. 5; CC BY 4.0",
+      "src": "/research/figures/invisible-body-anxiety-2-a237d109.webp",
+      "size": [
+        685,
+        585
+      ]
     },
     {
       "type": "text",
       "md": "У результата есть ограничения. Шесть записей пульса исключили из-за сильных помех. Общее сравнение того, как вид тела и совпадение прикосновений совместно влияли на пульс, не достигло статистической значимости. Авторы также не измерили отдельной анкетой, насколько убедительным казалось присутствие в комнате с аудиторией. Они предложили проверить возможное применение иллюзии в терапии социальной тревоги, но пациентов в этой работе не лечили. Полный текст — в [Scientific Reports](https://www.nature.com/articles/srep09831)."
     }
   ],
-  "date": "2026-11-17T08:00:00+03:00"
+  "date": "2026-11-17T08:00:00+03:00",
+  "coverSubjectPrompt": "ai:a black stereoscopic virtual reality headset with padded eyepieces, three-quarter view, entire device visible, no text",
+  "cover": "/research/invisible-body-anxiety-d3a261bd.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
