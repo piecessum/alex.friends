@@ -100,5 +100,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 44,
+    "postedAt": "2026-11-16T05:00:20.662Z",
+    "cover": "/research/accordion-menu-icons-4da7c959.webp"
+  }
 }
