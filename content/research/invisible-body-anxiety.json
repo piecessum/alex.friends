@@ -88,5 +88,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 45,
+    "postedAt": "2026-11-17T05:00:18.523Z",
+    "cover": "/research/invisible-body-anxiety-d3a261bd.webp"
+  }
 }
