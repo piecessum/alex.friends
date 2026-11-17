@@ -24,7 +24,12 @@
       "type": "image",
       "url": "https://arxiv.org/html/2304.02819v3/Figure1pdf.png",
       "caption": "Семь детекторов до и после изменения словаря. TOEFL — сочинения иностранцев, US 8th-grade — работы американских восьмиклассников.",
-      "source": "Liang et al., 2023, препринт, рисунок 1"
+      "source": "Liang et al., 2023, препринт, рисунок 1",
+      "src": "/research/figures/ai-detectors-nonnative-essays-1-1f13e178.webp",
+      "size": [
+        1090,
+        947
+      ]
     },
     {
       "type": "text",
@@ -68,7 +73,12 @@
       "type": "image",
       "url": "https://arxiv.org/html/2303.11156v4/images/title-wm.png",
       "caption": "Схема двух атак. Красный путь — переписывание машинного текста для обхода проверки. Синий — изучение скрытой метки для подделки её признаков.",
-      "source": "Sadasivan et al., версия 2025 года, рисунок 1"
+      "source": "Sadasivan et al., версия 2025 года, рисунок 1",
+      "src": "/research/figures/ai-detectors-nonnative-essays-2-f2304641.webp",
+      "size": [
+        1600,
+        763
+      ]
     },
     {
       "type": "text",
@@ -79,5 +89,12 @@
       "md": "Авторы [чешской проверки](https://arxiv.org/html/2602.05769v1/) заключают, что перекос зависит от языка, а распознавание улучшилось с 2023 года. Их результаты также показывают, насколько трудно сохранить точность при смене типа текста и модели, которая его написала."
     }
   ],
-  "date": "2026-11-18T08:00:00+03:00"
+  "date": "2026-11-18T08:00:00+03:00",
+  "coverSubjectPrompt": "ai:a dark blue laptop, open with a blank screen, three-quarter view, entire device visible",
+  "cover": "/research/ai-detectors-nonnative-essays-d1c8c3f7.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
