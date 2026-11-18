@@ -96,5 +96,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 46,
+    "postedAt": "2026-11-18T05:00:28.759Z",
+    "cover": "/research/ai-detectors-nonnative-essays-d1c8c3f7.webp"
+  }
 }
