@@ -32,7 +32,12 @@
       "type": "image",
       "url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1007%2Fs11517-025-03348-4/MediaObjects/11517_2025_3348_Fig3_HTML.png",
       "caption": "Показания трёх камер при съёмке источника, выставленного на 37 °C. A — FLIR, B — Seek, C — Hikmicro. По горизонтали время после включения в минутах, по вертикали температура в градусах Цельсия.",
-      "source": "Бернард и соавторы, 2025, рис. 3, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)"
+      "source": "Бернард и соавторы, 2025, рис. 3, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)",
+      "src": "/research/figures/smartphone-thermal-camera-warmup-1-2c331e7b.webp",
+      "size": [
+        685,
+        171
+      ]
     },
     {
       "type": "quote",
@@ -51,7 +56,12 @@
       "type": "image",
       "url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1007%2Fs11517-025-03348-4/MediaObjects/11517_2025_3348_Fig1_HTML.jpg",
       "caption": "Участок на задней стороне корпуса, который снимали лабораторным тепловизором. Для каждого замера брали самую высокую температуру внутри отмеченной области.",
-      "source": "Бернард и соавторы, 2025, рис. 1, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)"
+      "source": "Бернард и соавторы, 2025, рис. 1, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)",
+      "src": "/research/figures/smartphone-thermal-camera-warmup-2-c63d7113.webp",
+      "size": [
+        685,
+        463
+      ]
     },
     {
       "type": "bars",
@@ -85,7 +95,12 @@
       "type": "image",
       "url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1007%2Fs11517-025-03348-4/MediaObjects/11517_2025_3348_Fig6_HTML.jpg",
       "caption": "Тепловые снимки одной гипсовой плиты в одинаковых условиях. A — FLIR ONE Pro, B — Hikmicro Mini1, C — Seek Thermal CompactPRO. Оттенки серого показывают, как каждая камера передала температуру разных участков плиты.",
-      "source": "Бернард и соавторы, 2025, рис. 6, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)"
+      "source": "Бернард и соавторы, 2025, рис. 6, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)",
+      "src": "/research/figures/smartphone-thermal-camera-warmup-3-ffddf4bb.webp",
+      "size": [
+        685,
+        164
+      ]
     },
     {
       "type": "quote",
@@ -101,5 +116,12 @@
       "md": "Авторы сравнили три модели в лаборатории. Возможность заменить ими профессиональные тепловизоры в клинике осталась за пределами опыта. По итогам сравнения авторы предлагают при оценке таких камер проверять, насколько стабильно прибор измеряет температуру со временем и насколько ровно передаёт её по всему кадру. [Исследование в Medical & Biological Engineering & Computing](https://link.springer.com/article/10.1007/s11517-025-03348-4)"
     }
   ],
-  "date": "2026-11-19T08:00:00+03:00"
+  "date": "2026-11-19T08:00:00+03:00",
+  "coverSubjectPrompt": "ai:a compact black smartphone thermal camera attachment with twin lenses and a USB-C plug, three-quarter view, fully visible",
+  "cover": "/research/smartphone-thermal-camera-warmup-e51b83e9.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
