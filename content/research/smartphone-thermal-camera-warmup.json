@@ -123,5 +123,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 47,
+    "postedAt": "2026-11-19T05:00:17.615Z",
+    "cover": "/research/smartphone-thermal-camera-warmup-e51b83e9.webp"
+  }
 }
