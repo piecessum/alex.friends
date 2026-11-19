@@ -28,7 +28,12 @@
       "type": "image",
       "url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41598-024-78939-6/MediaObjects/41598_2024_78939_Fig3_HTML.png",
       "caption": "Схема экрана в опыте. Буквы обозначают направления как на компасе. N — сверху, E — справа, S — снизу, W — слева. На схеме показаны все восемь мест, а в каждой попытке пятно занимало только одно из них.",
-      "source": "Sárközy, Robinson, Kovács, Scientific Reports, 2024, рис. 3. CC BY 4.0"
+      "source": "Sárközy, Robinson, Kovács, Scientific Reports, 2024, рис. 3. CC BY 4.0",
+      "src": "/research/figures/motion-induced-blindness-1-9b2dd745.webp",
+      "size": [
+        685,
+        445
+      ]
     },
     {
       "type": "text",
@@ -50,7 +55,12 @@
       "type": "image",
       "url": "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41598-024-78939-6/MediaObjects/41598_2024_78939_Fig1_HTML.png",
       "caption": "Слева — доля времени, когда пятно было невидимо, справа — частота исчезновений. Каждая точка на графике стоит в том же направлении от центра, что и пятно в опыте. Чем дальше точка от центра, тем выше значение.",
-      "source": "Sárközy, Robinson, Kovács, Scientific Reports, 2024, рис. 1. CC BY 4.0"
+      "source": "Sárközy, Robinson, Kovács, Scientific Reports, 2024, рис. 1. CC BY 4.0",
+      "src": "/research/figures/motion-induced-blindness-2-419cc039.webp",
+      "size": [
+        685,
+        295
+      ]
     },
     {
       "type": "quote",
@@ -87,5 +97,18 @@
     "license": "CC BY 4.0",
     "source": "Scientific Reports, рис. 3",
     "mode": "full"
-  }
+  },
+  "coverCredit": {
+    "source": "Scientific Reports, рис. 3",
+    "author": "András Sárközy, Jonathan E. Robinson, Gyula Kovács",
+    "url": "https://www.nature.com/articles/s41598-024-78939-6/figures/3?error=cookies_not_supported",
+    "license": "CC BY 4.0"
+  },
+  "coverSubjectPrompt": "image:https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41598-024-78939-6/MediaObjects/41598_2024_78939_Fig3_HTML.png#full",
+  "cover": "/research/motion-induced-blindness-e74b6616.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
