@@ -2,6 +2,7 @@
   "kind": "article",
   "day": "2026-11-19",
   "slug": "smartphone-thermal-camera-warmup",
-  "state": "sending",
-  "at": "2026-11-19T05:00:14.458Z"
+  "state": "sent",
+  "at": "2026-11-19T05:00:14.458Z",
+  "messageId": 47
 }
