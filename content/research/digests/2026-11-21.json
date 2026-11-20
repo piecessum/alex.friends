@@ -24,5 +24,20 @@
   ],
   "slug": "2026-11-21",
   "date": "2026-11-21T08:00:00+03:00",
-  "title": "Неделя в исследованиях: 16–20 ноября"
+  "title": "Неделя в исследованиях: 16–20 ноября",
+  "cover": "/research/week-2026-11-21-7be53f04.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverFrom": [
+    "/research/accordion-menu-icons-4da7c959.webp",
+    "/research/invisible-body-anxiety-d3a261bd.webp",
+    "/research/ai-detectors-nonnative-essays-d1c8c3f7.webp",
+    "/research/smartphone-thermal-camera-warmup-e51b83e9.webp",
+    "/research/motion-induced-blindness-e74b6616.webp"
+  ],
+  "coverStyle": "pile-1",
+  "poster": "/research/digest-2026-11-21-6cdb6e43.webp",
+  "posterKey": "number-corner-1#6#interfaces"
 }
