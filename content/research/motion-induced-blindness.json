@@ -110,5 +110,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 48,
+    "postedAt": "2026-11-20T05:00:19.020Z",
+    "cover": "/research/motion-induced-blindness-e74b6616.webp"
+  }
 }
