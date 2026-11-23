@@ -73,5 +73,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 50,
+    "postedAt": "2026-11-23T05:00:17.574Z",
+    "cover": "/research/chatbots-are-you-sure-48d3dd2d.webp"
+  }
 }
