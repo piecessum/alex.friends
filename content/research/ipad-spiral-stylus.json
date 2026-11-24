@@ -96,5 +96,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 51,
+    "postedAt": "2026-11-24T05:00:17.286Z",
+    "cover": "/research/ipad-spiral-stylus-f35bb96c.webp"
+  }
 }
