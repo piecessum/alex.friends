@@ -40,7 +40,12 @@
       "type": "image",
       "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a44d/10075405/d7960e49149c/pone.0283257.g004.jpg",
       "caption": "Ошибки среди уверенных ответов во втором опыте. Слева показаны ответы для обычных букв, справа — для зеркальных. В каждой части графика авторы сравнили выбор отражённой формы и прочие ошибки после короткой и длинной паузы.",
-      "source": "Оттен, Сет и Пинто, PLOS ONE, 2023, рис. 4"
+      "source": "Оттен, Сет и Пинто, PLOS ONE, 2023, рис. 4",
+      "src": "/research/figures/mirrored-letter-memory-1-c95c1a11.webp",
+      "size": [
+        785,
+        521
+      ]
     },
     {
       "type": "quote",
@@ -63,7 +68,12 @@
       "type": "image",
       "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a44d/10075405/e38365898ebc/pone.0283257.g006.jpg",
       "caption": "Четвёртый опыт. Обычные и зеркальные буквы с одинаковой частотой становились правильным ответом. На правой панели видно, как часто участники выбирали обычную форму, когда им показывали зеркальную.",
-      "source": "Оттен, Сет и Пинто, PLOS ONE, 2023, рис. 6"
+      "source": "Оттен, Сет и Пинто, PLOS ONE, 2023, рис. 6",
+      "src": "/research/figures/mirrored-letter-memory-2-726ae441.webp",
+      "size": [
+        785,
+        416
+      ]
     },
     {
       "type": "text",
@@ -79,5 +89,12 @@
       "md": "Вывод авторов касается коротких пауз в задаче на зрительную память. Они оставили открытым вопрос о первых мгновениях после исчезновения картинки, когда в памяти ещё может держаться её мимолётный зрительный след. В этих опытах метку показывали самое раннее через полсекунды. [Статья в PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0283257)"
     }
   ],
-  "date": "2026-11-25T08:00:00+03:00"
+  "date": "2026-11-25T08:00:00+03:00",
+  "coverSubjectPrompt": "ai:a cobalt blue wooden capital C mirrored horizontally, standing upright, three-quarter view, fully in frame",
+  "cover": "/research/mirrored-letter-memory-b243cdb5.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
