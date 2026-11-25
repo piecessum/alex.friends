@@ -25,7 +25,12 @@
       "type": "image",
       "url": "https://arxiv.org/html/2410.05229v1/x7.png",
       "caption": "Сверху условие задачи про киви, ниже ответы двух моделей. В каждом решении видно, на каком шаге пять мелких плодов пропали из подсчёта.",
-      "source": "Мирзаде и соавторы, 2024, рис. 7"
+      "source": "Мирзаде и соавторы, 2024, рис. 7",
+      "src": "/research/figures/gsm-symbolic-extra-clue-1-0dabe513.webp",
+      "size": [
+        785,
+        338
+      ]
     },
     {
       "type": "heading",
@@ -105,5 +110,18 @@
     "license": "CC0",
     "source": "Wikimedia Commons",
     "mode": "cutout"
-  }
+  },
+  "coverCredit": {
+    "source": "Wikimedia Commons",
+    "author": "Boris Stumpf",
+    "url": "https://commons.wikimedia.org/wiki/File:Whole_kiwifruit_on_white_background.jpg",
+    "license": "CC0"
+  },
+  "coverSubjectPrompt": "image:https://upload.wikimedia.org/wikipedia/commons/a/a4/Whole_kiwifruit_on_white_background.jpg#cutout",
+  "cover": "/research/gsm-symbolic-extra-clue-0758e8a8.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverStyle": "collage-5"
 }
