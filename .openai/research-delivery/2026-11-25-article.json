@@ -2,6 +2,7 @@
   "kind": "article",
   "day": "2026-11-25",
   "slug": "mirrored-letter-memory",
-  "state": "sending",
-  "at": "2026-11-25T05:00:14.235Z"
+  "state": "sent",
+  "at": "2026-11-25T05:00:14.235Z",
+  "messageId": 52
 }
