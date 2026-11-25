@@ -96,5 +96,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 52,
+    "postedAt": "2026-11-25T05:00:17.464Z",
+    "cover": "/research/mirrored-letter-memory-b243cdb5.webp"
+  }
 }
