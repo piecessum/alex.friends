@@ -123,5 +123,10 @@
     1024,
     684
   ],
-  "coverStyle": "collage-5"
+  "coverStyle": "collage-5",
+  "telegram": {
+    "messageId": 53,
+    "postedAt": "2026-11-26T05:00:18.750Z",
+    "cover": "/research/gsm-symbolic-extra-clue-0758e8a8.webp"
+  }
 }
