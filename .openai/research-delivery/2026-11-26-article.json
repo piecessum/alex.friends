@@ -2,6 +2,7 @@
   "kind": "article",
   "day": "2026-11-26",
   "slug": "gsm-symbolic-extra-clue",
-  "state": "sending",
-  "at": "2026-11-26T05:00:14.398Z"
+  "state": "sent",
+  "at": "2026-11-26T05:00:14.398Z",
+  "messageId": 53
 }
