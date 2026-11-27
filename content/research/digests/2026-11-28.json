@@ -24,5 +24,19 @@
   ],
   "slug": "2026-11-28",
   "date": "2026-11-28T08:00:00+03:00",
-  "title": "Неделя в исследованиях: 23–27 ноября"
+  "title": "Неделя в исследованиях: 23–27 ноября",
+  "cover": "/research/week-2026-11-28-7f28af0b.webp",
+  "coverSize": [
+    1024,
+    684
+  ],
+  "coverFrom": [
+    "/research/chatbots-are-you-sure-48d3dd2d.webp",
+    "/research/ipad-spiral-stylus-f35bb96c.webp",
+    "/research/mirrored-letter-memory-b243cdb5.webp",
+    "/research/gsm-symbolic-extra-clue-0758e8a8.webp"
+  ],
+  "coverStyle": "pile-1",
+  "poster": "/research/digest-2026-11-28-06b937c1.webp",
+  "posterKey": "number-corner-1#7#ai"
 }
